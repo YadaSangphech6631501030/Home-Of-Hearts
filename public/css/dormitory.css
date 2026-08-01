@@ -1,0 +1,274 @@
+/* ============================
+   Dormitory Management Styling
+============================ */
+
+.page {
+  width: min(1140px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 24px 0 80px;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.page-title h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #2b2b2b;
+}
+
+/* ============================
+   Filter Control Bar
+============================ */
+
+.filter-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 680px;
+  margin: 0 auto 40px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+}
+
+.filter-group select {
+  height: 38px;
+  padding: 0 38px 0 18px;
+  border: 1px solid #d1cac6;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 14px;
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333333' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 13px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-group select:focus {
+  border-color: #e8a9b5;
+  box-shadow: 0 0 0 3px rgba(232, 169, 181, 0.2);
+}
+
+.filter-group.search-box {
+  flex: 1;
+  max-width: 280px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-input-wrapper input {
+  width: 100%;
+  height: 38px;
+  padding: 0 40px 0 18px;
+  border: 1px solid #d1cac6;
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 14px;
+  font-family: 'Noto Sans Thai', sans-serif;
+  color: #333333;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input-wrapper input:focus {
+  border-color: #e8a9b5;
+  box-shadow: 0 0 0 3px rgba(232, 169, 181, 0.2);
+}
+
+.search-input-wrapper .search-icon {
+  position: absolute;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* ============================
+   Floor Section Layout
+============================ */
+
+.floor-section {
+  margin-bottom: 40px;
+}
+
+.floor-section h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 16px;
+}
+
+.floor-layout {
+  display: grid;
+  grid-template-columns: repeat(6, 150px);
+  grid-template-rows: 120px 100px 120px;
+  gap: 12px;
+  justify-content: center;
+  position: relative;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.hallway {
+  grid-column: 1 / 7;
+  grid-row: 2;
+  background: #d8d8d8;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0; 
+}
+
+.stairs {
+  grid-column: 4 / 6;      
+  grid-row: 2;
+  width: 110px;             
+  height: 36px;            
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  justify-self: center;     
+  align-self: flex-end;   
+  margin-bottom: 6px;      
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555555;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  z-index: 2;
+}
+
+/* ============================
+   Room Card Styling
+============================ */
+
+.room-card {
+  width: 150px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(215, 209, 206, 0.75);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.room-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.room-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333333;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.room-card p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444444;
+}
+
+.room-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.room-dot--available {
+  background-color: #09c317;
+}
+
+.room-dot--occupied {
+  background-color: #ea2525;
+}
+
+.room-dot--maintenance {
+  background-color: #f59e0b;
+}
+
+.room-detail-link {
+  display: block;
+  width: 100%;
+  padding: 5px 0;
+  border-radius: 999px;
+  background: #dcd7d4;
+  color: #4a4a4a;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.room-detail-link:hover {
+  background: var(--color-olive, #7d8153);
+  color: #ffffff;
+}
+
+/* Grid Cell Positions */
+.r1c1 { grid-row: 1; grid-column: 1; }
+.r1c2 { grid-row: 1; grid-column: 2; }
+.r1c3 { grid-row: 1; grid-column: 3; }
+.r1c4 { grid-row: 1; grid-column: 4; }
+.r1c5 { grid-row: 1; grid-column: 5; }
+.r1c6 { grid-row: 1; grid-column: 6; }
+
+.r3c1 { grid-row: 3; grid-column: 1; }
+.r3c2 { grid-row: 3; grid-column: 2; }
+.r3c5 { grid-row: 3; grid-column: 5; }
+.r3c6 { grid-row: 3; grid-column: 6; }
+
+@media (max-width: 1024px) {
+  .floor-layout {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+  }
+  .r1c1, .r1c2, .r1c3, .r1c4, .r1c5, .r1c6,
+  .r3c1, .r3c2, .r3c5, .r3c6 {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
