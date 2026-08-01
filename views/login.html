@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>เข้าสู่ระบบ | Home of Hearts Residence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/login.css" />
+</head>
+
+<body>
+    <header class="login-header">
+        <a class="brand" href="/">
+            <div class="brand__icon">
+                <svg viewBox="0 0 512 512" fill="currentColor">
+                    <path
+                        d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z" />
+                </svg>
+            </div>
+            <div class="brand__text">
+                <div class="brand__title">Home of Hearts Residence</div>
+                <div class="brand__subtitle">หอพักบ้านแห่งหัวใจ</div>
+            </div>
+        </a>
+    </header>
+
+    <main class="login-shell">
+        <div class="login-photo">
+            <img src="/images/dormitory.png" alt="Home of Hearts Residence" />
+        </div>
+
+        <!-- Login Form Section -->
+        <div class="login-form-col">
+            <form class="login-form" id="login-form">
+                <h1 class="login-title">เข้าสู่ระบบ</h1>
+
+                <div class="field-underline">
+                    <label for="username">ชื่อ/อีเมล</label>
+                    <div class="input-row">
+                        <input type="text" id="username" name="username" placeholder="ระบุชื่อหรืออีเมล" required />
+                    </div>
+                </div>
+
+                <div class="field-underline">
+                    <label for="password">รหัสผ่าน</label>
+                    <div class="input-row">
+                        <input type="password" id="password" name="password" placeholder="ระบุรหัสผ่าน" required />
+
+                        <button class="toggle-visibility" type="button" id="toggle-password" aria-label="แสดงรหัสผ่าน">
+                            <svg id="eye-icon" viewBox="0 0 24 24">
+                                
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-meta-row">
+                    <a class="forgot-link" href="#">ลืมรหัสผ่าน</a>
+                </div>
+
+                <button class="login-submit" type="submit">เข้าสู่ระบบ</button>
+                <div class="login-error" id="login-error"></div>
+            </form>
+        </div>
+    </main>
+
+    <script src="/js/config.js"></script>
+    <script src="/js/login.js"></script>
+</body>
+
+</html>

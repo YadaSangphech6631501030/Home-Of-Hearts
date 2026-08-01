@@ -1,0 +1,217 @@
+/* ============================
+   Page & Shell Layout
+============================ */
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  height: 100vh;
+  overflow: hidden; 
+}
+
+.login-header {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 20px 40px 0;
+}
+
+.login-shell {
+  display: grid;
+  grid-template-columns: minmax(320px, 460px) 1fr;
+  align-items: center; 
+  gap: 70px;
+  max-width: 1050px;
+  height: calc(100vh - 80px);
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #7A824A; 
+}
+
+.brand__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.brand__icon svg {
+  width: 28px;
+  height: 28px;
+  fill: currentColor; 
+  transition: transform 0.2s ease;
+}
+
+.brand:hover .brand__icon svg {
+  transform: scale(1.05);
+}
+
+/* ============================
+   Media / Photo Section
+============================ */
+
+.login-photo {
+  width: 100%;
+  max-height: 82vh;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.login-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================
+   Login Form Layout
+============================ */
+
+.login-form-col {
+  display: flex;
+  align-items: center; 
+  justify-content: flex-start; 
+  height: 100%;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 380px;
+}
+
+/* หัวข้อเข้าสู่ระบบอยู่ตรงกลางตามรูปใหม่ */
+.login-title {
+  margin: 0 0 36px;
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center; 
+  color: #000000;
+  letter-spacing: 0.5px;
+}
+
+/* ============================
+   Form Inputs & Underline Fields
+============================ */
+
+.field-underline {
+  margin-bottom: 32px;
+}
+
+.field-underline label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f1c1d;
+  text-align: left;
+}
+
+.field-underline .input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #d0cac4; 
+}
+
+.field-underline .input-row:focus-within {
+  border-bottom-color: #7A824A;
+}
+
+.field-underline input {
+  flex: 1;
+  padding: 4px 0;
+  border: none;
+  background: transparent;
+  color: #1f1c1d;
+  font-family: inherit;
+  font-size: 15px;
+  outline: none;
+}
+
+.toggle-visibility {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border: none;
+  background: none;
+  color: #7A824A; 
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.toggle-visibility:hover {
+  opacity: 0.7;
+}
+
+.toggle-visibility svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ============================
+   Form Action & Meta Links
+============================ */
+
+.form-meta-row {
+  display: flex;
+  justify-content: flex-end;
+  margin: -16px 0 32px;
+}
+
+.forgot-link {
+  color: #7A824A; 
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+.login-submit {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #f0eae5;
+  border-radius: 12px;
+  background: #f8f4f0; 
+  color: #1f1c1d;
+  font-size: 17px;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-submit:hover {
+  background: #f1eae3;
+  transform: translateY(-1px);
+}
+
+.login-error {
+  min-height: 18px;
+  margin-top: 12px;
+  color: #ef1111;
+  font-size: 13px;
+  text-align: center;
+}
