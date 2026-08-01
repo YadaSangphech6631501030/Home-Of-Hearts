@@ -1,0 +1,432 @@
+/* ============================
+   Page Layout & Back Button
+============================ */
+
+.room-detail-main {
+  position: relative;
+  width: min(1140px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 24px 0 60px;
+}
+
+.back-button {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #7d8153;
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.back-button:hover {
+  background: #f8f6f4;
+  transform: translateX(-3px);
+}
+
+.module-title {
+  margin: 0 0 32px;
+  color: #2b2b2b;
+  font-size: 26px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.room-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.tenant-main-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ============================
+   Common Card Styling
+============================ */
+
+.tenant-card,
+.tenant-history-card,
+.room-info-card {
+  position: relative;
+  padding: 24px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.tenant-card h2,
+.tenant-history-card h2,
+.room-info-card h2 {
+  margin: 0 0 20px;
+  color: #2b2b2b;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+/* ============================
+   Tenant Profile & Avatars
+============================ */
+
+.tenant-profile {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.tenant-avatar {
+  display: grid;
+  place-items: center;
+  width: 130px;
+  height: 130px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #e1ebf7;
+  font-size: 64px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.tenant-avatar-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
+  margin-right: 20px;
+  border-radius: 50%;
+  background-color: #dcebf7;
+  color: #7d8153;
+  font-size: 42px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.tenant-form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input-field-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.input-field-group label {
+  color: #4a4a4a;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ============================
+   Tenant Actions & Status
+============================ */
+
+.tenant-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #efeae6;
+}
+
+.room-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #333333;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.status-dot-inline {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pill-button {
+  padding: 8px 22px;
+  border: none;
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.pill-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.pill-button--olive { background-color: #8c8a63; }
+.pill-button--rose  { background-color: #d19ba3; }
+.pill-button--black { background-color: #1a1a1a; }
+.pill-button--gray  { background-color: #b0adaa; }
+
+/* ============================
+   Side Cards & Room Info
+============================ */
+
+.room-side-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.room-info-card {
+  padding: 18px 24px;
+}
+
+.room-info-card h2 {
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.room-info-card p {
+  margin: 4px 0;
+  color: #666666;
+  font-size: 14px;
+}
+
+.room-info-card p span {
+  color: #2b2b2b;
+  font-weight: 600;
+}
+
+.card-arrow {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  color: #d19ba3;
+  font-size: 24px;
+  font-weight: 300;
+  text-decoration: none;
+  transform: translateY(-50%);
+}
+
+/* ============================
+   Tenant History Section
+============================ */
+
+.history-item {
+  position: relative;
+  margin-bottom: 16px;
+  padding-left: 20px;
+  border-left: 2px solid #8c8a63;
+}
+
+.history-year {
+  margin-bottom: 6px;
+  color: #8c8a63;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.history-details p {
+  margin: 3px 0;
+  color: #555555;
+  font-size: 14px;
+}
+
+/* ============================
+   Form Inputs & Icons
+============================ */
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding: 4px 28px 6px 6px;
+  border: none;
+  border-bottom: 1px solid #d0cac6;
+  background: transparent;
+  color: #1a1a1a;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.input-with-icon input:focus {
+  border-bottom-color: #d19ba3;
+}
+
+.pencil-icon {
+  position: absolute;
+  right: 4px;
+  bottom: 8px;
+  font-size: 14px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.input-with-icon input[type="date"] {
+  position: relative;
+  cursor: pointer;
+}
+
+.input-with-icon input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.calendar-icon {
+  position: absolute;
+  right: 4px;
+  bottom: 8px;
+  width: 16px;
+  height: 16px;
+  color: #a0a0a0;
+  pointer-events: none;
+}
+
+/* ============================
+   Modal & Popup Styling
+============================ */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.is-open {
+  display: flex !important;
+  opacity: 1;
+}
+
+.modal-card {
+  position: relative;
+  width: min(500px, 92%);
+  padding: 32px 28px;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.modal-card h2 {
+  margin: 0 0 24px;
+  color: #2b2b2b;
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  border: none;
+  background: none;
+  color: #888888;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-field-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal-field-group label {
+  min-width: 150px;
+  color: #4a4a4a;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* ============================
+   Responsive Design
+============================ */
+
+@media (max-width: 900px) {
+  .room-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .back-button {
+    position: relative;
+    top: 0;
+    margin-bottom: 16px;
+  }
+
+  .tenant-profile {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .input-field-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .input-with-icon {
+    width: 100%;
+  }
+}
