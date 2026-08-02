@@ -71,6 +71,29 @@ const announcementSchema = new mongoose.Schema(
 
 const Announcement = mongoose.model("Announcement", announcementSchema);
 
+// Maintenance schema
+const maintenanceSchema = new mongoose.Schema({
+  roomNumber: String,
+  senderName: String,
+  type: String,
+  status: { type: String, default: "รอดำเนินการ" }, 
+  appointmentDate: String,
+  completedDate: String
+}, { timestamps: true });
+const Maintenance = mongoose.models.Maintenance || mongoose.model("Maintenance", maintenanceSchema);
+
+// Bill schema
+const billingSchema = new mongoose.Schema({
+  roomNumber: String,
+  tenantName: String,
+  amount: Number,
+  dueDate: String,
+  completedDate: String,
+  status: { type: String, default: "pending" }, // 'pending', 'completed'
+  note: String
+}, { timestamps: true });
+const Billing = mongoose.models.Billing || mongoose.model("Billing", billingSchema);
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -111,6 +134,67 @@ app.get("/", (req, res) => {
 // admin dashboard page
 app.get("/admin/index.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "admin", "index.html"));
+});
+
+app.get("/api/dashboard/summary", async (req, res) => {
+  try {
+    // 1. ดึงสถิติระบบหอพัก
+    const totalRooms = await Room.countDocuments();
+    const occupiedRooms = await Room.countDocuments({
+      status: { $in: ["occupied", "ไม่ว่าง"] }
+    });
+    const availableRooms = totalRooms - occupiedRooms;
+
+    // 2. ดึงสถิติระบบแจ้งซ่อม
+    const maintPending = await Maintenance.countDocuments({ status: "รอดำเนินการ" });
+    const maintProgress = await Maintenance.countDocuments({ status: "กำลังดำเนินการ" });
+    const maintCompleted = await Maintenance.countDocuments({ status: "เสร็จสิ้น" });
+
+    // 3. ดึงสถิติระบบเงินหอพัก
+    const totalBillings = await Billing.countDocuments();
+    const billingPending = await Billing.countDocuments({ status: { $in: ["pending", "รอดำเนินการ"] } });
+    const billingCompleted = await Billing.countDocuments({ status: { $in: ["completed", "เสร็จสิ้น"] } });
+
+    // 4. ดึงสถิติระบบพัสดุ (พัสดุที่ยังรอรับ)
+    const parcelTotal = await Parcel.countDocuments({ status: "pending" });
+    const parcelBox = await Parcel.countDocuments({ status: "pending", type: "กล่อง" });
+    const parcelEnvelope = await Parcel.countDocuments({ status: "pending", type: "ซอง" });
+
+    // 5. ดึงรายการประกาศ / แจ้งเตือนล่าสุด 6 รายการ
+    const recentAnnouncements = await Announcement.find()
+      .sort({ createdAt: -1 })
+      .limit(6);
+
+    res.json({
+      success: true,
+      data: {
+        rooms: {
+          total: totalRooms,
+          occupied: occupiedRooms,
+          available: availableRooms
+        },
+        maintenance: {
+          pending: maintPending,
+          progress: maintProgress,
+          completed: maintCompleted
+        },
+        billing: {
+          total: totalBillings,
+          pending: billingPending,
+          completed: billingCompleted
+        },
+        parcels: {
+          total: parcelTotal,
+          box: parcelBox,
+          envelope: parcelEnvelope
+        },
+        alerts: recentAnnouncements
+      }
+    });
+  } catch (err) {
+    console.error("Dashboard Summary Error:", err);
+    res.status(500).json({ success: false, error: "ไม่สามารถดึงข้อมูลสรุปได้" });
+  }
 });
 
 // dormitory page - fetch all rooms

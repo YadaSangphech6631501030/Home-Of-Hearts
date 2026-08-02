@@ -55,20 +55,16 @@
         <button class="profile-trigger" type="button" id="profile-trigger" aria-expanded="false"
           aria-controls="profile-dropdown">
           <span class="profile-name" id="profile-name">สำนักงาน...</span>
-
           <span class="avatar" id="avatar-initials" aria-hidden="true">ส</span>
-
           <span class="profile-caret">⌄</span>
         </button>
 
         <div class="profile-dropdown" id="profile-dropdown" role="menu">
           <div class="profile-summary">
             <span class="avatar avatar--small" id="avatar-dropdown-initials" aria-hidden="true">ส</span>
-
             <span id="profile-menu-name">สำนักงานหอพัก</span>
           </div>
 
-          <!-- Profile Menu item -->
           <a class="profile-dropdown__item" href="#" role="menuitem">
             <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
               stroke-linecap="round" stroke-linejoin="round">
@@ -78,7 +74,6 @@
             <span>บัญชี</span>
           </a>
 
-          <!-- Profile logout-->
           <button class="profile-dropdown__item" type="button" id="logout-button" role="menuitem">
             <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
               stroke-linecap="round" stroke-linejoin="round">
@@ -100,33 +95,51 @@
     </section>
 
     <section class="dashboard-grid" aria-label="ภาพรวมระบบผู้ดูแล">
+
       <div class="summary-grid">
+        <!-- Dormitory -->
         <article class="summary-card">
           <h2>ระบบหอพัก 🏠</h2>
           <div class="divider"></div>
           <div class="card-stats">
-            <p>ทั้งหมด <span id="dash-total-rooms">0</span> ห้อง</p>
-            <p><span class="dot-circle dot-circle--red"></span> ไม่ว่าง <span id="dash-occupied-rooms">0</span> ห้อง</p>
-            <p><span class="dot-circle dot-circle--green"></span> ว่าง <span id="dash-available-rooms">0</span> ห้อง</p>
+            <p>ทั้งหมด <span class="stat-num"><span id="dash-total-rooms">0</span> ห้อง</span></p>
+            <p><span><span class="dot-circle dot-circle--red"></span> ไม่ว่าง</span> <span class="stat-num"><span id="dash-occupied-rooms">0</span> ห้อง</span></p>
+            <p><span><span class="dot-circle dot-circle--green"></span> ว่าง</span> <span class="stat-num"><span id="dash-available-rooms">0</span> ห้อง</span></p>
           </div>
         </article>
 
+        <!-- Maintenance -->
         <article class="summary-card">
           <h2>ระบบแจ้งซ่อม 🔨</h2>
           <div class="divider"></div>
-          <div class="summary-card__body" id="maintenance-summary"></div>
+          <div class="card-stats">
+            <p><span><span class="dot-circle dot-circle--grey"></span> ยังไม่ดำเนินการ</span> <span class="stat-num"><span id="dash-maint-pending">0</span> คำขอ</span></p>
+            <p><span><span class="dot-circle dot-circle--orange"></span> กำลังดำเนินการ</span> <span class="stat-num"><span id="dash-maint-progress">0</span> คำขอ</span></p>
+            <p><span><span class="dot-circle dot-circle--green"></span> เสร็จสิ้น</span> <span class="stat-num"><span id="dash-maint-done">0</span> คำขอ</span></p>
+          </div>
         </article>
 
+        <!-- Dormitory Bill -->
         <article class="summary-card">
           <h2>ระบบเงินหอพัก 💵</h2>
           <div class="divider"></div>
-          <div class="summary-card__body" id="billing-summary"></div>
+          <div class="card-stats">
+            <p>รอบวันที่ : <span id="dash-bill-date">31/08/2026</span></p>
+            <p>ทั้งหมด <span class="stat-num"><span id="dash-bill-total">0</span> ห้อง</span></p>
+            <p><span><span class="dot-circle dot-circle--grey"></span> ยังไม่ได้ดำเนินการ</span> <span class="stat-num"><span id="dash-bill-pending">0</span> ห้อง</span></p>
+            <p><span><span class="dot-circle dot-circle--green"></span> เสร็จสิ้น</span> <span class="stat-num"><span id="dash-bill-done">0</span> ห้อง</span></p>
+          </div>
         </article>
 
+        <!-- Parcel -->
         <article class="summary-card">
           <h2>ระบบพัสดุ 📦</h2>
           <div class="divider"></div>
-          <div class="summary-card__body" id="parcel-summary"></div>
+          <div class="card-stats">
+            <p>พัสดุรอรับ <span class="stat-num"><span id="dash-parcel-total">0</span> ชิ้น</span></p>
+            <p>กล่อง <span class="stat-num"><span id="dash-parcel-box">0</span> ชิ้น</span></p>
+            <p>ซอง <span class="stat-num"><span id="dash-parcel-envelope">0</span> ชิ้น</span></p>
+          </div>
         </article>
       </div>
 
@@ -137,6 +150,23 @@
       </article>
     </section>
   </main>
+
+  <!-- Alert Detail Modal (Popup) -->
+  <div class="modal" id="alert-modal" aria-hidden="true">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">รายละเอียดแจ้งเตือน</h3>
+        <button class="modal-close" type="button" id="modal-close-btn" aria-label="ปิด">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-date" id="modal-date"></p>
+        <div class="modal-content" id="modal-content"></div>
+      </div>
+    </div>
+  </div>
+
+  
 
   <script src="/js/admin-dashboard.js"></script>
 </body>
