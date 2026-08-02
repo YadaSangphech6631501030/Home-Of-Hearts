@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบเงินหอพัก | Home of Hearts Residence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/admin-dashboard.css" />
+  <link rel="stylesheet" href="/css/billing.css" />
+</head>
+
+<body class="admin-page">
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+
+  <header class="admin-header">
+    <a class="brand" href="/admin/index.html" aria-label="Home of Hearts Residence">
+      <div class="brand__icon" aria-hidden="true">
+        <svg viewBox="0 0 512 512" fill="currentColor">
+          <path
+            d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z" />
+        </svg>
+      </div>
+      <div class="brand__text">
+        <div class="brand__title">Home of Hearts Residence</div>
+        <div class="brand__subtitle">หอพักบ้านแห่งหัวใจ</div>
+      </div>
+    </a>
+
+    <!-- Navigation Menu -->
+    <nav class="admin-nav" aria-label="เมนูหลัก">
+      <a class="admin-nav__link" href="/admin/index.html" data-nav-page="index.html">หน้าหลัก</a>
+      <a class="admin-nav__link" href="/admin/contact.html" data-nav-page="contact.html">ติดต่อ</a>
+      <a class="admin-nav__link" href="/admin/dormitory.html" data-nav-page="dormitory.html">ระบบหอพัก</a>
+      <a class="admin-nav__link" href="/admin/maintenance.html" data-nav-page="maintenance.html">ระบบแจ้งซ่อม</a>
+      <a class="admin-nav__link admin-nav__link--active" href="/admin/billing.html"
+        data-nav-page="billing.html">ระบบเงินหอพัก</a>
+      <a class="admin-nav__link" href="/admin/parcels.html" data-nav-page="parcels.html">ระบบพัสดุ</a>
+      <a class="admin-nav__link" href="/admin/announcements.html" data-nav-page="announcements.html">ระบบประกาศ</a>
+    </nav>
+
+    <div class="admin-actions">
+      <button class="icon-button" type="button" aria-label="แจ้งเตือน">
+        <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+          <path d="M10 21h4" />
+        </svg>
+      </button>
+
+      <!-- Profile Menu -->
+      <div class="profile-menu">
+        <button class="profile-trigger" type="button" id="profile-trigger" aria-expanded="false"
+          aria-controls="profile-dropdown">
+          <span class="profile-name" id="profile-name">สำนักงาน...</span>
+          <span class="avatar" id="avatar-initials" aria-hidden="true">ส</span>
+          <span class="profile-caret">⌄</span>
+        </button>
+
+        <div class="profile-dropdown" id="profile-dropdown" role="menu">
+          <div class="profile-summary">
+            <span class="avatar avatar--small" id="avatar-dropdown-initials" aria-hidden="true">ส</span>
+            <span id="profile-menu-name">สำนักงานหอพัก</span>
+          </div>
+
+          <a class="profile-dropdown__item" href="#" role="menuitem">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="7" r="3.5"></circle>
+              <path d="M5 20c0-3.866 3.134-7 7-7s7 3.134 7 7"></path>
+            </svg>
+            <span>บัญชี</span>
+          </a>
+
+          <button class="profile-dropdown__item" type="button" id="logout-button" role="menuitem">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>ออกจากระบบ</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="billing-main">
+    <h1 class="billing-title">ระบบเงินหอพัก 💵</h1>
+
+    <!-- Action Buttons Bar -->
+    <div class="action-bar">
+      <button type="button" class="btn-action btn-secondary" id="btn-create-cycle">+ สร้างรอบบิล</button>
+      <button type="button" class="btn-action btn-primary" id="btn-create-bill">+ สร้างบิล</button>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-card">
+      <div class="filter-group">
+        <div class="date-range-group">
+          <span>จาก</span>
+          <div class="date-input-wrapper">
+            <input type="date" id="date-from" />
+            <svg class="calendar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+
+          <span>ถึง</span>
+          <div class="date-input-wrapper">
+            <input type="date" id="date-to" />
+            <svg class="calendar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+        </div>
+
+        <select id="filter-status" class="filter-select">
+          <option value="">สถานะ</option>
+          <option value="ชำระแล้ว">ชำระแล้ว</option>
+          <option value="รอชำระ">รอชำระ</option>
+          <option value="ค้างชำระ">ค้างชำระ</option>
+        </select>
+
+        <div class="search-input-wrapper">
+          <input type="text" id="search-input" placeholder="ค้นหา" />
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666666"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+        </div>
+      </div>
+
+      <div class="last-update">
+        อัพเดทข้อมูลล่าสุดวันที่ : <span id="last-update-date">--/--/----</span>
+      </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+      <table class="billing-table">
+        <thead>
+          <tr>
+            <th>วัน/เดือน/ปี</th>
+            <th>ห้อง</th>
+            <th>ผู้เช่า</th>
+            <th>ยอดเงิน</th>
+            <th>กำหนดชำระ</th>
+            <th>สถานะ</th>
+            <th>เสร็จสิ้น<br>วัน/เดือน/ปี</th>
+            <th>จัดการ</th>
+            <th>หมายเหตุ</th>
+          </tr>
+        </thead>
+        <tbody id="billing-tbody">
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+   <!-- Create bill -->
+  <div class="modal-overlay" id="create-batch-modal">
+    <div class="modal-card modal-card--large">
+
+      <div class="modal-content-card">
+        <h2 class="modal-card-title">สร้างรอบบิล 💵</h2>
+
+        <div class="modal-section-header">
+          <h3>ข้อมูลรอบบิล</h3>
+        </div>
+
+
+        <div class="form-row date-section">
+          <span class="label-text">จาก</span>
+          <div class="date-input-wrapper">
+            <input type="date" id="batch-date-from" />
+            <svg class="calendar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+
+          <span class="label-text">ถึง</span>
+          <div class="date-input-wrapper">
+            <input type="date" id="batch-date-to" />
+            <svg class="calendar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+        </div>
+
+  
+        <div class="form-group-block">
+          <label class="block-label" style="font-weight: 700; font-size: 15px; margin-bottom: 12px; display: block;">รายละเอียดค่าใช้จ่าย</label>
+          
+          <div style="display: flex; flex-direction: column; gap: 14px; padding-left: 12px; max-width: 270px;">
+
+            <!-- Room bill -->
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: 15px; color: #333; font-weight: 500;">ค่าเช่า</span>
+              <div style="display: inline-flex; align-items: center; border-bottom: 1.5px solid #d8d3cf; padding-bottom: 2px; gap: 6px; position: relative;">
+                <input type="text" id="rent-amount" value="4,600" style="border: none !important; outline: none !important; background: transparent !important; text-align: right; font-size: 15px; font-weight: 700; color: #1a1a1a; width: 55px; padding: 0; margin: 0; font-family: inherit;" />
+                <span style="font-size: 14px; color: #555; white-space: nowrap;">บาท</span>
+  
+                <button type="button" class="btn-edit-expense" style="position: static !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important; float: none !important; background: none !important; border: none !important; padding: 0 !important; margin: 0 !important; cursor: pointer; display: inline-flex !important; align-items: center; justify-content: center; width: 14px !important; height: 14px !important;">
+                  <svg style="width: 14px !important; height: 14px !important; display: block !important; position: static !important;" viewBox="0 0 24 24" fill="none" stroke="#b5b5b5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Water bill -->
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: 15px; color: #333; font-weight: 500;">ค่าน้ำ</span>
+              <div style="display: inline-flex; align-items: center; border-bottom: 1.5px solid #d8d3cf; padding-bottom: 2px; gap: 6px; position: relative;">
+                <input type="text" id="water-rate" value="27" style="border: none !important; outline: none !important; background: transparent !important; text-align: right; font-size: 15px; font-weight: 700; color: #1a1a1a; width: 55px; padding: 0; margin: 0; font-family: inherit;" />
+                <span style="font-size: 14px; color: #555; white-space: nowrap;">บาท/หน่วย</span>
+
+                <button type="button" class="btn-edit-expense" style="position: static !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important; float: none !important; background: none !important; border: none !important; padding: 0 !important; margin: 0 !important; cursor: pointer; display: inline-flex !important; align-items: center; justify-content: center; width: 14px !important; height: 14px !important;">
+                  <svg style="width: 14px !important; height: 14px !important; display: block !important; position: static !important;" viewBox="0 0 24 24" fill="none" stroke="#b5b5b5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Electric bill -->
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: 15px; color: #333; font-weight: 500;">ค่าไฟ</span>
+              <div style="display: inline-flex; align-items: center; border-bottom: 1.5px solid #d8d3cf; padding-bottom: 2px; gap: 6px; position: relative;">
+                <input type="text" id="electricity-rate" value="6" style="border: none !important; outline: none !important; background: transparent !important; text-align: right; font-size: 15px; font-weight: 700; color: #1a1a1a; width: 55px; padding: 0; margin: 0; font-family: inherit;" />
+                <span style="font-size: 14px; color: #555; white-space: nowrap;">บาท/หน่วย</span>
+               
+                <button type="button" class="btn-edit-expense" style="position: static !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important; float: none !important; background: none !important; border: none !important; padding: 0 !important; margin: 0 !important; cursor: pointer; display: inline-flex !important; align-items: center; justify-content: center; width: 14px !important; height: 14px !important;">
+                  <svg style="width: 14px !important; height: 14px !important; display: block !important; position: static !important;" viewBox="0 0 24 24" fill="none" stroke="#b5b5b5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- cancel and submit buttons -->
+        <div class="modal-actions-center">
+          <button type="button" class="btn-popup btn-popup-cancel" id="cancel-batch-modal">ยกเลิก</button>
+          <button type="button" class="btn-popup btn-popup-submit" id="submit-batch-modal">สร้างรอบบิล</button>
+        </div>
+
+        <div class="modal-footer-note">
+          <div class="note-title">หมายเหตุ</div>
+          <ul>
+            <li>ค่าน้ำและค่าไฟสามารถกรอกภายหลังเป็นรายห้องได้</li>
+            <li>ระบบจะสร้างบิลให้ผู้เช่าทุกห้องที่เลือก</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/js/billing.js"></script>
+  <script src="/js/admin-dashboard.js"></script>
+</body>
+
+</html>
