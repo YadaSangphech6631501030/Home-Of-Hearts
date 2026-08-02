@@ -1,0 +1,349 @@
+/* ============================
+   Layout & Container
+============================ */
+.page {
+  width: min(1000px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 24px 0 80px;
+}
+
+.page-header-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  margin: 0;
+  color: #2b2b2b;
+  font-size: 26px;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* ปุ่ม + เพิ่มประกาศใหม่ สีเขียวมะกอก */
+.action-buttons-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.btn-olive {
+  background-color: #8fa072;
+  color: #ffffff;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(143, 160, 114, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-olive:hover {
+  background-color: #7e8f63;
+  transform: translateY(-1px);
+}
+
+/* ============================
+   Announcement Item Cards
+============================ */
+.announcement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.announcement-card {
+  background: #ffffff;
+  border-radius: 999px; /* ขอบมนเต็มตามรูป */
+  padding: 18px 32px;
+  display: grid;
+  grid-template-columns: 220px 1fr 120px 24px;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f2f0eb;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.announcement-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.ann-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ann-preview {
+  font-size: 14px;
+  color: #777777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ann-date {
+  font-size: 14px;
+  color: #888888;
+  text-align: right;
+}
+
+.ann-arrow {
+  color: #b5a99a;
+  font-size: 18px;
+  text-align: right;
+}
+
+/* ============================
+   Modal Popup (ตรงตามภาพตัวอย่าง)
+============================ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.announcement-modal-card {
+  background: #ffffff;
+  width: min(800px, calc(100% - 32px));
+  padding: 36px 40px;
+  border-radius: 28px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  transform: translateY(20px);
+  transition: transform 0.25s ease;
+  position: relative;
+}
+
+.modal-overlay.active .announcement-modal-card {
+  transform: translateY(0);
+}
+
+/* Top Bar ใน Modal */
+.modal-top-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.author-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.author-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+}
+
+.author-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.3;
+}
+
+.divider-v {
+  width: 1px;
+  height: 32px;
+  background-color: #e0e0e0;
+}
+
+.date-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.date-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+}
+
+.date-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.close-btn {
+  position: absolute;
+  right: 0;
+  top: -8px;
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  color: #333;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* Dividers */
+.modal-divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 12px 0 20px;
+}
+
+.modal-divider.light {
+  border-top-color: #efefef;
+  margin: 16px 0;
+}
+
+/* Form Inputs */
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.form-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333;
+  width: 50px;
+}
+
+.input-inline {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  font-family: inherit;
+  color: #333;
+}
+
+.textarea-plain {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: #444;
+  resize: none;
+}
+
+.input-inline::placeholder,
+.textarea-plain::placeholder {
+  color: #bbb;
+}
+
+/* Bottom Bar ใน Modal */
+.modal-bottom-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.btn-publish {
+  background-color: #f7f6f2;
+  color: #2b2b2b;
+  border: 1px solid #e8e6df;
+  padding: 8px 32px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  transition: all 0.2s;
+}
+
+.btn-publish:hover {
+  background-color: #8fa072;
+  color: #ffffff;
+  border-color: #8fa072;
+}
+
+.btn-upload-img {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.btn-upload-img:hover {
+  background-color: #f5f5f5;
+}
+
+/* ============================
+   View Announcement Modal Style
+============================ */
+.view-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333333;
+}
+
+.view-body {
+  font-size: 14px;
+  color: #444444;
+  line-height: 1.6;
+  white-space: pre-wrap; /* เพื่อให้อ่านเว้นวรรค/ขึ้นบรรทัดใหม่ได้ตรงตามที่พิมพ์ */
+  min-height: 120px;
+}
+
+.view-image-container {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.view-image-container img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* ปุ่มลบประกาศ */
+.btn-delete {
+  background-color: #fff0f0;
+  color: #e53935;
+  border: 1px solid #ffcdd2;
+  padding: 8px 24px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #e53935;
+  color: #ffffff;
+  border-color: #e53935;
+}

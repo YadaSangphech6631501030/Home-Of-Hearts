@@ -58,6 +58,19 @@ const parcelSchema = new mongoose.Schema(
 
 const Parcel = mongoose.model("Parcel", parcelSchema);
 
+// announcement schema
+const announcementSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+    author: { type: String, default: "สำนักงานหอพักบ้านแห่งหัวใจ" },
+    date: { type: String, required: true }, 
+  },
+  { timestamps: true }
+);
+
+const Announcement = mongoose.model("Announcement", announcementSchema);
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -257,6 +270,43 @@ app.put('/api/parcels/:id', async (req, res) => {
     }
 
     res.json({ success: true, data: updatedParcel });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+//  get announcements 
+app.get("/api/announcements", async (req, res) => {
+  try {
+    const list = await Announcement.find().sort({ createdAt: -1 });
+    res.json({ success: true, data: list });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+//  add new announcement
+app.post("/api/announcements", async (req, res) => {
+  try {
+    const { title, content, date } = req.body;
+    const newAnnouncement = new Announcement({
+      title,
+      content,
+      date: date || new Date().toLocaleDateString("th-TH"),
+    });
+    await newAnnouncement.save();
+    res.status(201).json({ success: true, data: newAnnouncement });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// delete announcement
+app.delete("/api/announcements/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Announcement.findByIdAndDelete(id);
+    res.json({ success: true, message: "Deleted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
