@@ -1,0 +1,544 @@
+/* ============================
+   Page & Header Layout
+============================ */
+
+.page {
+  width: min(1140px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 24px 0 80px;
+}
+
+.page-header-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  margin: 0;
+  color: #2b2b2b;
+  font-size: 26px;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* ============================
+   Action Buttons
+============================ */
+
+.action-buttons-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.btn {
+  padding: 8px 22px;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-pink {
+  background-color: #e5a9b8;
+  color: #ffffff;
+}
+
+/* ============================
+   Filter Control Bar 
+============================ */
+
+.filter-card {
+  display: flex;
+  flex-wrap: nowrap; 
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 8px 16px;
+  border: 1px solid #f0f0f0;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  overflow-x: auto;
+}
+
+.filter-group select {
+  height: 34px;
+  padding: 0 24px 0 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 999px;
+  background: #ffffff url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 8px center / 12px;
+  color: #666666;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.date-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #555555;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.date-input-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.date-input {
+  width: 115px;
+  height: 34px;
+  padding: 0 28px 0 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #666666;
+  font-size: 12px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.date-input-wrapper::after {
+  content: "";
+  position: absolute;
+  right: 8px;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-wrapper input {
+  width: 100px;
+  height: 34px;
+  padding: 0 28px 0 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #333333;
+  font-size: 13px;
+  outline: none;
+}
+
+.search-input-wrapper .search-icon {
+  position: absolute;
+  right: 8px;
+  font-size: 11px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.last-updated {
+  margin-left: auto;
+  padding-left: 6px;
+  color: #888888;
+  font-size: 12.5px;
+  font-weight: 400;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+/* ============================
+   Table Action Buttons 
+============================ */
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-action {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #8c827a; 
+  transition: all 0.2s ease;
+}
+
+.btn-action svg {
+  display: block;
+  stroke: currentColor;
+}
+
+.btn-action:hover {
+  background-color: #f3ece8;
+  transform: scale(1.12);
+}
+
+/* ปุ่มดูรูปภาพ (รูปตา) */
+.view-image-btn:hover {
+  color: #e5a9b8; /* สีชมพูโทนหลักของเว็บ */
+}
+
+/* ปุ่มแก้ไข (ดินสอ) */
+.edit-btn:hover {
+  color: #5a4b47; /* เทาเข้มขึ้นเล็กน้อยเมื่อชี้ */
+}
+
+/* ปุ่มลบ (ถังขยะ) */
+.delete-btn:hover {
+  color: #e57373; /* สีแดงนวลๆ ตอน hover */
+}
+
+/* ============================
+   Parcels Table Styling
+============================ */
+
+.table-card {
+  min-height: 380px;
+  padding: 24px;
+  border: 1px solid #f0f0f0;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+}
+
+.parcel-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.parcel-table th {
+  padding: 14px 8px;
+  border-bottom: 1px solid #eeeeee;
+  color: #222222;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.parcel-table td {
+  padding: 16px 8px;
+  border-bottom: 1px solid #f9f9f9;
+  color: #555555;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.empty-state-cell {
+  padding: 100px 0 !important;
+  border-bottom: none !important;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaaaaa;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.status-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.green {
+  background-color: #2ecc71;
+}
+
+.status-dot.orange {
+  background-color: #f39c12;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* ============================
+   Modal / Popup System
+============================ */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-card {
+  background: #ffffff;
+  width: min(820px, calc(100% - 32px));
+  padding: 36px 48px;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  transform: translateY(20px);
+  transition: transform 0.25s ease;
+}
+
+.modal-overlay.active .modal-card {
+  transform: translateY(0);
+}
+
+.modal-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #2b2b2b;
+  margin: 0 0 24px 0;
+}
+
+.form-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 8px;
+}
+
+.form-divider {
+  border: none;
+  border-top: 1px solid #eeeeee;
+  margin-bottom: 24px;
+}
+
+/* Form Layout Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  row-gap: 18px;
+  column-gap: 16px;
+  align-items: center;
+}
+
+.form-grid > label {
+  font-size: 14px;
+  color: #333333;
+  font-weight: 500;
+}
+
+/* Custom Input/Select */
+.form-field select,
+.form-field input[type="text"] {
+  width: 220px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid #dcdcdc;
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 14px;
+  color: #333333;
+  outline: none;
+}
+
+.form-field select {
+  padding-right: 30px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #ffffff url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 12px center / 12px;
+  cursor: pointer;
+}
+
+.auto-text {
+  color: #b0b0b0;
+  font-size: 14px;
+}
+
+/* Input Date Wrapper */
+.modal-date-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.modal-date-input {
+  width: 220px;
+  height: 36px;
+  padding: 0 36px 0 16px;
+  border: 1px solid #dcdcdc;
+  border-radius: 999px;
+  font-size: 13.5px;
+  color: #666666;
+  outline: none;
+}
+
+.modal-date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+/* File Upload Button */
+.file-upload-label {
+  color: #a0a0a0;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s;
+}
+
+.file-upload-label:hover {
+  color: #666666;
+}
+
+.file-name-text {
+  font-size: 12px;
+  color: #e5a9b8;
+  margin-left: 8px;
+}
+
+.note-field-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 220px;
+  width: 100%;
+}
+
+.note-field-wrapper input {
+  border: none !important;
+  border-bottom: 1px solid #dcdcdc !important;
+  border-radius: 0 !important;
+  width: 100% !important;
+  padding: 4px 24px 4px 0 !important;
+  height: 28px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.note-field-wrapper input:focus {
+  border-bottom-color: #e5a9b8 !important;
+}
+
+.note-field-wrapper svg,
+.note-field-wrapper .edit-icon {
+  position: absolute;
+  right: 2px;
+  bottom: 6px;
+  font-size: 13px;
+  color: #888888;
+  pointer-events: none;
+}
+
+/* Modal Action Buttons */
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.btn-modal {
+  width: 140px;
+  height: 40px;
+  border: none;
+  border-radius: 999px;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel {
+  background-color: #c4c4c4;
+  color: #ffffff;
+}
+
+.btn-cancel:hover {
+  background-color: #b0b0b0;
+}
+
+.btn-submit {
+  background-color: #e5a9b8;
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(229, 169, 184, 0.4);
+}
+
+.btn-submit:hover {
+  background-color: #dc97a8;
+  transform: translateY(-1px);
+}
+
+.form-field input[type="text"] {
+  width: 220px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid #dcdcdc;
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 14px;
+  color: #333333;
+  outline: none;
+}

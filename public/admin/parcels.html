@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบพัสดุ | Home of Hearts Residence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/admin-dashboard.css" />
+  <link rel="stylesheet" href="/css/parcels.css" />
+</head>
+
+<body class="admin-page">
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+
+  <!-- Header Section -->
+  <header class="admin-header">
+    <a class="brand" href="/admin/index.html" aria-label="Home of Hearts Residence">
+      <div class="brand__icon" aria-hidden="true">
+        <svg viewBox="0 0 512 512" fill="currentColor">
+          <path
+            d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z" />
+        </svg>
+      </div>
+      <div class="brand__text">
+        <div class="brand__title">Home of Hearts Residence</div>
+        <div class="brand__subtitle">หอพักบ้านแห่งหัวใจ</div>
+      </div>
+    </a>
+
+    <nav class="admin-nav" aria-label="เมนูหลัก">
+      <a class="admin-nav__link" href="/admin/index.html">หน้าหลัก</a>
+      <a class="admin-nav__link" href="/admin/contact.html">ติดต่อ</a>
+      <a class="admin-nav__link" href="/admin/dormitory.html">ระบบหอพัก</a>
+      <a class="admin-nav__link" href="/admin/maintenance.html">ระบบแจ้งซ่อม</a>
+      <a class="admin-nav__link" href="/admin/billing.html">ระบบเงินหอพัก</a>
+      <a class="admin-nav__link admin-nav__link--active" href="/admin/parcels.html">ระบบพัสดุ</a>
+      <a class="admin-nav__link" href="/admin/announcements.html">ระบบประกาศ</a>
+    </nav>
+
+    <div class="admin-actions">
+      <button class="icon-button" type="button" aria-label="แจ้งเตือน">
+        <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+          <path d="M10 21h4" />
+        </svg>
+      </button>
+
+      <div class="profile-menu">
+        <button class="profile-trigger" type="button" id="profile-trigger">
+          <span class="profile-name" id="profile-name">สำนักงาน...</span>
+          <span class="avatar" id="avatar-initials" aria-hidden="true">ส</span>
+          <span class="profile-caret">⌄</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="page">
+    <div class="page-header-container">
+      <h2 class="page-title">ระบบพัสดุ 📦</h2>
+    </div>
+
+    <!-- Action Button Top Right -->
+    <div class="action-buttons-wrapper">
+      <button class="btn btn-pink" id="open-add-parcel-modal" type="button">+ เพิ่มพัสดุใหม่</button>
+    </div>
+
+    <!-- Filter Control Bar -->
+    <div class="filter-card"
+      style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; background: #ffffff; padding: 14px 20px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); margin-bottom: 24px;">
+
+      <div class="filter-main-group" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+
+        <div class="filter-group">
+          <select id="filter-type"
+            style="height: 38px; padding: 0 32px 0 14px; border-radius: 999px; border: 1px solid #d1cac6; font-size: 13.5px; color: #555; background: #ffffff url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23666%22 stroke-width=%222.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>') no-repeat right 12px center; appearance: none; -webkit-appearance: none; cursor: pointer; outline: none; font-family: inherit;">
+            <option value="" disabled selected hidden>ประเภท</option>
+            <option value="all">ทั้งหมด</option>
+            <option value="small-box">กล่องขนาดเล็ก</option>
+            <option value="medium-box">กล่องขนาดกลาง</option>
+            <option value="large-box">กล่องขนาดใหญ่</option>
+            <option value="envelope">ซองเอกสาร</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <select id="filter-courier"
+            style="height: 38px; padding: 0 32px 0 14px; border-radius: 999px; border: 1px solid #d1cac6; font-size: 13.5px; color: #555; background: #ffffff url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23666%22 stroke-width=%222.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>') no-repeat right 12px center; appearance: none; -webkit-appearance: none; cursor: pointer; outline: none; font-family: inherit;">
+            <option value="" disabled selected hidden>ขนส่ง</option>
+            <option value="all">ทั้งหมด</option>
+            <option value="flash">Flash</option>
+            <option value="kerry">Kerry</option>
+            <option value="thailand-post">ไปรษณีย์ไทย</option>
+            <option value="j&t">J&T</option>
+            <option value="shopee">Shopee Xpress</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <select id="filter-status"
+            style="height: 38px; padding: 0 32px 0 14px; border-radius: 999px; border: 1px solid #d1cac6; font-size: 13.5px; color: #555; background: #ffffff url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23666%22 stroke-width=%222.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>') no-repeat right 12px center; appearance: none; -webkit-appearance: none; cursor: pointer; outline: none; font-family: inherit;">
+            <option value="" disabled selected hidden>สถานะ</option>
+            <option value="all">ทั้งหมด</option>
+            <option value="completed">เสร็จสิ้น</option>
+            <option value="pending">รอรับพัสดุ</option>
+          </select>
+        </div>
+
+        <div class="filter-group date-group"
+          style="display: flex; align-items: center; gap: 6px; font-size: 13.5px; color: #444;">
+          <label>จาก</label>
+          <div class="date-input-wrapper" style="position: relative; display: flex; align-items: center;">
+            <input type="date" id="date-from" class="date-input"
+              style="height: 38px; border-radius: 999px; border: 1px solid #d1cac6; padding: 0 12px; font-size: 13px; color: #555; outline: none; font-family: inherit;" />
+          </div>
+        </div>
+
+        <div class="filter-group date-group"
+          style="display: flex; align-items: center; gap: 6px; font-size: 13.5px; color: #444;">
+          <label>ถึง</label>
+          <div class="date-input-wrapper" style="position: relative; display: flex; align-items: center;">
+            <input type="date" id="date-to" class="date-input"
+              style="height: 38px; border-radius: 999px; border: 1px solid #d1cac6; padding: 0 12px; font-size: 13px; color: #555; outline: none; font-family: inherit;" />
+          </div>
+        </div>
+
+        <!-- Search Input -->
+        <div class="filter-group search-box">
+          <div class="search-input-wrapper" style="position: relative; display: flex; align-items: center;">
+            <label for="parcel-search" class="sr-only">ค้นหา</label>
+            <input type="text" id="parcel-search" placeholder="ค้นหา"
+              style="height: 38px; width: 170px; border-radius: 999px; border: 1px solid #d1cac6; padding: 0 36px 0 16px; font-size: 13.5px; color: #333; outline: none; font-family: inherit;" />
+            <svg class="search-icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#666666"
+              stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+              style="position: absolute; right: 14px; pointer-events: none;">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Update Date -->
+      <div class="last-updated" style="font-size: 13px; color: #777; white-space: nowrap;">
+        อัพเดทข้อมูลล่าสุดวันที่ : <span id="update-date">--/--/----</span>
+      </div>
+    </div>
+
+    <!-- Data Table Card -->
+    <div class="table-card">
+      <table class="parcel-table">
+        <thead>
+          <tr>
+            <th>วัน/เดือน/ปี</th>
+            <th>ห้อง</th>
+            <th>ผู้รับ</th>
+            <th>ประเภท</th>
+            <th>ขนส่ง</th>
+            <th>สถานะ</th>
+            <th>เสร็จสิ้น<br>วัน/เดือน/ปี</th>
+            <th>จัดการ</th>
+            <th>หมายเหตุ</th>
+          </tr>
+        </thead>
+        <tbody id="parcel-table-body">
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="/js/admin-dashboard.js"></script>
+  <script src="/js/parcels.js"></script>
+
+  <!-- add + edit parcel -->
+  <div class="modal-overlay" id="add-parcel-modal">
+    <div class="modal-card">
+      <h2 class="modal-title">เพิ่มพัสดุใหม่</h2>
+
+      <form id="add-parcel-form">
+        <div class="form-section-title">ข้อมูลพัสดุ</div>
+        <hr class="form-divider" />
+
+        <div class="form-grid">
+          <!-- Room -->
+          <label for="modal-room">ห้อง</label>
+          <div class="form-field">
+            <select id="modal-room" required>
+              <option value="" disabled selected hidden></option>
+              <option value="101">101</option>
+              <option value="102">102</option>
+              <option value="204">204</option>
+              <option value="305">305</option>
+              <option value="408">408</option>
+            </select>
+          </div>
+
+          <label>ผู้เช่า</label>
+          <div class="form-field auto-text" id="modal-tenant-name">-</div>
+
+          <!-- courier -->
+          <label for="modal-courier">ขนส่ง</label>
+          <div class="form-field">
+            <select id="modal-courier" required>
+              <option value="" disabled selected hidden></option>
+              <option value="Flash">Flash</option>
+              <option value="Kerry">Kerry</option>
+              <option value="ไปรษณีย์ไทย">ไปรษณีย์ไทย</option>
+              <option value="J&T">J&T</option>
+              <option value="Shopee Xpress">Shopee Xpress</option>
+            </select>
+          </div>
+
+          <!-- Type -->
+          <label for="modal-type">ประเภท</label>
+          <div class="form-field">
+            <select id="modal-type" required>
+              <option value="" disabled selected hidden></option>
+              <option value="กล่องขนาดเล็ก">กล่องขนาดเล็ก</option>
+              <option value="กล่องขนาดกลาง">กล่องขนาดกลาง</option>
+              <option value="กล่องขนาดใหญ่">กล่องขนาดใหญ่</option>
+              <option value="ซองเอกสาร">ซองเอกสาร</option>
+            </select>
+          </div>
+
+          <label for="modal-date">วันที่รับเข้าระบบ</label>
+          <div class="form-field modal-date-wrapper">
+            <input type="date" id="modal-date" class="modal-date-input" required />
+          </div>
+
+          <!-- completed day -->
+          <label for="modal-completed-date">วันที่เสร็จสิ้น</label>
+          <div class="form-field modal-date-wrapper">
+            <input type="date" id="modal-completed-date" class="modal-date-input" />
+          </div>
+
+          <!-- recipient name -->
+          <label for="modal-recipient">ชื่อผู้รับพัสดุ</label>
+          <div class="form-field">
+            <input type="text" id="modal-recipient" placeholder="ระบุชื่อผู้รับพัสดุ" />
+          </div>
+
+          <!-- photo -->
+          <label>รูปภาพ</label>
+          <div class="form-field" style="display: flex; align-items: center; gap: 8px;">
+            <label for="modal-image-input" class="file-upload-label"
+              style="display: inline-flex; align-items: center; gap: 6px; color: #777; font-size: 14px; cursor: pointer; user-select: none;">
+              <span>กดเพิ่มรูปภาพ</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#888888" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l7.9-7.9">
+                </path>
+              </svg>
+            </label>
+            <input type="file" id="modal-image-input" accept="image/*" hidden />
+            <span id="file-name-display" class="file-name-text"
+              style="font-size: 13px; color: #d46a84; font-weight: 500;"></span>
+          </div>
+
+          <label for="modal-note">หมายเหตุ</label>
+          <div class="form-field note-field-wrapper"
+            style="position: relative; display: flex; align-items: center; max-width: 220px;">
+            <input type="text" id="modal-note" placeholder=""
+              style="width: 100%; border: none; border-bottom: 1px solid #dcd3ce; background: transparent; outline: none; font-size: 14px; color: #333; padding: 4px 22px 4px 0; border-radius: 0;" />
+
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999999" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              style="position: absolute; right: 2px; bottom: 6px; pointer-events: none;">
+              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+              <path d="m15 5 4 4"></path>
+            </svg>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-modal btn-cancel" id="close-modal-btn">ยกเลิก</button>
+          <button type="submit" class="btn-modal btn-submit">บันทึกข้อมูล</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>
