@@ -14,6 +14,7 @@ mongoose
   .then(() => console.log("✅ Connected to MongoDB successfully!"))
   .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
+// Room schema
 const roomSchema = new mongoose.Schema(
   {
     roomNumber: { type: String, required: true, unique: true },
@@ -37,6 +38,25 @@ const roomSchema = new mongoose.Schema(
 );
 
 const Room = mongoose.model("Room", roomSchema);
+
+// Parcel schema
+const parcelSchema = new mongoose.Schema(
+  {
+    roomNumber: { type: String, required: true },
+    recipientName: { type: String, default: "-" },
+    courier: { type: String, required: true },
+    type: { type: String, required: true },
+    receivedDate: { type: String, required: true },
+    completedDate: { type: String, default: "-" },
+    status: { type: String, enum: ["pending", "completed"], default: "pending" },
+    statusText: { type: String, default: "รอรับพัสดุ" },
+    note: { type: String, default: "-" },
+    imageUrl: { type: String, default: "" }
+  },
+  { timestamps: true }
+);
+
+const Parcel = mongoose.model("Parcel", parcelSchema);
 
 // Middleware
 app.use(express.json());
@@ -184,6 +204,59 @@ app.post("/api/rooms/:roomNumber/checkout", async (req, res) => {
     }
 
     res.json({ success: true, message: "Check-out successful", data: room });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// get parcels pages
+app.get('/api/parcels', async (req, res) => {
+  try {
+    const parcels = await Parcel.find().sort({ createdAt: -1 });
+    res.json(parcels);
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// add new parcel
+app.post('/api/parcels', async (req, res) => {
+  try {
+    const newParcel = new Parcel(req.body);
+    await newParcel.save();
+    res.status(201).json({ success: true, data: newParcel });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// delete parcel
+app.delete('/api/parcels/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedParcel = await Parcel.findByIdAndDelete(id);
+
+    if (!deletedParcel) {
+      return res.status(404).json({ success: false, message: 'Parcel not found' });
+    }
+
+    res.json({ success: true, message: 'Parcel deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// updates parcel
+app.put('/api/parcels/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedParcel = await Parcel.findByIdAndUpdate(id, req.body, { new: true });
+
+    if (!updatedParcel) {
+      return res.status(404).json({ success: false, message: 'Parcel not found' });
+    }
+
+    res.json({ success: true, data: updatedParcel });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
