@@ -1,16 +1,20 @@
-
 /* ============================
      Page Layout & Grid Structure
     ============================ */
+
+/* 1. กำหนดขนาดและระยะเว้นบน-ล่างให้ตรงกับหน้าอื่น */
 .page {
-  padding: 20px 20px 60px 20px;
-  max-width: 1000px;
-  margin: 0 auto;
+  max-width: 1200px !important; 
+  margin: 0 auto !important;
+  width: min(1200px, calc(100% - 48px)) !important;
+  box-sizing: border-box !important;
+  padding-top: 24px; /* ดันเนื้อหาลงมาจาก AppBar ไม่ให้กระตุก/เคลื่อน */
+  padding-bottom: 40px;
 }
 
 .page-header-container {
   text-align: center;
-  margin-top: 10px;
+  margin-top: 0; /* ปรับเป็น 0 เพราะใช้ padding-top จาก .page แล้ว */
   margin-bottom: 28px;
 }
 
@@ -28,17 +32,19 @@
   gap: 20px;
   align-items: stretch;
   max-width: 820px;
-  margin: 0 auto 40px auto;
+  margin: 0 auto;
 }
 
-/* Base Card Item */
+/* ============================
+    Base Card Item & Components
+    ============================ */
 .card-item {
   background: #ffffff;
   border: 1px solid #f0f0f0;
   border-radius: 18px;
   padding: 20px 24px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-  position: relative !important;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -52,12 +58,11 @@
   text-align: center;
 }
 
-/* ==========================================================================
-   2. QR Card & Photo Action Buttons
-   ========================================================================== */
-
+/* ============================
+    QR Card & Photo Action Buttons
+    ============================ */
 .qr-wrapper {
-  position: relative !important;
+  position: relative;
   width: 150px;
   height: 150px;
   display: flex;
@@ -81,7 +86,7 @@
 }
 
 .edit-photo-btn {
-  position: absolute !important;
+  position: absolute;
   top: -8px;
   right: -8px;
   width: 32px;
@@ -96,7 +101,6 @@
   justify-content: center;
   color: #8c827a;
   transition: all 0.2s ease;
-  z-index: 10;
 }
 
 .edit-photo-btn:hover {
@@ -112,18 +116,17 @@
   color: #888888;
 }
 
-/* ==========================================================================
-   3. Info Card & Pencil Button (มุมขวาบน)
-   ========================================================================== */
-
+/* ============================
+    Info Card & Pencil Button
+    ============================ */
 .info-card {
   align-items: flex-start;
   padding: 20px 24px;
-  position: relative !important;
+  position: relative;
 }
 
 .edit-info-btn {
-  position: absolute !important;
+  position: absolute;
   top: 16px;
   right: 16px;
   width: 34px;
@@ -173,218 +176,138 @@
   word-break: break-word;
 }
 
-/* ==========================================================================
-   4. Modal / Popup Style ( Horizontal Layout + Pill Input + ชมพูกะปิ #E8A9B5 )
-   ========================================================================== */
-
+/* ============================
+    Modal / Popup Style
+    ============================ */
 .modal-overlay {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  background: rgba(0, 0, 0, 0.35) !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(4px);
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transition: all 0.25s ease-in-out !important;
-  z-index: 9999 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s ease-in-out;
+  z-index: 9999;
 }
 
 .modal-overlay.active {
-  opacity: 1 !important;
-  visibility: visible !important;
+  opacity: 1;
+  visibility: visible;
 }
 
 .modal-card {
-  background: #ffffff !important;
-  width: 90% !important;
-  max-width: 460px !important;
-  border-radius: 24px !important;
-  padding: 28px 32px !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12) !important;
-  transform: scale(0.92) translateY(10px) !important;
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-  box-sizing: border-box !important;
+  background: #ffffff;
+  width: 90%;
+  max-width: 460px;
+  border-radius: 24px;
+  padding: 28px 32px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  transform: scale(0.92) translateY(10px);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-sizing: border-box;
 }
 
 .modal-overlay.active .modal-card {
-  transform: scale(1) translateY(0) !important;
+  transform: scale(1) translateY(0);
 }
 
 .modal-title {
-  font-size: 18px !important;
-  font-weight: 700 !important;
-  color: #2b2b2b !important;
-  margin: 0 0 22px 0 !important;
-  text-align: center !important;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2b2b2b;
+  margin: 0 0 22px 0;
+  text-align: center;
 }
 
-/* Form Layout แนวนอน */
 .form-grid {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 16px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .form-field {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 16px !important;
-  width: 100% !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
 }
 
-/* Label ด้านซ้าย */
 .form-field label {
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  color: #2b2b2b !important;
-  width: 110px !important;
-  flex-shrink: 0 !important;
-  text-align: left !important;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2b2b2b;
+  width: 110px;
+  flex-shrink: 0;
+  text-align: left;
 }
 
-/* Input ทรงแคปซูลด้านขวา */
 .form-field input {
-  flex: 1 !important;
-  padding: 9px 18px !important;
-  border: 1px solid #d9d9d9 !important;
-  border-radius: 50px !important;
-  font-size: 14px !important;
-  font-family: 'Noto Sans Thai', sans-serif !important;
-  color: #333333 !important;
-  background-color: #ffffff !important;
-  outline: none !important;
-  box-sizing: border-box !important;
-  transition: all 0.2s ease !important;
+  flex: 1;
+  padding: 9px 18px;
+  border: 1px solid #d9d9d9;
+  border-radius: 50px;
+  font-size: 14px;
+  font-family: 'Noto Sans Thai', sans-serif;
+  color: #333333;
+  background-color: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
 }
 
 .form-field input:focus {
-  border-color: #e8a9b5 !important;
-  box-shadow: 0 0 0 3px rgba(232, 169, 181, 0.2) !important;
+  border-color: #e8a9b5;
+  box-shadow: 0 0 0 3px rgba(232, 169, 181, 0.2);
 }
 
-/* Modal Action Buttons (ทรงแคปซูล) */
 .modal-actions {
-  display: flex !important;
-  justify-content: flex-end !important;
-  gap: 12px !important;
-  margin-top: 24px !important;
-  width: 100% !important;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  width: 100%;
 }
 
 .btn-modal {
-  font-family: 'Noto Sans Thai', sans-serif !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  border-radius: 50px !important;
-  border: none !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-/* ปุ่มยกเลิก สีเทาอ่อน */
 .btn-cancel {
-  background-color: #f2edf0 !important;
-  color: #7a6e73 !important;
-  padding: 9px 22px !important;
+  background-color: #f2edf0;
+  color: #7a6e73;
+  padding: 9px 22px;
 }
 
 .btn-cancel:hover {
-  background-color: #e6dfeb !important;
-  color: #52474c !important;
+  background-color: #e6dfeb;
+  color: #52474c;
 }
 
-/* ปุ่มบันทึก สีชมพูกะปิพาสเทล (#E8A9B5) */
 .btn-submit {
-  background-color: #e8a9b5 !important;
-  color: #ffffff !important;
-  padding: 9px 26px !important;
-  box-shadow: 0 4px 15px rgba(232, 169, 181, 0.35) !important;
+  background-color: #e8a9b5;
+  color: #ffffff;
+  padding: 9px 26px;
+  box-shadow: 0 4px 15px rgba(232, 169, 181, 0.35);
 }
 
 .btn-submit:hover {
-  background-color: #df98a5 !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 6px 18px rgba(232, 169, 181, 0.45) !important;
-}
-
-/* ==========================================================================
-   5. Profile Dropdown Menu Styling
-   ========================================================================== */
-
-.profile-menu {
-  position: relative !important;
-}
-
-.profile-trigger {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: transparent;
-  border: none;
-  font-family: inherit;
-}
-
-.profile-dropdown {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  width: 200px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  border: 1px solid #f0f0f0;
-  padding: 8px 0;
-  display: none;
-  flex-direction: column;
-  z-index: 1000;
-  animation: fadeIn 0.2s ease;
-}
-
-.profile-dropdown.active {
-  display: flex !important;
-}
-
-.dropdown-item {
-  padding: 10px 16px;
-  font-size: 14px;
-  color: #444444;
-  text-decoration: none;
-  transition: background-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.dropdown-item:hover {
-  background-color: #faf0f2;
-  color: #2b2b2b;
-}
-
-.dropdown-item.logout {
-  color: #e53935;
-}
-
-.dropdown-item.logout:hover {
-  background-color: #ffebee;
-}
-
-.dropdown-divider {
-  border: none;
-  border-top: 1px solid #f0f0f0;
-  margin: 6px 0;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+  background-color: #df98a5;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(232, 169, 181, 0.45);
 }
 
 @media (max-width: 768px) {
