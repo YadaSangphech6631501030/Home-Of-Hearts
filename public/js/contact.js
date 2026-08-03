@@ -3,19 +3,21 @@ document.addEventListener("DOMContentLoaded", () => {
      Profile Dropdown Menu System
     ============================ */
 
-  const profileMenu = document.getElementById("profile-menu");
   const profileTrigger = document.getElementById("profile-trigger");
-  const profileDropdown = document.getElementById("profile-dropdown");
+  const profileMenu = document.querySelector(".profile-menu");
 
-  if (profileTrigger && profileDropdown) {
+  if (profileTrigger && profileMenu) {
     profileTrigger.addEventListener("click", (e) => {
       e.stopPropagation();
-      profileDropdown.classList.toggle("active");
+      profileMenu.classList.toggle("is-open");
+      const isExpanded = profileMenu.classList.contains("is-open");
+      profileTrigger.setAttribute("aria-expanded", isExpanded);
     });
 
     document.addEventListener("click", (e) => {
-      if (profileMenu && !profileMenu.contains(e.target)) {
-        profileDropdown.classList.remove("active");
+      if (!profileMenu.contains(e.target)) {
+        profileMenu.classList.remove("is-open");
+        profileTrigger.setAttribute("aria-expanded", "false");
       }
     });
   }
