@@ -66,23 +66,24 @@
           </div>
 
           <a class="profile-dropdown__item" href="#" role="menuitem">
-            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
-              stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="7" r="3.5"></circle>
-              <path d="M5 20c0-3.866 3.134-7 7-7s7 3.134 7 7"></path>
-            </svg>
-            <span>บัญชี</span>
-          </a>
+            <a class="profile-dropdown__item" href="/admin/account.html" role="menuitem">
+              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="7" r="3.5"></circle>
+                <path d="M5 20c0-3.866 3.134-7 7-7s7 3.134 7 7"></path>
+              </svg>
+              <span>บัญชี</span>
+            </a>
 
-          <button class="profile-dropdown__item" type="button" id="logout-button" role="menuitem">
-            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-              <polyline points="16 17 21 12 16 7"></polyline>
-              <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
-            <span>ออกจากระบบ</span>
-          </button>
+            <button class="profile-dropdown__item" type="button" id="logout-button" role="menuitem">
+              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>ออกจากระบบ</span>
+            </button>
         </div>
       </div>
     </div>
@@ -103,8 +104,10 @@
           <div class="divider"></div>
           <div class="card-stats">
             <p>ทั้งหมด <span class="stat-num"><span id="dash-total-rooms">0</span> ห้อง</span></p>
-            <p><span><span class="dot-circle dot-circle--red"></span> ไม่ว่าง</span> <span class="stat-num"><span id="dash-occupied-rooms">0</span> ห้อง</span></p>
-            <p><span><span class="dot-circle dot-circle--green"></span> ว่าง</span> <span class="stat-num"><span id="dash-available-rooms">0</span> ห้อง</span></p>
+            <p><span><span class="dot-circle dot-circle--red"></span> ไม่ว่าง</span> <span class="stat-num"><span
+                  id="dash-occupied-rooms">0</span> ห้อง</span></p>
+            <p><span><span class="dot-circle dot-circle--green"></span> ว่าง</span> <span class="stat-num"><span
+                  id="dash-available-rooms">0</span> ห้อง</span></p>
           </div>
         </article>
 
@@ -113,9 +116,12 @@
           <h2>ระบบแจ้งซ่อม 🔨</h2>
           <div class="divider"></div>
           <div class="card-stats">
-            <p><span><span class="dot-circle dot-circle--grey"></span> ยังไม่ดำเนินการ</span> <span class="stat-num"><span id="dash-maint-pending">0</span> คำขอ</span></p>
-            <p><span><span class="dot-circle dot-circle--orange"></span> กำลังดำเนินการ</span> <span class="stat-num"><span id="dash-maint-progress">0</span> คำขอ</span></p>
-            <p><span><span class="dot-circle dot-circle--green"></span> เสร็จสิ้น</span> <span class="stat-num"><span id="dash-maint-done">0</span> คำขอ</span></p>
+            <p><span><span class="dot-circle dot-circle--grey"></span> ยังไม่ดำเนินการ</span> <span
+                class="stat-num"><span id="dash-maint-pending">0</span> คำขอ</span></p>
+            <p><span><span class="dot-circle dot-circle--orange"></span> กำลังดำเนินการ</span> <span
+                class="stat-num"><span id="dash-maint-progress">0</span> คำขอ</span></p>
+            <p><span><span class="dot-circle dot-circle--green"></span> เสร็จสิ้น</span> <span class="stat-num"><span
+                  id="dash-maint-done">0</span> คำขอ</span></p>
           </div>
         </article>
 
@@ -126,8 +132,10 @@
           <div class="card-stats">
             <p>รอบวันที่ : <span id="dash-bill-date">31/08/2026</span></p>
             <p>ทั้งหมด <span class="stat-num"><span id="dash-bill-total">0</span> ห้อง</span></p>
-            <p><span><span class="dot-circle dot-circle--grey"></span> ยังไม่ได้ดำเนินการ</span> <span class="stat-num"><span id="dash-bill-pending">0</span> ห้อง</span></p>
-            <p><span><span class="dot-circle dot-circle--green"></span> เสร็จสิ้น</span> <span class="stat-num"><span id="dash-bill-done">0</span> ห้อง</span></p>
+            <p><span><span class="dot-circle dot-circle--grey"></span> ยังไม่ได้ดำเนินการ</span> <span
+                class="stat-num"><span id="dash-bill-pending">0</span> ห้อง</span></p>
+            <p><span><span class="dot-circle dot-circle--green"></span> เสร็จสิ้น</span> <span class="stat-num"><span
+                  id="dash-bill-done">0</span> ห้อง</span></p>
           </div>
         </article>
 
@@ -166,7 +174,7 @@
     </div>
   </div>
 
-  
+
 
   <script src="/js/admin-dashboard.js"></script>
 </body>
