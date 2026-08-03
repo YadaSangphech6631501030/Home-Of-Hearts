@@ -107,23 +107,90 @@ app.use("/js", express.static(path.join(__dirname, "public/js")));
 app.post("/auth/login", async (req, res) => {
   const { username, password } = req.body;
 
+  try{
   if (
-    (username === "admin" || username === "admin@example.com") &&
-    password === "12345678"
-  ) {
-    return res.json({
-      token: "mock-jwt-token-home-of-hearts",
-      user: {
-        username: "admin",
-        name: "สำนักงานหอพักบ้านแห่งหัวใจ",
-        role: "admin",
+      (username === "admin" || username === "admin@example.com") &&
+      password === "12345678"
+    ) {
+      return res.json({
+        success: true,
+        token: "mock-jwt-token-admin",
+        user: {
+          role: "admin",
+          name: "สำนักงานหอพักบ้านแห่งหัวใจ",
+          roomNumber: "-",
+          phone: "-",
+          email: "admin@example.com",
+        },
+      });
+    }
+
+    const room = await Room.findOne({ roomNumber: username });
+
+    if (room && room.tenant && room.tenant.fullName) {
+
+    if (password === room.tenant.phone || password === "12345678") {
+        return res.json({
+          success: true,
+          token: `mock-token-room-${room.roomNumber}`,
+          user: {
+            role: "tenant",
+            name: room.tenant.fullName,
+            roomNumber: room.roomNumber,
+            phone: room.tenant.phone,
+            email: room.tenant.email || "-",
+          },
+        });
+      }
+    }
+
+    return res.status(401).json({
+      success: false,
+      message: "เลขห้อง เบอร์โทร หรือรหัสผ่านไม่ถูกต้อง",
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// get user info
+app.get("/api/me", async (req, res) => {
+  try {
+    const roomNumber = req.query.roomNumber || req.headers["x-room-number"];
+
+    if (!roomNumber || roomNumber === "-") {
+      return res.json({
+        success: true,
+        data: {
+          role: "admin",
+          name: "สำนักงานหอพักบ้านแห่งหัวใจ",
+          room: "-",
+          phone: "02-123-4567",
+          email: "admin@homeofhearts.com",
+        },
+      });
+    }
+
+    const room = await Room.findOne({ roomNumber });
+
+    if (!room || !room.tenant) {
+      return res.status(404).json({ success: false, message: "ไม่พบข้อมูลผู้เช่า" });
+    }
+
+
+    res.json({
+      success: true,
+      data: {
+        role: "tenant",
+        name: room.tenant.fullName || "ไม่ระบุชื่อ",
+        room: room.roomNumber,
+        phone: room.tenant.phone || "-",
+        email: room.tenant.email || "-",
       },
     });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
-
-  return res.status(401).json({
-    message: "Username or password is incorrect",
-  });
 });
 
 // login page
@@ -138,29 +205,29 @@ app.get("/admin/index.html", (req, res) => {
 
 app.get("/api/dashboard/summary", async (req, res) => {
   try {
-    // 1. ดึงสถิติระบบหอพัก
+    // get rooms
     const totalRooms = await Room.countDocuments();
     const occupiedRooms = await Room.countDocuments({
       status: { $in: ["occupied", "ไม่ว่าง"] }
     });
     const availableRooms = totalRooms - occupiedRooms;
 
-    // 2. ดึงสถิติระบบแจ้งซ่อม
+    // get maintenance
     const maintPending = await Maintenance.countDocuments({ status: "รอดำเนินการ" });
     const maintProgress = await Maintenance.countDocuments({ status: "กำลังดำเนินการ" });
     const maintCompleted = await Maintenance.countDocuments({ status: "เสร็จสิ้น" });
 
-    // 3. ดึงสถิติระบบเงินหอพัก
+    // get billing
     const totalBillings = await Billing.countDocuments();
     const billingPending = await Billing.countDocuments({ status: { $in: ["pending", "รอดำเนินการ"] } });
     const billingCompleted = await Billing.countDocuments({ status: { $in: ["completed", "เสร็จสิ้น"] } });
 
-    // 4. ดึงสถิติระบบพัสดุ (พัสดุที่ยังรอรับ)
+    // get parcels
     const parcelTotal = await Parcel.countDocuments({ status: "pending" });
     const parcelBox = await Parcel.countDocuments({ status: "pending", type: "กล่อง" });
     const parcelEnvelope = await Parcel.countDocuments({ status: "pending", type: "ซอง" });
 
-    // 5. ดึงรายการประกาศ / แจ้งเตือนล่าสุด 6 รายการ
+    // get announcements
     const recentAnnouncements = await Announcement.find()
       .sort({ createdAt: -1 })
       .limit(6);
@@ -238,7 +305,7 @@ app.get("/api/rooms/:roomNumber", async (req, res) => {
   }
 });
 
-// Update Room / Tenant Details 
+// Update Room 
 app.put("/api/rooms/:roomNumber", async (req, res) => {
   try {
     const { roomNumber } = req.params;

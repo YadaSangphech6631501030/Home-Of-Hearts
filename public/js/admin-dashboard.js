@@ -77,6 +77,17 @@
         updateText('dash-available-rooms', available);
       }
 
+      // profile menu
+      document.addEventListener('DOMContentLoaded', () => {
+      const accountMenuItems = document.querySelectorAll('.profile-dropdown__item[href="#"]');
+  
+    accountMenuItems.forEach(item => {
+    if (item.textContent.includes('บัญชี')) {
+      item.setAttribute('href', '/admin/account.html'); 
+    }
+  });
+});
+
       // Maintenance Summary
       if (maintRes.status === 'fulfilled' && Array.isArray(maintRes.value)) {
         const maints = maintRes.value;
