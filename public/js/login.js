@@ -41,7 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const username = document.getElementById('username').value.trim();
-      const password = passwordInput ? passwordInput.value : '';
+      const password = passwordInput ? passwordInput.value.trim() : '';
+
+      if (!username || !password) {
+        if (msg) msg.textContent = 'กรุณากรอกชื่อ/อีเมลและรหัสผ่านให้ครบ';
+        return;
+      }
 
       try {
         const response = await fetch('/auth/login', {

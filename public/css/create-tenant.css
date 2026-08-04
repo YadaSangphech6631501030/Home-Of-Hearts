@@ -1,15 +1,17 @@
-/* 1. ล็อกความสูงหน้าจอ และซ่อน Scrollbar เกิน */
+/* =====================
+   layout pages
+======================= */
+
 .tenant-create-page {
   height: 100vh;
   max-height: 100vh;
-  overflow: hidden; /* ป้องกันการเกิด Scrollbar */
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   background: #ffffff;
   color: #202020;
 }
 
-/* 2. ลดความสูงของ Header ลงเล็กน้อย */
 .create-header {
   display: flex;
   align-items: center;
@@ -18,18 +20,16 @@
   padding: 10px 24px;
 }
 
-/* 3. ให้ส่วน Main ขยายเต็มพื้นที่ที่เหลือ (Flex Grow) */
 .tenant-create-main {
   position: relative;
   flex: 1;
-  width: min(1000px, calc(100% - 48px));
+  width: min(1140px, calc(100% - 48px));
   margin: 0 auto;
-  padding: 10px 0 20px;
+  padding: 24px 0 60px;
   display: flex;
-  align-items: center; /* จัดเนื้อหาให้อยู่กึ่งกลางแนวตั้ง */
+  align-items: center;
 }
 
-/* ปุ่มย้อนกลับปรับตำแหน่งให้อยู่พอดี */
 .create-back-button {
   position: absolute;
   top: 24px;
@@ -40,8 +40,8 @@
   height: 42px;
   border-radius: 50%;
   background: #ffffff;
-  color: var(--color-olive, #7d8153);
-  font-size: 0;
+  color: #7d8153;
+  font-size: 24px;
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
@@ -50,21 +50,11 @@
   z-index: 20;
 }
 
-.create-back-button::before {
-  content: "‹";
-  transform: translateY(-1px);
-  color: currentColor;
-  font-size: 34px;
-  font-weight: 700;
-  line-height: 1;
-}
-
 .create-back-button:hover {
   background: #f8f6f4;
   transform: translateX(-3px);
 }
 
-/* 4. ปรับ Grid Layout และ Gap */
 .tenant-create-layout {
   display: grid;
   grid-template-columns: minmax(280px, 340px) minmax(300px, 1fr);
@@ -74,11 +64,10 @@
   padding: 0 20px;
 }
 
-/* 5. ปรับรูปภาพให้กะทัดรัดขึ้น */
 .create-photo {
   width: 100%;
-  max-height: calc(100vh - 120px); /* ล็อกไม่ให้รูปดันหน้าจอสูงเกิน */
-  aspect-ratio: 4 / 5; /* เปลี่ยนจาก 405/605 ให้สั้นลงเล็กน้อย */
+  max-height: calc(100vh - 120px); 
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: 10px;
 }
@@ -90,7 +79,6 @@
   object-fit: cover;
 }
 
-/* 6. ฟอร์มกรอกข้อมูล */
 .tenant-create-form {
   width: min(100%, 400px);
   margin: 0 auto;
@@ -99,19 +87,18 @@
 .tenant-create-form h1 {
   margin: 0 0 18px;
   color: #111111;
-  font-size: 26px; /* ลดขนาดหัวข้อลง */
+  font-size: 26px; 
   font-weight: 800;
   text-align: center;
   letter-spacing: 0;
 }
 
-/* 7. ปรับช่อง Input และ Label ให้กระชับ */
 .tenant-field {
   position: relative;
   display: block;
-  margin-bottom: 12px; /* ลด spacing ระหว่างบรรทัด */
+  margin-bottom: 12px;
   color: #111111;
-  font-size: 16px; /* ลดขนาด Font ตัวหนังสือ */
+  font-size: 16px; 
   font-weight: 700;
 }
 
@@ -165,7 +152,6 @@
   stroke-width: 2;
 }
 
-/* 8. ปรับปุ่ม Submit และ Message */
 .tenant-submit {
   width: 100%;
   min-height: 44px;
@@ -194,17 +180,16 @@
   color: #15803d;
 }
 
-/* 9. หน้าจอ Responsive (แท็บเล็ต/มือถือ) */
 @media (max-width: 900px) {
   .create-back-button {
-    top: 18px;
+    top: 24px;
     left: 0;
   }
 
   .tenant-create-page {
     height: auto;
     min-height: 100vh;
-    overflow: auto; /* บนมือถือยอมให้เลื่อนได้เพื่อป้องกันตัวหนังสือทับกัน */
+    overflow: auto; 
   }
 
   .tenant-create-layout {

@@ -149,6 +149,10 @@ app.use("/js", express.static(path.join(__dirname, "public/js")));
 app.post("/auth/login", async (req, res) => {
   const { username, password } = req.body;
 
+  if (!username || !password) {
+    return res.status(400).json({ success: false, message: "กรุณากรอกชื่อ/อีเมลและรหัสผ่านให้ครบ" });
+  }
+
   try {
     const adminUser = await User.findOne({
       role: "admin",
@@ -348,14 +352,18 @@ app.post("/api/rooms/:roomNumber/tenant-account", async (req, res) => {
     }
 
     const { roomNumber } = req.params;
-    const { name, email, password, confirmPassword } = req.body;
+    const { name, email, phone, password, confirmPassword } = req.body;
 
-    if (!name || !email || !password || !confirmPassword) {
-      return res.status(400).json({ success: false, message: "กรุณากรอกข้อมูลให้ครบ" });
+    if (!name || !email || !phone || !password || !confirmPassword || !roomNumber) {
+      return res.status(400).json({ success: false, message: "กรุณากรอกข้อมูลให้ครบทุกช่อง" });
     }
 
     if (password !== confirmPassword) {
       return res.status(400).json({ success: false, message: "รหัสผ่านไม่ตรงกัน" });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({ success: false, message: "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร" });
     }
 
     const room = await Room.findOne({ roomNumber });
@@ -375,19 +383,21 @@ app.post("/api/rooms/:roomNumber/tenant-account", async (req, res) => {
       username: roomNumber,
       name,
       email,
+      phone,
       password: hashedPassword,
       role: "user",
     });
 
     room.status = "occupied";
     room.tenant.fullName = name;
+    room.tenant.phone = phone;
     room.tenant.email = email;
     await room.save();
 
     res.status(201).json({
       success: true,
       data: {
-        user: { id: user._id, username: user.username, name: user.name, email: user.email, role: user.role },
+        user: { id: user._id, username: user.username, name: user.name, email: user.email, phone: user.phone, role: user.role },
         room,
       },
     });
@@ -429,6 +439,16 @@ app.put("/api/rooms/:roomNumber", async (req, res) => {
     const { roomNumber } = req.params;
     const { status, tenant, price } = req.body;
 
+    const tenantEmail = tenant && tenant.email ? tenant.email.trim() : "";
+
+    if (tenantEmail) {
+      const existingEmailUser = await User.findOne({ email: tenantEmail, username: { $ne: roomNumber } });
+
+      if (existingEmailUser) {
+        return res.status(409).json({ success: false, message: "อีเมลนี้ถูกใช้งานแล้ว" });
+      }
+    }
+
     const updatedRoom = await Room.findOneAndUpdate(
       { roomNumber },
       {
@@ -450,6 +470,19 @@ app.put("/api/rooms/:roomNumber", async (req, res) => {
 
     if (!updatedRoom) {
       return res.status(404).json({ success: false, message: "Room not found" });
+    }
+
+    if (tenant) {
+      await User.findOneAndUpdate(
+        { username: roomNumber, role: "user" },
+        {
+          $set: {
+            name: tenant.fullName || "",
+            phone: tenant.phone || "",
+            ...(tenantEmail && { email: tenantEmail }),
+          },
+        }
+      );
     }
 
     res.json({ success: true, data: updatedRoom });

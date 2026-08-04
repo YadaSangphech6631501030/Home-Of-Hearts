@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -50,13 +51,18 @@
         </label>
 
         <label class="tenant-field">
+          <span>เบอร์โทร</span>
+          <input id="tenant-phone" name="phone" type="tel" autocomplete="tel" required />
+        </label>
+
+        <label class="tenant-field">
           <span>ห้อง</span>
           <input id="tenant-room" name="room" type="text" readonly required />
         </label>
 
         <label class="tenant-field tenant-field--password">
           <span>รหัสผ่าน</span>
-          <input id="tenant-password" name="password" type="password" autocomplete="new-password" required />
+          <input id="tenant-password" name="password" type="password" autocomplete="new-password" minlength="8" required />
           <button class="tenant-eye-button" type="button" data-target="tenant-password" aria-label="แสดง/ซ่อนรหัสผ่าน">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
@@ -64,7 +70,7 @@
 
         <label class="tenant-field tenant-field--password">
           <span>ยืนยันรหัสผ่าน</span>
-          <input id="tenant-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" required />
+          <input id="tenant-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required />
           <button class="tenant-eye-button" type="button" data-target="tenant-confirm-password" aria-label="แสดง/ซ่อนรหัสผ่าน">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>

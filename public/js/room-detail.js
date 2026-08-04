@@ -52,8 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const fullName = (tenant.fullName || "").trim() || "-";
     const phone = tenant.phone || "-";
     const email = tenant.email || "-";
-    const moveIn = tenant.moveInDate;
-    const contractEnd = tenant.contractEndDate;
+    const moveIn = tenant.moveInDate || tenant.startDate;
+    const contractEnd = tenant.contractEndDate || tenant.endDate;
 
     if (tenantName) tenantName.textContent = fullName;
     if (tenantPhone) tenantPhone.textContent = phone;
@@ -134,12 +134,12 @@ document.addEventListener("DOMContentLoaded", () => {
         fullName: modalName.value,
         phone: modalPhone.value,
         email: modalEmail.value,
-        moveInDate: modalMoveIn.value || null,
-        contractEndDate: modalContractEnd.value || null,
+        startDate: modalMoveIn.value || "",
+        endDate: modalContractEnd.value || "",
       };
 
       try {
-        const response = await fetch(`/api/rooms/${roomNumber}/tenant`, {
+        const response = await fetch(`/api/rooms/${encodeURIComponent(roomNumber)}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ tenant: updatedTenant }),
