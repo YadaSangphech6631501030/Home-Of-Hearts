@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ระบบประกาศ | Home of Hearts Residence</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/admin-dashboard.css" />
   <link rel="stylesheet" href="/css/announcements.css" />
@@ -20,7 +22,8 @@
     <a class="brand" href="/admin/index.html" aria-label="Home of Hearts Residence">
       <div class="brand__icon" aria-hidden="true">
         <svg viewBox="0 0 512 512" fill="currentColor">
-          <path d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z" />
+          <path
+            d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z" />
         </svg>
       </div>
       <div class="brand__text">
@@ -53,8 +56,33 @@
           <span class="avatar" id="avatar-initials" aria-hidden="true">ส</span>
           <span class="profile-caret">⌄</span>
         </button>
+
+        <div class="profile-dropdown" id="profile-dropdown" role="menu">
+          <div class="profile-summary">
+            <span class="avatar avatar--small" id="avatar-dropdown-initials" aria-hidden="true">ส</span>
+            <span id="profile-menu-name">สำนักงานหอพัก</span>
+          </div>
+
+          <a class="profile-dropdown__item" href="/admin/account.html" role="menuitem">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="7" r="3.5"></circle>
+              <path d="M5 20c0-3.866 3.134-7 7-7s7 3.134 7 7"></path>
+            </svg>
+            <span>บัญชี</span>
+          </a>
+
+          <button class="profile-dropdown__item" type="button" id="logout-button" role="menuitem">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>ออกจากระบบ</span>
+          </button>
+        </div>
       </div>
-    </div>
   </header>
 
   <!-- Main Content -->
@@ -63,21 +91,19 @@
       <h2 class="page-title">ระบบประกาศ 📢</h2>
     </div>
 
-    <!-- ปุ่มเพิ่มประกาศใหม่ -->
+    <!-- add new announcement -->
     <div class="action-buttons-wrapper">
       <button class="btn btn-olive" id="open-add-modal-btn" type="button">+ เพิ่มประกาศใหม่</button>
     </div>
 
-    <!-- รายการประกาศ -->
+    <!-- announcement list -->
     <div class="announcement-list" id="announcement-list-container">
-      <!-- ข้อมูลจะถูก render ผ่าน JS -->
     </div>
   </main>
 
-  <!-- Modal เพิ่มประกาศใหม่ (ตรงตามรูปภาพที่คุณแนบ) -->
   <div class="modal-overlay" id="announcement-modal">
     <div class="announcement-modal-card">
-      
+
       <!-- Modal Header -->
       <div class="modal-top-bar">
         <div class="author-section">
@@ -100,11 +126,12 @@
           <label class="form-label">หัวข้อ</label>
           <input type="text" id="announcement-title" class="input-inline" placeholder="พิมพ์ที่นี่" required />
         </div>
-        
+
         <hr class="modal-divider light" />
-    
+
         <div class="form-row content-row">
-          <textarea id="announcement-content" class="textarea-plain" placeholder="พิมพ์ที่นี่" rows="6" required></textarea>
+          <textarea id="announcement-content" class="textarea-plain" placeholder="พิมพ์ที่นี่" rows="6"
+            required></textarea>
         </div>
 
         <!-- Action Footer -->
@@ -112,7 +139,8 @@
           <button type="submit" class="btn-publish">ประกาศ</button>
           <label class="btn-upload-img" title="แนบรูปภาพ">
             <input type="file" id="announcement-image" accept="image/*" hidden />
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7a8264" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7a8264" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
               <circle cx="8.5" cy="8.5" r="1.5"></circle>
               <polyline points="21 15 16 10 5 21"></polyline>
@@ -126,7 +154,7 @@
   </div>
 
   <!-- view announcement modal -->
-   <div class="modal-overlay" id="view-announcement-modal">
+  <div class="modal-overlay" id="view-announcement-modal">
     <div class="announcement-modal-card">
       <div class="modal-top-bar">
         <div class="author-section">
@@ -148,12 +176,12 @@
           <span class="form-label">หัวข้อ</span>
           <div class="view-title" id="view-modal-title">-</div>
         </div>
-        
+
         <hr class="modal-divider light" />
 
         <div class="view-body" id="view-modal-content">
         </div>
-  
+
         <div class="view-image-container" id="view-modal-image-container" style="display: none;">
           <img id="view-modal-image" src="" alt="รูปภาพประกาศ" />
         </div>
@@ -169,4 +197,5 @@
   <script src="/js/admin-dashboard.js"></script>
   <script src="/js/announcements.js"></script>
 </body>
+
 </html>
