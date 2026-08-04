@@ -1,9 +1,51 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
+const User = require("./models/User");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SESSION_SECRET = process.env.SESSION_SECRET;
+
+if (!SESSION_SECRET) {
+  throw new Error("Missing SESSION_SECRET environment variable");
+}
+
+function createSessionToken(payload) {
+  const body = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const signature = crypto
+    .createHmac("sha256", SESSION_SECRET)
+    .update(body)
+    .digest("base64url");
+
+  return body + "." + signature;
+}
+
+function verifySessionToken(token) {
+  if (!token || !token.includes(".")) return null;
+
+  const [body, signature] = token.split(".");
+  const expected = crypto
+    .createHmac("sha256", SESSION_SECRET)
+    .update(body)
+    .digest("base64url");
+
+  if (signature !== expected) return null;
+
+  try {
+    return JSON.parse(Buffer.from(body, "base64url").toString("utf8"));
+  } catch (error) {
+    return null;
+  }
+}
+
+function getSessionUser(req) {
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+  return verifySessionToken(token);
+}
 
 // MongoDB
 const MONGO_URI =
@@ -107,20 +149,30 @@ app.use("/js", express.static(path.join(__dirname, "public/js")));
 app.post("/auth/login", async (req, res) => {
   const { username, password } = req.body;
 
-  try{
-  if (
-      (username === "admin" || username === "admin@example.com") &&
-      password === "12345678"
-    ) {
+  if (!username || !password) {
+    return res.status(400).json({ success: false, message: "กรุณากรอกชื่อ/อีเมลและรหัสผ่านให้ครบ" });
+  }
+
+  try {
+    const adminUser = await User.findOne({
+      role: "admin",
+      $or: [{ username }, { email: username }],
+    });
+
+    if (adminUser && await bcrypt.compare(password, adminUser.password)) {
+      const token = createSessionToken({ role: "admin", userId: String(adminUser._id) });
+
       return res.json({
         success: true,
-        token: "mock-jwt-token-admin",
+        token,
         user: {
-          role: "admin",
-          name: "สำนักงานหอพักบ้านแห่งหัวใจ",
+          id: adminUser._id,
+          role: adminUser.role,
+          username: adminUser.username,
+          name: adminUser.name || adminUser.username || "สำนักงานหอพักบ้านแห่งหัวใจ",
           roomNumber: "-",
-          phone: "-",
-          email: "admin@example.com",
+          phone: adminUser.phone || "-",
+          email: adminUser.email || "-",
         },
       });
     }
@@ -128,11 +180,12 @@ app.post("/auth/login", async (req, res) => {
     const room = await Room.findOne({ roomNumber: username });
 
     if (room && room.tenant && room.tenant.fullName) {
+      if (password === room.tenant.phone || password === "12345678") {
+        const token = createSessionToken({ role: "tenant", roomNumber: room.roomNumber });
 
-    if (password === room.tenant.phone || password === "12345678") {
         return res.json({
           success: true,
-          token: `mock-token-room-${room.roomNumber}`,
+          token,
           user: {
             role: "tenant",
             name: room.tenant.fullName,
@@ -156,27 +209,38 @@ app.post("/auth/login", async (req, res) => {
 // get user info
 app.get("/api/me", async (req, res) => {
   try {
-    const roomNumber = req.query.roomNumber || req.headers["x-room-number"];
+    const sessionUser = getSessionUser(req);
 
-    if (!roomNumber || roomNumber === "-") {
+    if (!sessionUser) {
+      return res.status(401).json({ success: false, message: "กรุณาเข้าสู่ระบบอีกครั้ง" });
+    }
+
+    if (sessionUser.role === "admin") {
+      const adminUser = await User.findOne({ _id: sessionUser.userId, role: "admin" });
+
+      if (!adminUser) {
+        return res.status(404).json({ success: false, message: "ไม่พบข้อมูลบัญชีผู้ดูแล" });
+      }
+
       return res.json({
         success: true,
         data: {
-          role: "admin",
-          name: "สำนักงานหอพักบ้านแห่งหัวใจ",
-          room: "-",
-          phone: "02-123-4567",
-          email: "admin@homeofhearts.com",
+          id: adminUser._id,
+          role: adminUser.role,
+          username: adminUser.username,
+          name: adminUser.name || adminUser.username || "สำนักงานหอพักบ้านแห่งหัวใจ",
+          room: "Admin",
+          phone: adminUser.phone || "-",
+          email: adminUser.email || "-",
         },
       });
     }
 
-    const room = await Room.findOne({ roomNumber });
+    const room = await Room.findOne({ roomNumber: sessionUser.roomNumber });
 
     if (!room || !room.tenant) {
       return res.status(404).json({ success: false, message: "ไม่พบข้อมูลผู้เช่า" });
     }
-
 
     res.json({
       success: true,
@@ -278,6 +342,70 @@ app.get("/api/rooms", async (req, res) => {
   }
 });
 
+// Create tenant account and attach it to a room
+app.post("/api/rooms/:roomNumber/tenant-account", async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+
+    if (!sessionUser || sessionUser.role !== "admin") {
+      return res.status(403).json({ success: false, message: "ต้องเป็นผู้ดูแลระบบเท่านั้น" });
+    }
+
+    const { roomNumber } = req.params;
+    const { name, email, phone, password, confirmPassword } = req.body;
+
+    if (!name || !email || !phone || !password || !confirmPassword || !roomNumber) {
+      return res.status(400).json({ success: false, message: "กรุณากรอกข้อมูลให้ครบทุกช่อง" });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({ success: false, message: "รหัสผ่านไม่ตรงกัน" });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({ success: false, message: "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร" });
+    }
+
+    const room = await Room.findOne({ roomNumber });
+
+    if (!room) {
+      return res.status(404).json({ success: false, message: "ไม่พบห้องพัก" });
+    }
+
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(409).json({ success: false, message: "อีเมลนี้ถูกใช้งานแล้ว" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({
+      username: roomNumber,
+      name,
+      email,
+      phone,
+      password: hashedPassword,
+      role: "user",
+    });
+
+    room.status = "occupied";
+    room.tenant.fullName = name;
+    room.tenant.phone = phone;
+    room.tenant.email = email;
+    await room.save();
+
+    res.status(201).json({
+      success: true,
+      data: {
+        user: { id: user._id, username: user.username, name: user.name, email: user.email, phone: user.phone, role: user.role },
+        room,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Fetch room details by room number
 app.get("/api/rooms/:roomNumber", async (req, res) => {
   try {
@@ -311,6 +439,16 @@ app.put("/api/rooms/:roomNumber", async (req, res) => {
     const { roomNumber } = req.params;
     const { status, tenant, price } = req.body;
 
+    const tenantEmail = tenant && tenant.email ? tenant.email.trim() : "";
+
+    if (tenantEmail) {
+      const existingEmailUser = await User.findOne({ email: tenantEmail, username: { $ne: roomNumber } });
+
+      if (existingEmailUser) {
+        return res.status(409).json({ success: false, message: "อีเมลนี้ถูกใช้งานแล้ว" });
+      }
+    }
+
     const updatedRoom = await Room.findOneAndUpdate(
       { roomNumber },
       {
@@ -332,6 +470,19 @@ app.put("/api/rooms/:roomNumber", async (req, res) => {
 
     if (!updatedRoom) {
       return res.status(404).json({ success: false, message: "Room not found" });
+    }
+
+    if (tenant) {
+      await User.findOneAndUpdate(
+        { username: roomNumber, role: "user" },
+        {
+          $set: {
+            name: tenant.fullName || "",
+            phone: tenant.phone || "",
+            ...(tenantEmail && { email: tenantEmail }),
+          },
+        }
+      );
     }
 
     res.json({ success: true, data: updatedRoom });

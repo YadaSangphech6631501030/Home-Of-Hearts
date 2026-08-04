@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Modal Elements
   const tenantModal = document.getElementById("tenant-modal");
+  const btnAddTenant = document.getElementById("btn-add-tenant");
   const btnEditTenant = document.getElementById("btn-edit-tenant");
   const modalClose = document.getElementById("modal-close");
   const modalBtnCancel = document.getElementById("modal-btn-cancel");
@@ -51,8 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const fullName = (tenant.fullName || "").trim() || "-";
     const phone = tenant.phone || "-";
     const email = tenant.email || "-";
-    const moveIn = tenant.moveInDate;
-    const contractEnd = tenant.contractEndDate;
+    const moveIn = tenant.moveInDate || tenant.startDate;
+    const contractEnd = tenant.contractEndDate || tenant.endDate;
 
     if (tenantName) tenantName.textContent = fullName;
     if (tenantPhone) tenantPhone.textContent = phone;
@@ -115,6 +116,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  if (btnAddTenant) {
+    btnAddTenant.addEventListener("click", () => {
+      window.location.href = `/admin/create-tenant.html?room=${encodeURIComponent(roomNumber)}`;
+    });
+  }
+
   if (btnEditTenant) btnEditTenant.addEventListener("click", openModal);
   if (modalClose) modalClose.addEventListener("click", closeModal);
   if (modalBtnCancel) modalBtnCancel.addEventListener("click", closeModal);
@@ -127,12 +134,12 @@ document.addEventListener("DOMContentLoaded", () => {
         fullName: modalName.value,
         phone: modalPhone.value,
         email: modalEmail.value,
-        moveInDate: modalMoveIn.value || null,
-        contractEndDate: modalContractEnd.value || null,
+        startDate: modalMoveIn.value || "",
+        endDate: modalContractEnd.value || "",
       };
 
       try {
-        const response = await fetch(`/api/rooms/${roomNumber}/tenant`, {
+        const response = await fetch(`/api/rooms/${encodeURIComponent(roomNumber)}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ tenant: updatedTenant }),
