@@ -57,14 +57,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const data = await response.json();
         if (!response.ok) {
-          if (msg) msg.textContent = data.error || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
+          if (msg) msg.textContent = data.error || data.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
           return;
         }
 
         localStorage.setItem(CONFIG.TOKEN_KEY, data.token || 'admin-session');
         localStorage.setItem(CONFIG.USER_KEY, JSON.stringify(data.user || { name: username }));
 
-        window.location.href = '/admin/index.html';
+        window.location.href = data.user && (data.user.role === 'tenant' || data.user.role === 'user') ? '/user/index.html' : '/admin/index.html';
       } catch (error) {
         if (msg) msg.textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
         console.error('Login error:', error);

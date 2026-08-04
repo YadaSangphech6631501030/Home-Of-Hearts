@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ชำระค่าหอพัก | Home of Hearts Residence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/user-home.css" />
+</head>
+<body class="user-page">
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+  <header class="user-header">
+    <a class="user-brand" href="/user/index.html" aria-label="Home of Hearts Residence">
+      <span class="user-brand__icon" aria-hidden="true"><svg viewBox="0 0 512 512" fill="currentColor"><path d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z"/></svg></span>
+      <span><strong>Home of Hearts Residence</strong><small>หอพักบ้านแห่งหัวใจ</small></span>
+    </a>
+    <nav class="user-nav" aria-label="เมนูผู้เช่า">
+      <a class="" href="/user/index.html">หน้าหลัก</a>
+      <a class="" href="/user/contact.html">ติดต่อ</a>
+      <a class="" href="/user/maintenance.html">แจ้งซ่อม</a>
+      <a class="is-active" href="/user/billing.html">ชำระค่าหอพัก</a>
+      <a class="" href="/user/parcels.html">พัสดุ</a>
+      <a class="" href="/user/announcements.html">ประกาศ</a>
+    </nav>
+    <div class="user-actions">
+      <button class="user-bell" type="button" aria-label="แจ้งเตือน"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></button>
+      <button class="user-profile" type="button" id="user-profile-trigger" aria-expanded="false" aria-controls="user-profile-dropdown"><span id="user-profile-name">ผู้เช่า...</span><span class="user-avatar" id="user-avatar">ผ</span><span>⌄</span></button>
+      <div class="user-profile-dropdown" id="user-profile-dropdown" role="menu">
+        <div class="profile-summary"><span class="user-avatar user-avatar--small" id="user-menu-avatar">ผ</span><strong id="user-menu-name">ผู้เช่า</strong></div>
+        <button type="button" id="user-logout" role="menuitem">ออกจากระบบ</button>
+      </div>
+    </div>
+  </header>
+  <main class="user-main user-main--simple">
+    <h1 class="module-title">ชำระค่าหอพัก</h1>
+    <section class="user-card placeholder-card">
+      <h2>ชำระค่าหอพัก</h2>
+      <p>เตรียมใส่ข้อมูลจริงจากระบบ</p>
+    </section>
+  </main>
+  <script src="/js/user-home.js"></script>
+</body>
+</html>
