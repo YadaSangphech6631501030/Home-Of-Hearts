@@ -56,8 +56,33 @@
           <span class="avatar" id="avatar-initials" aria-hidden="true">ส</span>
           <span class="profile-caret">⌄</span>
         </button>
+
+        <div class="profile-dropdown" id="profile-dropdown" role="menu">
+          <div class="profile-summary">
+            <span class="avatar avatar--small" id="avatar-dropdown-initials" aria-hidden="true">ส</span>
+            <span id="profile-menu-name">สำนักงานหอพัก</span>
+          </div>
+
+          <a class="profile-dropdown__item" href="/admin/account.html" role="menuitem">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="7" r="3.5"></circle>
+              <path d="M5 20c0-3.866 3.134-7 7-7s7 3.134 7 7"></path>
+            </svg>
+            <span>บัญชี</span>
+          </a>
+
+          <button class="profile-dropdown__item" type="button" id="logout-button" role="menuitem">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>ออกจากระบบ</span>
+          </button>
+        </div>
       </div>
-    </div>
   </header>
 
   <!-- Main Content -->
