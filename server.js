@@ -177,6 +177,30 @@ app.post("/auth/login", async (req, res) => {
       });
     }
 
+    const tenantUser = await User.findOne({
+      role: "user",
+      $or: [{ username }, { email: username }],
+    });
+
+    if (tenantUser && await bcrypt.compare(password, tenantUser.password)) {
+      const room = await Room.findOne({ roomNumber: tenantUser.username });
+      const token = createSessionToken({ role: "tenant", roomNumber: tenantUser.username, userId: String(tenantUser._id) });
+
+      return res.json({
+        success: true,
+        token,
+        user: {
+          id: tenantUser._id,
+          role: "tenant",
+          username: tenantUser.username,
+          name: tenantUser.name || (room && room.tenant && room.tenant.fullName) || "ผู้เช่า",
+          roomNumber: tenantUser.username,
+          phone: tenantUser.phone || (room && room.tenant && room.tenant.phone) || "-",
+          email: tenantUser.email || (room && room.tenant && room.tenant.email) || "-",
+        },
+      });
+    }
+
     const room = await Room.findOne({ roomNumber: username });
 
     if (room && room.tenant && room.tenant.fullName) {
@@ -236,20 +260,27 @@ app.get("/api/me", async (req, res) => {
       });
     }
 
-    const room = await Room.findOne({ roomNumber: sessionUser.roomNumber });
+    const tenantUser = sessionUser.userId
+      ? await User.findOne({ _id: sessionUser.userId, role: "user" })
+      : null;
+    const roomNumber = tenantUser ? tenantUser.username : sessionUser.roomNumber;
+    const room = await Room.findOne({ roomNumber });
 
-    if (!room || !room.tenant) {
+    if (!tenantUser && (!room || !room.tenant)) {
       return res.status(404).json({ success: false, message: "ไม่พบข้อมูลผู้เช่า" });
     }
 
     res.json({
       success: true,
       data: {
+        id: tenantUser ? tenantUser._id : undefined,
         role: "tenant",
-        name: room.tenant.fullName || "ไม่ระบุชื่อ",
-        room: room.roomNumber,
-        phone: room.tenant.phone || "-",
-        email: room.tenant.email || "-",
+        username: tenantUser ? tenantUser.username : room.roomNumber,
+        name: (tenantUser && tenantUser.name) || (room && room.tenant && room.tenant.fullName) || "ไม่ระบุชื่อ",
+        room: roomNumber,
+        roomNumber,
+        phone: (tenantUser && tenantUser.phone) || (room && room.tenant && room.tenant.phone) || "-",
+        email: (tenantUser && tenantUser.email) || (room && room.tenant && room.tenant.email) || "-",
       },
     });
   } catch (error) {
@@ -325,6 +356,37 @@ app.get("/api/dashboard/summary", async (req, res) => {
   } catch (err) {
     console.error("Dashboard Summary Error:", err);
     res.status(500).json({ success: false, error: "ไม่สามารถดึงข้อมูลสรุปได้" });
+  }
+});
+
+// user homepage data - only for the logged-in tenant
+app.get('/api/user/home-data', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+
+    if (!sessionUser || sessionUser.role !== 'tenant') {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้เช่าเท่านั้น' });
+    }
+
+    const roomNumber = sessionUser.roomNumber;
+    const [latestBill, pendingParcels, latestMaintenance, announcements] = await Promise.all([
+      Billing.findOne({ roomNumber }).sort({ dueDate: -1, createdAt: -1 }),
+      Parcel.find({ roomNumber, status: { $nin: ['completed', 'เสร็จสิ้น'] } }).sort({ createdAt: -1 }),
+      Maintenance.findOne({ roomNumber }).sort({ createdAt: -1 }),
+      Announcement.find().sort({ createdAt: -1 }).limit(2),
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        billing: latestBill,
+        pendingParcelCount: pendingParcels.length,
+        maintenance: latestMaintenance,
+        announcements,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
