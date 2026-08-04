@@ -34,7 +34,8 @@
 
   // Profile Dropdown Events
   if (profileTrigger && profileMenu) {
-    profileTrigger.addEventListener("click", () => {
+    profileTrigger.addEventListener("click", (event) => {
+      event.stopPropagation();
       const isOpen = profileMenu.classList.toggle("is-open");
       profileTrigger.setAttribute("aria-expanded", String(isOpen));
     });

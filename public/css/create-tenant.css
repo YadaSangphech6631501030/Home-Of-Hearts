@@ -1,0 +1,224 @@
+/* 1. ล็อกความสูงหน้าจอ และซ่อน Scrollbar เกิน */
+.tenant-create-page {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden; /* ป้องกันการเกิด Scrollbar */
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  color: #202020;
+}
+
+/* 2. ลดความสูงของ Header ลงเล็กน้อย */
+.create-header {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  min-height: 56px;
+  padding: 10px 24px;
+}
+
+/* 3. ให้ส่วน Main ขยายเต็มพื้นที่ที่เหลือ (Flex Grow) */
+.tenant-create-main {
+  position: relative;
+  flex: 1;
+  width: min(1000px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 10px 0 20px;
+  display: flex;
+  align-items: center; /* จัดเนื้อหาให้อยู่กึ่งกลางแนวตั้ง */
+}
+
+/* ปุ่มย้อนกลับปรับตำแหน่งให้อยู่พอดี */
+.create-back-button {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--color-olive, #7d8153);
+  font-size: 0;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  z-index: 20;
+}
+
+.create-back-button::before {
+  content: "‹";
+  transform: translateY(-1px);
+  color: currentColor;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.create-back-button:hover {
+  background: #f8f6f4;
+  transform: translateX(-3px);
+}
+
+/* 4. ปรับ Grid Layout และ Gap */
+.tenant-create-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) minmax(300px, 1fr);
+  gap: 40px;
+  align-items: center;
+  width: 100%;
+  padding: 0 20px;
+}
+
+/* 5. ปรับรูปภาพให้กะทัดรัดขึ้น */
+.create-photo {
+  width: 100%;
+  max-height: calc(100vh - 120px); /* ล็อกไม่ให้รูปดันหน้าจอสูงเกิน */
+  aspect-ratio: 4 / 5; /* เปลี่ยนจาก 405/605 ให้สั้นลงเล็กน้อย */
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.create-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 6. ฟอร์มกรอกข้อมูล */
+.tenant-create-form {
+  width: min(100%, 400px);
+  margin: 0 auto;
+}
+
+.tenant-create-form h1 {
+  margin: 0 0 18px;
+  color: #111111;
+  font-size: 26px; /* ลดขนาดหัวข้อลง */
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0;
+}
+
+/* 7. ปรับช่อง Input และ Label ให้กระชับ */
+.tenant-field {
+  position: relative;
+  display: block;
+  margin-bottom: 12px; /* ลด spacing ระหว่างบรรทัด */
+  color: #111111;
+  font-size: 16px; /* ลดขนาด Font ตัวหนังสือ */
+  font-weight: 700;
+}
+
+.tenant-field span {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.tenant-field input {
+  width: 100%;
+  height: 36px;
+  border: 0;
+  border-bottom: 1px solid #bcb7b4;
+  outline: 0;
+  background: transparent;
+  color: #333333;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.tenant-field input:focus {
+  border-bottom-color: var(--color-olive, #7d8153);
+}
+
+.tenant-field--password input {
+  padding-right: 40px;
+}
+
+.tenant-eye-button {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  color: var(--color-olive, #7d8153);
+  cursor: pointer;
+}
+
+.tenant-eye-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+/* 8. ปรับปุ่ม Submit และ Message */
+.tenant-submit {
+  width: 100%;
+  min-height: 44px;
+  margin: 16px 0 16px;
+  border: 0;
+  border-radius: 7px;
+  background: #f9f6f4;
+  color: #111111;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.26);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tenant-message {
+  min-height: 20px;
+  margin: 0;
+  padding-top: 12px;
+  color: #b42318;
+  font-size: 13px;
+  text-align: center;
+}
+
+.tenant-message.is-success {
+  color: #15803d;
+}
+
+/* 9. หน้าจอ Responsive (แท็บเล็ต/มือถือ) */
+@media (max-width: 900px) {
+  .create-back-button {
+    top: 18px;
+    left: 0;
+  }
+
+  .tenant-create-page {
+    height: auto;
+    min-height: 100vh;
+    overflow: auto; /* บนมือถือยอมให้เลื่อนได้เพื่อป้องกันตัวหนังสือทับกัน */
+  }
+
+  .tenant-create-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 30px 0 0;
+  }
+
+  .create-photo {
+    aspect-ratio: 16 / 9;
+    max-height: 200px;
+  }
+
+  .tenant-create-form {
+    width: 100%;
+  }
+}

@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Modal Elements
   const tenantModal = document.getElementById("tenant-modal");
+  const btnAddTenant = document.getElementById("btn-add-tenant");
   const btnEditTenant = document.getElementById("btn-edit-tenant");
   const modalClose = document.getElementById("modal-close");
   const modalBtnCancel = document.getElementById("modal-btn-cancel");
@@ -113,6 +114,12 @@ document.addEventListener("DOMContentLoaded", () => {
       tenantModal.classList.remove("is-open");
       tenantModal.setAttribute("aria-hidden", "true");
     }
+  }
+
+  if (btnAddTenant) {
+    btnAddTenant.addEventListener("click", () => {
+      window.location.href = `/admin/create-tenant.html?room=${encodeURIComponent(roomNumber)}`;
+    });
   }
 
   if (btnEditTenant) btnEditTenant.addEventListener("click", openModal);

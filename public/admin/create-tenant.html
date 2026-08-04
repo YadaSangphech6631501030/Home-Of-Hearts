@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>สมัครบัญชี | Home of Hearts Residence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/admin-dashboard.css" />
+  <link rel="stylesheet" href="/css/create-tenant.css" />
+</head>
+<body class="tenant-create-page">
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+
+  <header class="create-header">
+    <a class="brand" href="/admin/index.html" aria-label="Home of Hearts Residence">
+      <div class="brand__icon" aria-hidden="true">
+        <svg viewBox="0 0 512 512" fill="currentColor">
+          <path d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z" />
+        </svg>
+      </div>
+      <div class="brand__text">
+        <div class="brand__title">Home of Hearts Residence</div>
+        <div class="brand__subtitle">หอพักบ้านแห่งหัวใจ</div>
+      </div>
+    </a>
+  </header>
+
+  <main class="tenant-create-main">
+    <a class="create-back-button" id="create-back-button" href="/admin/dormitory.html" aria-label="กลับหน้าก่อนหน้า">‹</a>
+
+    <section class="tenant-create-layout">
+      <div class="create-photo">
+        <img src="/images/dormitory.png" alt="ทางเดินหอพัก Home of Hearts Residence" />
+      </div>
+
+      <form class="tenant-create-form" id="tenant-create-form">
+        <h1>สมัครบัญชี</h1>
+
+        <label class="tenant-field">
+          <span>ชื่อ</span>
+          <input id="tenant-name" name="name" type="text" autocomplete="name" required />
+        </label>
+
+        <label class="tenant-field">
+          <span>อีเมล</span>
+          <input id="tenant-email" name="email" type="email" autocomplete="email" required />
+        </label>
+
+        <label class="tenant-field">
+          <span>ห้อง</span>
+          <input id="tenant-room" name="room" type="text" readonly required />
+        </label>
+
+        <label class="tenant-field tenant-field--password">
+          <span>รหัสผ่าน</span>
+          <input id="tenant-password" name="password" type="password" autocomplete="new-password" required />
+          <button class="tenant-eye-button" type="button" data-target="tenant-password" aria-label="แสดง/ซ่อนรหัสผ่าน">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </label>
+
+        <label class="tenant-field tenant-field--password">
+          <span>ยืนยันรหัสผ่าน</span>
+          <input id="tenant-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" required />
+          <button class="tenant-eye-button" type="button" data-target="tenant-confirm-password" aria-label="แสดง/ซ่อนรหัสผ่าน">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </label>
+
+        <button class="tenant-submit" type="submit">สมัครบัญชี</button>
+        <p class="tenant-message" id="tenant-message"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="/js/create-tenant.js"></script>
+</body>
+</html>
