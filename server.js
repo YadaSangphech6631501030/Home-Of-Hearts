@@ -659,6 +659,23 @@ app.post("/api/rooms/:roomNumber/checkout", async (req, res) => {
   }
 });
 
+
+// user parcels - only parcels for the logged-in tenant room
+app.get('/api/user/parcels', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+
+    if (!sessionUser || sessionUser.role !== 'tenant') {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้เช่าเท่านั้น' });
+    }
+
+    const parcels = await Parcel.find({ roomNumber: sessionUser.roomNumber }).sort({ createdAt: -1 });
+    res.json({ success: true, data: parcels });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // get parcels pages
 app.get('/api/parcels', async (req, res) => {
   try {

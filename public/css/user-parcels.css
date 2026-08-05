@@ -1,0 +1,823 @@
+/* =======================
+   USER PARCELS PAGE STYLES
+   ======================= */
+.user-parcels-main {
+  width: min(1340px, calc(100% - 64px));
+  margin: 0 auto;
+  padding: 30px 0 72px;
+}
+
+.parcels-page-title {
+  margin: 0 0 28px;
+  text-align: center;
+  color: #111111;
+  font-size: 28px;
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+/* =======================
+   FILTER CARD & CONTROLS
+   ======================= */
+.user-filter-card {
+  margin: 0 auto 34px;
+  padding: 18px 24px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.filter-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.filter-controls-group::-webkit-scrollbar { display: none; }
+
+.filter-pill-select,
+.pill-date-wrapper input,
+.search-pill-input {
+  height: 44px;
+  border: 1px solid #d8d0cc;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #55504d;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  outline: none;
+}
+
+.filter-pill-select {
+  min-width: 148px;
+  padding: 0 42px 0 18px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%236f6a67' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+}
+
+.date-filter-item,
+.search-filter-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #55504d;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pill-date-wrapper input {
+  width: 152px;
+  padding: 0 14px;
+}
+
+.search-filter-item { position: relative; }
+
+.search-filter-item label {
+  position: absolute;
+  left: 18px;
+  color: #77716e;
+  pointer-events: none;
+}
+
+.search-pill-input {
+  width: 188px;
+  padding: 0 42px 0 66px;
+}
+
+.search-filter-item::after {
+  content: "⌕";
+  position: absolute;
+  right: 17px;
+  color: #6f6a67;
+  font-size: 26px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ========
+    DATE
+   ========== */
+.last-update-bar {
+  margin: -78px 30px 44px auto;
+  width: max-content;
+  color: #888181;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.user-table-card {
+  min-height: 420px;
+  padding: 42px 28px 32px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+}
+
+.user-parcel-table {
+  width: 100%;
+  min-width: 1040px;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.user-parcel-table th {
+  padding: 18px 14px 26px;
+  border-bottom: 1px solid #ece7e4;
+  color: #222222;
+  font-size: 17px;
+  line-height: 1.3;
+  font-weight: 800;
+}
+
+.user-parcel-table td {
+  padding: 24px 14px;
+  border-bottom: 1px solid #f0ece9;
+  color: #55504d;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.status-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.dot-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-orange { background: #ff9800; }
+.dot-green { background: #19b83b; }
+
+.btn-view-eye {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #928780;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.btn-view-eye svg {
+  width: 21px;
+  height: 21px;
+}
+
+.btn-view-eye:hover {
+  background: #f9f6f4;
+  color: #7d8153;
+}
+
+.empty-state-cell {
+  height: 240px;
+  color: #888181;
+}
+
+.user-parcel-note {
+  width: min(900px, 100%);
+  margin: 18px 0 0 12px;
+  color: #111111;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.note-heading {
+  display: inline-block;
+  margin-bottom: 6px;
+  border-bottom: 1px solid #777777;
+  font-weight: 500;
+}
+
+.user-parcel-note p { margin: 0; }
+
+@media (max-width: 900px) {
+  .user-parcels-main {
+    width: min(100% - 32px, 720px);
+    padding-top: 24px;
+  }
+
+  .parcels-page-title { font-size: 24px; }
+  .user-filter-card { margin-bottom: 18px; }
+
+  .last-update-bar {
+    margin: 0 0 18px;
+    width: auto;
+    font-size: 14px;
+  }
+}
+
+.user-parcels-main {
+  width: min(1140px, calc(100% - 48px));
+  padding: 24px 0 80px;
+}
+
+.parcels-page-title {
+  margin: 8px 0 20px;
+  color: #2b2b2b;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.user-filter-card {
+  margin-bottom: 24px;
+  padding: 8px 16px;
+  border: 1px solid #f0f0f0;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.filter-controls-group {
+  gap: 8px;
+}
+
+.filter-pill-select,
+.pill-date-wrapper input,
+.search-pill-input {
+  height: 34px;
+  border-color: #e5e5e5;
+  color: #666666;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.filter-pill-select {
+  min-width: 120px;
+  padding: 0 24px 0 12px;
+  background-position: right 8px center;
+  background-size: 12px;
+}
+
+.date-filter-item,
+.search-filter-item {
+  gap: 4px;
+  color: #555555;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.pill-date-wrapper input {
+  width: 115px;
+  padding: 0 28px 0 10px;
+  font-size: 12px;
+}
+
+.search-filter-item label {
+  left: 12px;
+  color: #666666;
+}
+
+.search-pill-input {
+  width: 100px;
+  padding: 0 28px 0 12px;
+  color: #333333;
+}
+
+.search-filter-item::after {
+  right: 8px;
+  color: #666666;
+  font-size: 18px;
+  opacity: 0.5;
+}
+
+.last-update-bar {
+  margin: -59px 16px 24px auto;
+  padding-left: 6px;
+  color: #888888;
+  font-size: 12.5px;
+  font-weight: 400;
+}
+
+.user-table-card {
+  min-height: 380px;
+  padding: 24px;
+  border: 1px solid #f0f0f0;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+}
+
+.user-parcel-table {
+  min-width: 1000px;
+}
+
+.user-parcel-table th {
+  padding: 14px 8px;
+  border-bottom: 1px solid #eeeeee;
+  color: #222222;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.user-parcel-table td {
+  padding: 16px 8px;
+  border-bottom: 1px solid #f9f9f9;
+  color: #555555;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.status-wrap {
+  gap: 6px;
+}
+
+.dot-status {
+  width: 8px;
+  height: 8px;
+}
+
+.btn-view-eye {
+  width: 30px;
+  height: 30px;
+  color: #8c827a;
+}
+
+.btn-view-eye svg {
+  width: 17px;
+  height: 17px;
+}
+
+.btn-view-eye:hover {
+  background-color: #f3ece8;
+  color: #e5a9b8;
+}
+
+.empty-state-cell {
+  height: 220px;
+  color: #888888;
+}
+
+.user-parcel-note {
+  margin-top: 16px;
+  color: #111111;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .user-parcels-main {
+    width: min(100% - 32px, 720px);
+    padding-top: 24px;
+  }
+
+  .parcels-page-title {
+    font-size: 24px;
+  }
+
+  .last-update-bar {
+    margin: 0 0 18px;
+    width: auto;
+    font-size: 12.5px;
+  }
+}
+
+.user-parcel-table {
+  min-width: 920px;
+}
+
+.user-table-card {
+  padding: 20px 28px 28px;
+  border-radius: 16px;
+}
+
+.user-parcel-table {
+  min-width: 920px;
+}
+
+.user-parcel-table th {
+  padding: 0 8px 10px;
+  border-bottom: 1px solid #cfc9c7;
+  color: #111111;
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+.user-parcel-table td {
+  padding: 14px 8px 16px;
+  border-bottom: 1px solid #cfc9c7;
+  color: #888181;
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 400;
+}
+
+.user-parcel-table th:nth-child(3),
+.user-parcel-table td:nth-child(3),
+.user-parcel-table th:nth-child(6),
+.user-parcel-table td:nth-child(6) {
+  line-height: 1.15;
+}
+
+.status-wrap {
+  color: #888181;
+  gap: 10px;
+}
+
+.dot-grey {
+  background: #888181;
+}
+
+.btn-view-eye {
+  color: #111111;
+}
+
+.btn-view-eye svg {
+  width: 18px;
+  height: 18px;
+}
+
+.user-parcels-main .action-buttons-wrapper,
+.user-parcels-main #open-add-parcel-modal,
+.user-parcels-main .edit-btn,
+.user-parcels-main .delete-btn,
+.user-parcels-main .btn-action:not(.view-image-btn) {
+  display: none !important;
+}
+
+.filter-pill-select,
+.pill-date-wrapper input,
+.search-pill-input {
+  height: 38px;
+  border-color: #d1cac6;
+  color: #555555;
+  font-size: 13.5px;
+  font-weight: 400;
+}
+
+.filter-pill-select {
+  padding: 0 32px 0 14px;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+
+.date-filter-item,
+.search-filter-item {
+  gap: 6px;
+  color: #444444;
+  font-size: 13.5px;
+  font-weight: 400;
+}
+
+.pill-date-wrapper input {
+  height: 38px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.search-pill-input {
+  width: 170px;
+  height: 38px;
+  padding: 0 36px 0 16px;
+  font-size: 13.5px;
+}
+
+.search-filter-item label {
+  left: 16px;
+}
+
+.search-filter-item::after {
+  right: 14px;
+  font-size: 15px;
+  opacity: 1;
+}
+
+.last-update-bar {
+  margin-top: -62px;
+  color: #777777;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.btn-view-eye {
+  width: auto;
+  height: auto;
+  padding: 6px;
+  color: #8c827a;
+  display: inline-flex;
+}
+
+.btn-view-eye svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+}
+
+/* Final user parcels sizing: align with admin while keeping user page read-only. */
+.user-parcels-main {
+  width: min(1140px, calc(100% - 48px));
+  padding: 24px 0 80px;
+}
+
+.parcels-page-title {
+  margin: 8px 0 20px;
+  color: #2b2b2b;
+  font-size: 26px;
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+.user-filter-card {
+  margin-bottom: 24px;
+  padding: 14px 20px;
+  border: 0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.filter-controls-group {
+  gap: 10px;
+}
+
+.filter-pill-select,
+.pill-date-wrapper input,
+.search-pill-input {
+  height: 38px;
+  border: 1px solid #d1cac6;
+  color: #555555;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 400;
+}
+
+.filter-pill-select {
+  padding: 0 32px 0 14px;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+
+.date-filter-item,
+.search-filter-item {
+  gap: 6px;
+  color: #444444;
+  font-size: 13.5px;
+  font-weight: 400;
+}
+
+.pill-date-wrapper input {
+  width: 115px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.search-pill-input {
+  width: 170px;
+  padding: 0 36px 0 16px;
+  font-size: 13.5px;
+}
+
+.search-filter-item label {
+  left: 16px;
+  color: #777777;
+}
+
+.search-filter-item::after {
+  right: 14px;
+  color: #666666;
+  font-size: 15px;
+  opacity: 1;
+}
+
+.last-update-bar {
+  margin: -62px 0 24px auto;
+  color: #777777;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.user-table-card {
+  min-height: 380px;
+  padding: 24px;
+  border: 0;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+}
+
+.user-parcel-table {
+  min-width: 920px;
+  width: 100%;
+}
+
+.user-parcel-table th {
+  padding: 14px 8px;
+  border-bottom: 0;
+  color: #222222;
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.user-parcel-table td {
+  padding: 16px 8px;
+  border-bottom: 0;
+  color: #555555;
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 400;
+}
+
+.status-wrap {
+  gap: 6px;
+}
+
+.dot-status {
+  width: 8px;
+  height: 8px;
+}
+
+.btn-view-eye {
+  padding: 6px;
+  border-radius: 50%;
+  color: #8c827a;
+}
+
+.btn-view-eye svg {
+  width: 17px;
+  height: 17px;
+}
+
+
+/* Copy admin parcel sizing more closely and restore the grey table rule. */
+.user-parcels-main {
+  width: min(1240px, calc(100% - 48px));
+}
+
+.user-filter-card {
+  padding: 14px 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.filter-controls-group {
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.search-filter-item::after {
+  content: none;
+}
+
+.search-filter-item .search-icon-svg {
+  position: absolute;
+  right: 14px;
+  pointer-events: none;
+}
+
+.user-table-card {
+  min-height: 420px;
+  padding: 42px 28px 32px;
+  border-radius: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+}
+
+.user-parcel-table {
+  min-width: 960px;
+}
+
+.user-parcel-table th {
+  padding: 14px 8px;
+  border-bottom: 1px solid #eeeeee;
+  color: #222222;
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.user-parcel-table td {
+  padding: 16px 8px;
+  border-bottom: 1px solid #f9f9f9;
+  color: #555555;
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 400;
+}
+
+.user-parcel-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.btn-view-eye {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #8c827a;
+  transition: all 0.2s ease;
+}
+
+.btn-view-eye:hover {
+  background-color: #f3ece8;
+  color: #e5a9b8;
+  transform: scale(1.12);
+}
+
+.btn-view-eye svg {
+  display: block;
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+}
+
+
+/* Keep parcel filters grouped normally like admin. */
+.user-filter-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-controls-group {
+  flex: 0 1 auto;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.last-update-bar {
+  margin: 0;
+  margin-left: auto;
+  padding-left: 6px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.search-filter-item {
+  flex: 0 0 auto;
+}
+
+/* Use the same calendar icon treatment as admin parcels. */
+.pill-date-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.pill-date-wrapper input[type="date"] {
+  padding-right: 34px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.pill-date-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.pill-date-wrapper::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  width: 15px;
+  height: 15px;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Prevent the user parcels filter bar from scrolling. */
+.user-filter-card {
+  overflow: visible;
+}
+
+.filter-controls-group {
+  overflow: visible;
+  flex-wrap: nowrap;
+  scrollbar-width: auto;
+}
+
+.filter-controls-group::-webkit-scrollbar {
+  display: none;
+}
