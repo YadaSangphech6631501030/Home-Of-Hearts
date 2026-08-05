@@ -5,40 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>แจ้งซ่อม | Home of Hearts Residence</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/user-home.css" />
+  <link rel="stylesheet" href="/css/user-maintenance.css" />
 </head>
 <body class="user-page">
   <script src="/js/config.js"></script>
   <script src="/js/api.js"></script>
+
+  <!-- App Bar Header -->
   <header class="user-header">
     <a class="user-brand" href="/user/index.html" aria-label="Home of Hearts Residence">
-      <span class="user-brand__icon" aria-hidden="true"><svg viewBox="0 0 512 512" fill="currentColor"><path d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z"/></svg></span>
+      <span class="user-brand__icon" aria-hidden="true">
+        <svg viewBox="0 0 512 512" fill="currentColor">
+          <path d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z"/>
+        </svg>
+      </span>
       <span><strong>Home of Hearts Residence</strong><small>หอพักบ้านแห่งหัวใจ</small></span>
     </a>
     <nav class="user-nav" aria-label="เมนูผู้เช่า">
-      <a class="" href="/user/index.html">หน้าหลัก</a>
-      <a class="" href="/user/contact.html">ติดต่อ</a>
+      <a href="/user/index.html">หน้าหลัก</a>
+      <a href="/user/contact.html">ติดต่อ</a>
       <a class="is-active" href="/user/maintenance.html">แจ้งซ่อม</a>
-      <a class="" href="/user/billing.html">ชำระค่าหอพัก</a>
-      <a class="" href="/user/parcels.html">พัสดุ</a>
-      <a class="" href="/user/announcements.html">ประกาศ</a>
+      <a href="/user/billing.html">ชำระค่าหอพัก</a>
+      <a href="/user/parcels.html">พัสดุ</a>
+      <a href="/user/announcements.html">ประกาศ</a>
     </nav>
     <div class="user-actions">
-      <button class="user-bell" type="button" aria-label="แจ้งเตือน"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></button>
-      <button class="user-profile" type="button" id="user-profile-trigger" aria-expanded="false" aria-controls="user-profile-dropdown"><span id="user-profile-name">ผู้เช่า...</span><span class="user-avatar" id="user-avatar">ผ</span><span>⌄</span></button>
+      <button class="user-bell" type="button" aria-label="แจ้งเตือน">
+        <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+      </button>
+      <button class="user-profile" type="button" id="user-profile-trigger" aria-expanded="false">
+        <span id="user-profile-name">ผู้เช่า...</span>
+        <span class="user-avatar" id="user-avatar">ผ</span>
+        <span>⌄</span>
+      </button>
       <div class="user-profile-dropdown" id="user-profile-dropdown" role="menu">
-        <div class="profile-summary"><span class="user-avatar user-avatar--small" id="user-menu-avatar">ผ</span><strong id="user-menu-name">ผู้เช่า</strong></div>
-        <a class="user-dropdown-item" href="/user/account.html" role="menuitem">
-          <svg class="user-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <div class="profile-summary">
+          <span class="user-avatar user-avatar--small">ผ</span>
+          <strong>ผู้เช่า</strong>
+        </div>
+        <a class="user-dropdown-item" href="/user/account.html">
+          <svg class="user-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
             <circle cx="12" cy="7" r="3.5"></circle>
             <path d="M5 20c0-3.866 3.134-7 7-7s7 3.134 7 7"></path>
           </svg>
           <span>บัญชี</span>
         </a>
-        <button class="user-dropdown-item" type="button" id="user-logout" role="menuitem">
-          <svg class="user-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <button class="user-dropdown-item" type="button" id="user-logout">
+          <svg class="user-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
             <polyline points="16 17 21 12 16 7"></polyline>
             <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -48,13 +64,97 @@
       </div>
     </div>
   </header>
-  <main class="user-main user-main--simple">
-    <h1 class="module-title">แจ้งซ่อม</h1>
-    <section class="user-card placeholder-card">
-      <h2>แจ้งซ่อม</h2>
-      <p>เตรียมใส่ข้อมูลจริงจากระบบ</p>
-    </section>
+
+  <!-- Main Content -->
+  <main class="user-maintenance-main">
+    <h1 class="maintenance-title">แจ้งซ่อม 🔨</h1>
+
+    <div class="maintenance-grid">
+      <!-- Water -->
+      <button class="repair-card" type="button" data-type="ช่างประปา">
+        <div class="repair-icon-box">
+          <span class="emoji-icon">💧</span>
+        </div>
+        <span class="repair-label">ช่างประปา</span>
+      </button>
+
+      <!-- Electric -->
+      <button class="repair-card" type="button" data-type="ช่างไฟ">
+        <div class="repair-icon-box">
+          <span class="emoji-icon">💡</span>
+        </div>
+        <span class="repair-label">ช่างไฟ</span>
+      </button>
+
+      <!-- Air -->
+      <button class="repair-card" type="button" data-type="ช่างแอร์">
+        <div class="repair-icon-box">
+          <span class="emoji-icon">💨</span>
+        </div>
+        <span class="repair-label">ช่างแอร์</span>
+      </button>
+
+      <!-- Key -->
+      <button class="repair-card" type="button" data-type="ช่างกุญแจ">
+        <div class="repair-icon-box">
+          <span class="emoji-icon">🔑</span>
+        </div>
+        <span class="repair-label">ช่างกุญแจ</span>
+      </button>
+
+      <!-- All -->
+      <button class="repair-card" type="button" data-type="ช่างซ่อม">
+        <div class="repair-icon-box">
+          <span class="emoji-icon">🔨</span>
+        </div>
+        <span class="repair-label">ช่างซ่อม</span>
+      </button>
+
+      <!-- Network -->
+      <button class="repair-card" type="button" data-type="เน็ต wifi">
+        <div class="repair-icon-box">
+          <span class="emoji-icon">📶</span>
+        </div>
+        <span class="repair-label">เน็ต wifi</span>
+      </button>
+    </div>
   </main>
+
+  <p class="repair-note"><span>หมายเหตุ</span><br />กรณีฉุกเฉิน ติดต่อ <strong id="repair-contact-tel">-</strong> (เบอร์สำนักงานหอพัก)</p>
+
+  <div class="repair-modal" id="repair-modal" aria-hidden="true">
+    <div class="repair-modal__card" role="dialog" aria-modal="true" aria-labelledby="repair-modal-title">
+      <button class="repair-modal__close" type="button" id="repair-modal-close" aria-label="ปิด">×</button>
+      <h2 class="repair-modal__title" id="repair-modal-title">แจ้งซ่อม</h2>
+
+      <div class="repair-modal__meta">
+        <div class="repair-modal__sender">จาก <span id="repair-sender-name">ผู้เช่า</span></div>
+        <div class="repair-modal__date-room">
+          <span>วัน/เดือน/ปี</span><strong id="repair-date">-</strong>
+          <span>ห้อง</span><strong id="repair-room">-</strong>
+        </div>
+      </div>
+
+      <form class="repair-form" id="repair-form">
+        <label class="repair-title-row">
+          <span>หัวข้อ</span>
+          <input id="repair-title" name="title" type="text" placeholder="พิมพ์ที่นี่" required />
+        </label>
+        <textarea id="repair-description" name="description" placeholder="พิมพ์ที่นี่" required></textarea>
+        <input id="repair-image" name="image" type="file" accept="image/*" hidden />
+        <div class="repair-form__actions">
+          <button class="repair-submit" type="submit">แจ้งซ่อม</button>
+          <button class="repair-image-button" type="button" id="repair-image-button" aria-label="แนบรูปภาพ">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path><path d="M18 3v5"></path><path d="M15.5 5.5h5"></path></svg>
+          </button>
+          <span class="repair-file-name" id="repair-file-name"></span>
+        </div>
+        <p class="repair-message" id="repair-message"></p>
+      </form>
+    </div>
+  </div>
+
   <script src="/js/user-home.js"></script>
+  <script src="/js/user-maintenance.js"></script>
 </body>
 </html>
