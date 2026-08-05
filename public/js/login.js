@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const password = passwordInput ? passwordInput.value.trim() : '';
 
       if (!username || !password) {
-        if (msg) msg.textContent = 'กรุณากรอกชื่อ/อีเมลและรหัสผ่านให้ครบ';
+        if (msg) msg.textContent = 'กรุณากรอกเลขห้อง/อีเมลและรหัสผ่านให้ครบ';
         return;
       }
 

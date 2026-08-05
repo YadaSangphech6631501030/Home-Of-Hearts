@@ -150,7 +150,7 @@ app.post("/auth/login", async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ success: false, message: "กรุณากรอกชื่อ/อีเมลและรหัสผ่านให้ครบ" });
+    return res.status(400).json({ success: false, message: "กรุณากรอกเลขห้อง/อีเมลและรหัสผ่านให้ครบ" });
   }
 
   try {
