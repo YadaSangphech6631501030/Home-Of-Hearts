@@ -30,7 +30,21 @@
       <button class="user-profile" type="button" id="user-profile-trigger" aria-expanded="false" aria-controls="user-profile-dropdown"><span id="user-profile-name">ผู้เช่า...</span><span class="user-avatar" id="user-avatar">ผ</span><span>⌄</span></button>
       <div class="user-profile-dropdown" id="user-profile-dropdown" role="menu">
         <div class="profile-summary"><span class="user-avatar user-avatar--small" id="user-menu-avatar">ผ</span><strong id="user-menu-name">ผู้เช่า</strong></div>
-        <button type="button" id="user-logout" role="menuitem">ออกจากระบบ</button>
+        <a class="user-dropdown-item" href="/user/account.html" role="menuitem">
+          <svg class="user-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="7" r="3.5"></circle>
+            <path d="M5 20c0-3.866 3.134-7 7-7s7 3.134 7 7"></path>
+          </svg>
+          <span>บัญชี</span>
+        </a>
+        <button class="user-dropdown-item" type="button" id="user-logout" role="menuitem">
+          <svg class="user-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>ออกจากระบบ</span>
+        </button>
       </div>
     </div>
   </header>

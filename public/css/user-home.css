@@ -19,7 +19,7 @@ body.user-page { min-height: 100vh; margin: 0; font-family: "Noto Sans Thai", sa
 .user-bell { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; } .user-bell svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .user-profile { display: inline-flex; align-items: center; gap: 12px; max-width: 250px; } .user-profile > span:first-child { max-width: 118px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .user-avatar { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: #ffffff; box-shadow: 0 4px 10px rgba(125,129,83,.18); color: var(--olive); font-size: 20px; line-height: 1; font-weight: 800; flex: 0 0 auto; }
-.user-avatar--small { width: 34px; height: 34px; box-shadow: none; background: #eef6fb; }
+.user-avatar--small { width: 34px; height: 34px; box-shadow: none; background: #ffffff; }
 .user-profile-dropdown { display: none; position: absolute; right: 0; top: calc(100% + 12px); width: 220px; padding: 12px 16px; border: 1px solid rgba(215,209,206,.65); border-radius: 16px; background: rgba(255,255,255,.98); box-shadow: 0 10px 30px rgba(0,0,0,.08); z-index: 100; } .user-profile-dropdown.is-open { display: block; }
 .profile-summary { display: flex; align-items: center; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--line); } .user-profile-dropdown button { width: 100%; margin-top: 10px; border: 0; background: transparent; text-align: left; font: inherit; color: var(--ink); cursor: pointer; padding: 8px 4px; }
 .user-main { width: min(920px, calc(100% - 48px)); margin: 0 auto; padding: 34px 0 64px; }
@@ -105,4 +105,303 @@ body.user-page { min-height: 100vh; margin: 0; font-family: "Noto Sans Thai", sa
     max-width: 500px;
     margin: 0 auto;
   }
+}
+
+
+/* Align the user index into equal visual rows. */
+.user-main {
+  width: min(980px, calc(100% - 48px));
+  max-width: 980px;
+}
+
+.user-dashboard-grid {
+  max-width: 880px;
+  grid-template-columns: 310px minmax(0, 500px);
+  gap: 70px;
+  align-items: start;
+  overflow: visible;
+}
+
+.qr-column,
+.info-column {
+  grid-template-rows: 278px 278px;
+  gap: 34px;
+  align-items: start;
+  overflow: visible;
+}
+
+.qr-section {
+  height: 278px;
+  min-width: 0;
+  overflow: visible;
+}
+
+.qr-card {
+  width: 220px;
+  padding: 28px;
+}
+
+.info-column {
+  width: 500px;
+  max-width: 500px;
+}
+
+.info-column .user-card {
+  height: 244px;
+  max-height: 244px;
+  overflow: hidden;
+}
+
+.info-column .card-list,
+.info-column .list-item,
+.info-column .alert-list-item {
+  min-width: 0;
+}
+
+.info-column .list-copy,
+.info-column .alert-list-copy {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.info-column .list-copy strong,
+.info-column .list-copy span,
+.info-column .alert-list-copy strong,
+.info-column .alert-list-copy span {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.announcement-card .list-item {
+  min-height: 72px;
+}
+
+@media (max-width: 980px) {
+  .user-dashboard-grid {
+    max-width: min(500px, 100%);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .qr-column,
+  .info-column {
+    width: min(500px, 100%);
+    max-width: 500px;
+    grid-template-rows: auto;
+  }
+
+  .qr-section,
+  .info-column .user-card {
+    height: auto;
+    max-height: none;
+  }
+
+  .qr-card {
+    width: min(220px, 72vw);
+  }
+}
+
+
+/* Align the white card frames across left and right columns. */
+.info-column .user-card {
+  margin-top: 27px;
+}
+
+.qr-column,
+.info-column {
+  grid-template-rows: 278px 278px;
+}
+
+.info-column .user-card {
+  height: 244px;
+  max-height: 244px;
+}
+
+@media (max-width: 980px) {
+  .info-column .user-card {
+    margin-top: 0;
+    height: auto;
+    max-height: none;
+  }
+}
+
+
+/* User profile dropdown matches the admin profile menu. */
+.user-profile-dropdown {
+  width: 220px;
+  padding: 12px 16px;
+  border: 1px solid rgba(215, 209, 206, 0.65);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.user-profile-dropdown .profile-summary {
+  gap: 12px;
+  padding-bottom: 10px;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #333333;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.user-dropdown-item:hover {
+  background: #f9f6f4;
+}
+
+.user-menu-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  color: #666666;
+}
+
+.user-profile-dropdown button.user-dropdown-item {
+  margin-top: 0;
+}
+
+
+/* Keep logout typography identical to the account dropdown item. */
+.user-profile-dropdown button.user-dropdown-item,
+.user-profile-dropdown a.user-dropdown-item {
+  color: #333333;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+
+/* Match the user profile dropdown to the admin dropdown visual weight. */
+.user-profile-dropdown {
+  width: 220px;
+  padding: 16px 16px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.user-profile-dropdown .profile-summary {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 0 0 14px;
+  margin: 0 0 14px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.user-profile-dropdown .profile-summary strong {
+  color: #333333;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.35;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.user-profile-dropdown .user-avatar--small {
+  width: 42px;
+  height: 42px;
+  background: #ffffff;
+  box-shadow: 0 8px 18px rgba(125, 129, 83, 0.12);
+  font-size: 20px;
+}
+
+.user-dropdown-item,
+.user-profile-dropdown button.user-dropdown-item,
+.user-profile-dropdown a.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 42px;
+  padding: 8px 10px;
+  color: #333333;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.user-menu-icon {
+  width: 24px;
+  height: 24px;
+  color: #666666;
+}
+
+
+/* Match user dropdown typography and icons exactly to admin. */
+.user-profile-dropdown .profile-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 10px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #eeeeee;
+  color: #333333;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.user-profile-dropdown .profile-summary strong {
+  color: #333333;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.user-profile-dropdown .user-avatar--small {
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(125, 129, 83, 0.18);
+  font-size: 18px;
+}
+
+.user-dropdown-item,
+.user-profile-dropdown button.user-dropdown-item,
+.user-profile-dropdown a.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: auto;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: #333333;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.user-menu-icon {
+  width: 18px;
+  height: 18px;
+  color: #666666;
+  flex-shrink: 0;
+}
+
+.user-dropdown-item:hover {
+  background-color: #f5f2ef;
 }
