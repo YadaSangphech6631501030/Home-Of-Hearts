@@ -1,8 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  /* ============================
-     Profile Dropdown Menu System
-    ============================ */
-
+  // Element selectors
   const profileTrigger = document.getElementById("profile-trigger");
   const profileMenu = document.querySelector(".profile-menu");
 
@@ -22,10 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* ============================
-     Edit Contact Modal System
-    ============================ */
-
+  // Edit contact modal
   const modal = document.getElementById("edit-contact-modal");
   const openModalBtn = document.getElementById("open-edit-modal");
   const closeModalBtn = document.getElementById("close-modal-btn");
@@ -44,6 +38,48 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputFacebook = document.getElementById("input-facebook");
   const inputLine = document.getElementById("input-line");
   const inputAddress = document.getElementById("input-address");
+
+  const qrImages = {
+    qrMain: document.getElementById("qr-img-1"),
+    qrShop: document.getElementById("qr-img-2"),
+    qrOffice: document.getElementById("qr-img-3"),
+  };
+
+  loadContactData();
+
+  async function loadContactData() {
+    try {
+      const response = await API.get("/api/contact");
+      applyContactData(response.data || response);
+    } catch (error) {
+      console.error("Error loading contact data:", error);
+    }
+  }
+
+  function applyContactData(data = {}) {
+    if (displayTel) displayTel.textContent = data.tel || "-";
+    if (displayEmail) displayEmail.textContent = data.email || "-";
+    if (displayFacebook) displayFacebook.textContent = data.facebook || "-";
+    if (displayLine) displayLine.textContent = data.line || "-";
+    if (displayAddress) displayAddress.textContent = data.address || "-";
+    if (qrImages.qrMain && data.qrMain) qrImages.qrMain.src = data.qrMain;
+    if (qrImages.qrShop && data.qrShop) qrImages.qrShop.src = data.qrShop;
+    if (qrImages.qrOffice && data.qrOffice) qrImages.qrOffice.src = data.qrOffice;
+  }
+
+  async function saveContactData(extra = {}) {
+    const payload = {
+      tel: displayTel?.textContent === "-" ? "" : displayTel?.textContent || "",
+      email: displayEmail?.textContent === "-" ? "" : displayEmail?.textContent || "",
+      facebook: displayFacebook?.textContent === "-" ? "" : displayFacebook?.textContent || "",
+      line: displayLine?.textContent === "-" ? "" : displayLine?.textContent || "",
+      address: displayAddress?.textContent === "-" ? "" : displayAddress?.textContent || "",
+      ...extra,
+    };
+
+    const response = await API.put("/api/contact", payload);
+    applyContactData(response.data || response);
+  }
 
   openModalBtn?.addEventListener("click", () => {
     if (inputTel && displayTel)
@@ -75,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target === modal) closeModal();
   });
 
-  editForm?.addEventListener("submit", (e) => {
+  editForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     if (displayTel && inputTel)
@@ -89,28 +125,40 @@ document.addEventListener("DOMContentLoaded", () => {
     if (displayAddress && inputAddress)
       displayAddress.textContent = inputAddress.value.trim() || "-";
 
-    closeModal();
+    try {
+      await saveContactData();
+      closeModal();
+    } catch (error) {
+      alert(error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูลติดต่อ");
+    }
   });
 
-  /* ============================
-     QR Code Upload Preview System
-    ============================ */
-
-  const setupQRUpload = (inputId, imgId) => {
+  // Qr code upload
+  const setupQRUpload = (inputId, imgId, payloadKey) => {
     const fileInput = document.getElementById(inputId);
     const imgElement = document.getElementById(imgId);
 
     fileInput?.addEventListener("change", (e) => {
       const file = e.target.files?.[0];
-      if (file && imgElement) {
-        const newImgUrl = URL.createObjectURL(file);
+      if (!file || !imgElement) return;
+
+      const reader = new FileReader();
+      reader.addEventListener("load", async () => {
+        const newImgUrl = reader.result;
         imgElement.src = newImgUrl;
         fileInput.value = "";
-      }
+
+        try {
+          await saveContactData({ [payloadKey]: newImgUrl });
+        } catch (error) {
+          alert(error.message || "เกิดข้อผิดพลาดในการบันทึก QR Code");
+        }
+      });
+      reader.readAsDataURL(file);
     });
   };
 
-  setupQRUpload("upload-qr-1", "qr-img-1");
-  setupQRUpload("upload-qr-2", "qr-img-2");
-  setupQRUpload("upload-qr-3", "qr-img-3");
+  setupQRUpload("upload-qr-1", "qr-img-1", "qrMain");
+  setupQRUpload("upload-qr-2", "qr-img-2", "qrShop");
+  setupQRUpload("upload-qr-3", "qr-img-3", "qrOffice");
 });

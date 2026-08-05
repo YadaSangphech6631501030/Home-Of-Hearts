@@ -8,28 +8,44 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/user-home.css" />
+  <link rel="stylesheet" href="/css/user-contact.css" />
 </head>
 <body class="user-page">
   <script src="/js/config.js"></script>
   <script src="/js/api.js"></script>
+
+  <!-- App Bar Header -->
   <header class="user-header">
     <a class="user-brand" href="/user/index.html" aria-label="Home of Hearts Residence">
-      <span class="user-brand__icon" aria-hidden="true"><svg viewBox="0 0 512 512" fill="currentColor"><path d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z"/></svg></span>
+      <span class="user-brand__icon" aria-hidden="true">
+        <svg viewBox="0 0 512 512" fill="currentColor">
+          <path d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z"/>
+        </svg>
+      </span>
       <span><strong>Home of Hearts Residence</strong><small>หอพักบ้านแห่งหัวใจ</small></span>
     </a>
     <nav class="user-nav" aria-label="เมนูผู้เช่า">
-      <a class="" href="/user/index.html">หน้าหลัก</a>
+      <a href="/user/index.html">หน้าหลัก</a>
       <a class="is-active" href="/user/contact.html">ติดต่อ</a>
-      <a class="" href="/user/maintenance.html">แจ้งซ่อม</a>
-      <a class="" href="/user/billing.html">ชำระค่าหอพัก</a>
-      <a class="" href="/user/parcels.html">พัสดุ</a>
-      <a class="" href="/user/announcements.html">ประกาศ</a>
+      <a href="/user/maintenance.html">แจ้งซ่อม</a>
+      <a href="/user/billing.html">ชำระค่าหอพัก</a>
+      <a href="/user/parcels.html">พัสดุ</a>
+      <a href="/user/announcements.html">ประกาศ</a>
     </nav>
     <div class="user-actions">
-      <button class="user-bell" type="button" aria-label="แจ้งเตือน"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></button>
-      <button class="user-profile" type="button" id="user-profile-trigger" aria-expanded="false" aria-controls="user-profile-dropdown"><span id="user-profile-name">ผู้เช่า...</span><span class="user-avatar" id="user-avatar">ผ</span><span>⌄</span></button>
+      <button class="user-bell" type="button" aria-label="แจ้งเตือน">
+        <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+      </button>
+      <button class="user-profile" type="button" id="user-profile-trigger" aria-expanded="false" aria-controls="user-profile-dropdown">
+        <span id="user-profile-name">ผู้เช่า...</span>
+        <span class="user-avatar" id="user-avatar">ผ</span>
+        <span>⌄</span>
+      </button>
       <div class="user-profile-dropdown" id="user-profile-dropdown" role="menu">
-        <div class="profile-summary"><span class="user-avatar user-avatar--small" id="user-menu-avatar">ผ</span><strong id="user-menu-name">ผู้เช่า</strong></div>
+        <div class="profile-summary">
+          <span class="user-avatar user-avatar--small" id="user-menu-avatar">ผ</span>
+          <strong id="user-menu-name">ผู้เช่า</strong>
+        </div>
         <a class="user-dropdown-item" href="/user/account.html" role="menuitem">
           <svg class="user-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="7" r="3.5"></circle>
@@ -48,13 +64,55 @@
       </div>
     </div>
   </header>
-  <main class="user-main user-main--simple">
-    <h1 class="module-title">ข้อมูลติดต่อ</h1>
-    <section class="user-card placeholder-card">
-      <h2>ข้อมูลติดต่อ</h2>
-      <p>เตรียมใส่ข้อมูลจริงจากระบบ</p>
-    </section>
+
+  <!-- Main Content -->
+  <main class="user-contact-main">
+    <h1 class="contact-page-title">ติดต่อสำนักงานหอพัก 📞</h1>
+
+    <div class="contact-card">
+      <div class="contact-info-section">
+        <h2>ช่องทางติดต่อหอพักบ้านแห่งหัวใจ</h2>
+        <ul class="contact-list">
+          <li>
+            <span class="contact-icon">📞</span>
+            <strong>Tel :</strong>
+            <span id="contact-tel">097-920-xxxx , 095-221-xxx</span>
+          </li>
+          <li>
+            <span class="contact-icon">✉️</span>
+            <strong>Email :</strong>
+            <span id="contact-email">123@gmail.com</span>
+          </li>
+          <li>
+            <span class="contact-icon">💬</span>
+            <strong>Facebook :</strong>
+            <span id="contact-facebook">123</span>
+          </li>
+          <li>
+            <span class="contact-icon">💬</span>
+            <strong>Line :</strong>
+            <span id="contact-line">@123</span>
+          </li>
+          <li>
+            <span class="contact-icon">🏠</span>
+            <strong>ที่อยู่ :</strong>
+            <span id="contact-address">000 จ.เชียงราย อ.เมือง ต.เวียง 57160</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- QR Code -->
+      <div class="contact-qr-section">
+        <h3>Line หอพัก</h3>
+        <div class="qr-code-box">
+          <img id="contact-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=LineHormpak&color=7d8153" alt="Line QR Code" />
+        </div>
+        <p>สแกนเพิ่มเพื่อน หรือ @1234</p>
+      </div>
+    </div>
   </main>
+
   <script src="/js/user-home.js"></script>
+  <script src="/js/user-contact.js"></script>
 </body>
 </html>
