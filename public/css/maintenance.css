@@ -275,3 +275,184 @@
   align-items: center;
   gap: 6px;
 }
+
+.maintenance-edit-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(255, 249, 250, 0.62);
+  backdrop-filter: blur(4px);
+}
+
+.maintenance-edit-modal.is-open {
+  display: flex;
+}
+
+.maintenance-edit-card {
+  position: relative;
+  width: min(440px, calc(100vw - 48px));
+  border: 0;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 18px 44px rgba(71, 55, 59, 0.16);
+  padding: 28px 32px 24px;
+  font-family: 'Noto Sans Thai', sans-serif;
+}
+
+.maintenance-edit-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #111111;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.maintenance-edit-close:hover {
+  background: #f9f6f4;
+}
+
+.maintenance-edit-card h2 {
+  margin: 0 42px 8px 0;
+  color: #111111;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.maintenance-edit-summary {
+  margin: 0 0 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e0dcd9;
+  color: #777777;
+  font-size: 14px;
+}
+
+.maintenance-edit-field {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.maintenance-edit-field select,
+.maintenance-edit-field input {
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #d1cac6;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #555555;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.maintenance-edit-field select:focus,
+.maintenance-edit-field input:focus {
+  border-color: #e8a9b5;
+  box-shadow: 0 0 0 3px rgba(232, 169, 181, 0.2);
+}
+
+.maintenance-edit-message {
+  min-height: 20px;
+  margin: 0 0 10px;
+  color: #d18a9a;
+  font-size: 13px;
+}
+
+.maintenance-edit-message.is-success {
+  color: #4caf50;
+}
+
+.maintenance-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.maintenance-edit-cancel,
+.maintenance-edit-submit {
+  min-width: 92px;
+  height: 38px;
+  border: 0;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.maintenance-edit-cancel {
+  background: #f9f6f4;
+  color: #555555;
+}
+
+.maintenance-edit-submit {
+  background: #8c8a63;
+  color: #ffffff;
+}
+
+.maintenance-edit-date {
+  position: relative;
+  display: block;
+}
+
+.maintenance-edit-field .maintenance-edit-date input[type="date"] {
+  width: 100%;
+  padding: 0 48px 0 18px;
+  color: #555555;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.maintenance-edit-field .maintenance-edit-date input[type="date"]::-webkit-datetime-edit,
+.maintenance-edit-field .maintenance-edit-date input[type="date"]::-webkit-datetime-edit-text,
+.maintenance-edit-field .maintenance-edit-date input[type="date"]::-webkit-datetime-edit-month-field,
+.maintenance-edit-field .maintenance-edit-date input[type="date"]::-webkit-datetime-edit-day-field,
+.maintenance-edit-field .maintenance-edit-date input[type="date"]::-webkit-datetime-edit-year-field {
+  color: #555555;
+  font-weight: 400;
+}
+
+.maintenance-edit-field .maintenance-edit-date input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.maintenance-edit-date svg {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  fill: none;
+  stroke: #888888;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.maintenance-edit-field .maintenance-edit-date input[type="date"] {
+  font-size: 14px;
+  font-weight: 400;
+}
