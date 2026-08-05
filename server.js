@@ -371,8 +371,19 @@ app.get('/api/maintenance', async (req, res) => {
       return res.status(403).json({ success: false, message: 'ต้องเป็นผู้ดูแลระบบเท่านั้น' });
     }
 
-    const { type, status, from, to } = req.query;
+    const { search, type, status, from, to } = req.query;
     const query = {};
+
+    if (search && String(search).trim()) {
+      const keyword = String(search).trim();
+      query.$or = [
+        { roomNumber: { $regex: keyword, $options: 'i' } },
+        { senderName: { $regex: keyword, $options: 'i' } },
+        { type: { $regex: keyword, $options: 'i' } },
+        { title: { $regex: keyword, $options: 'i' } },
+        { description: { $regex: keyword, $options: 'i' } },
+      ];
+    }
 
     if (type) query.type = type;
     if (status) query.status = status;
@@ -427,6 +438,47 @@ app.post('/api/maintenance', async (req, res) => {
     });
 
     res.status(201).json({ success: true, data: item });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+
+app.put('/api/maintenance/:id', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+    const sessionAdmin = sessionUser && sessionUser.role === 'admin';
+    const mongoAdmin = sessionUser && sessionUser.userId
+      ? await User.findOne({ _id: sessionUser.userId, role: 'admin' }).select('_id')
+      : null;
+
+    if (!sessionAdmin && !mongoAdmin) {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้ดูแลระบบเท่านั้น' });
+    }
+
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: 'รหัสรายการแจ้งซ่อมไม่ถูกต้อง' });
+    }
+
+    const { status, appointmentDate, completedDate } = req.body;
+    const allowedStatuses = ['รอดำเนินการ', 'กำลังดำเนินการ', 'เสร็จสิ้น'];
+    if (status !== undefined && !allowedStatuses.includes(status)) {
+      return res.status(400).json({ success: false, message: 'สถานะแจ้งซ่อมไม่ถูกต้อง' });
+    }
+
+    const payload = {
+      ...(status !== undefined && { status }),
+      ...(appointmentDate !== undefined && { appointmentDate }),
+      ...(completedDate !== undefined && { completedDate }),
+    };
+
+    const item = await Maintenance.findByIdAndUpdate(id, payload, { new: true });
+    if (!item) {
+      return res.status(404).json({ success: false, message: 'ไม่พบรายการแจ้งซ่อม' });
+    }
+
+    res.json({ success: true, data: item });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

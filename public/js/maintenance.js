@@ -1,14 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
   const tbody = document.getElementById("maintenance-tbody");
   const filterType = document.getElementById("filter-type");
+  const searchInput = document.getElementById("search-input");
   const filterStatus = document.getElementById("filter-status");
   const dateFrom = document.getElementById("date-from");
   const dateTo = document.getElementById("date-to");
   
   const lastUpdateElement = document.getElementById("last-update-date");
+  const editModal = document.getElementById("maintenance-edit-modal");
+  const editForm = document.getElementById("maintenance-edit-form");
+  const editClose = document.getElementById("maintenance-edit-close");
+  const editCancel = document.getElementById("maintenance-edit-cancel");
+  const editStatus = document.getElementById("maintenance-edit-status");
+  const editAppointment = document.getElementById("maintenance-edit-appointment");
+  const editCompleted = document.getElementById("maintenance-edit-completed");
+  const editSummary = document.getElementById("maintenance-edit-summary");
+  const editMessage = document.getElementById("maintenance-edit-message");
+  let currentRequests = [];
+  let editingId = null;
 
   async function fetchMaintenanceRequests() {
     try {
+      const search = searchInput ? searchInput.value.trim() : "";
       const type = filterType ? filterType.value : "";
       const status = filterStatus ? filterStatus.value : "";
       const from = dateFrom ? dateFrom.value : "";
@@ -16,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Query Parameters
       const queryParams = new URLSearchParams({
+        ...(search && { search }),
         ...(type && { type }),
         ...(status && { status }),
         ...(from && { from }),
@@ -25,7 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await API.get(`/api/maintenance?${queryParams.toString()}`);
       
       // show information in table
-      renderTable(data);
+      currentRequests = Array.isArray(data) ? data : [];
+      renderTable(currentRequests);
       
       // updates day
       updateLastModifiedDate(data);
@@ -129,6 +144,91 @@ document.addEventListener("DOMContentLoaded", () => {
     const month = String(d.getMonth() + 1).padStart(2, "0");
     const year = d.getFullYear();
     return `${day}/${month}/${year}`;
+  }
+
+  function openEditModal(id) {
+    const item = currentRequests.find((request) => String(request._id) === String(id));
+    if (!item || !editModal) return;
+    editingId = id;
+    if (editStatus) editStatus.value = item.status || "รอดำเนินการ";
+    if (editAppointment) editAppointment.value = toInputDate(item.appointmentDate);
+    if (editCompleted) editCompleted.value = toInputDate(item.completedDate);
+    if (editSummary) editSummary.textContent = "ห้อง " + (item.roomNumber || "-") + " • " + (item.senderName || "-") + " • " + (item.type || "-");
+    if (editMessage) {
+      editMessage.textContent = "";
+      editMessage.classList.remove("is-success");
+    }
+    editModal.classList.add("is-open");
+    editModal.setAttribute("aria-hidden", "false");
+  }
+
+  function closeEditModal() {
+    editModal?.classList.remove("is-open");
+    editModal?.setAttribute("aria-hidden", "true");
+    editingId = null;
+    editForm?.reset();
+  }
+
+  function toInputDate(value) {
+    if (!value || value === "-") return "";
+    if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}/.test(value)) return value.slice(0, 10);
+    if (typeof value === "string" && value.includes("/")) {
+      const [day, month, year] = value.split("/");
+      return year + "-" + month.padStart(2, "0") + "-" + day.padStart(2, "0");
+    }
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+    return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
+  }
+
+  tbody?.addEventListener("click", (event) => {
+    const button = event.target.closest(".btn-edit-row");
+    if (!button) return;
+    openEditModal(button.dataset.id);
+  });
+
+  editClose?.addEventListener("click", closeEditModal);
+  editCancel?.addEventListener("click", closeEditModal);
+  editModal?.addEventListener("click", (event) => {
+    if (event.target === editModal) closeEditModal();
+  });
+
+  editForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!editingId) return;
+
+    try {
+      const response = await API.put("/api/maintenance/" + editingId, {
+        status: editStatus?.value || "รอดำเนินการ",
+        appointmentDate: editAppointment?.value || "",
+        completedDate: editCompleted?.value || "",
+      });
+
+      if (editMessage) {
+        editMessage.textContent = "บันทึกข้อมูลแล้ว";
+        editMessage.classList.add("is-success");
+      }
+
+      const updated = response.data || response;
+      currentRequests = currentRequests.map((item) => String(item._id) === String(editingId) ? updated : item);
+      renderTable(currentRequests);
+      updateLastModifiedDate(currentRequests);
+      setTimeout(closeEditModal, 500);
+    } catch (error) {
+      console.error("Error updating maintenance:", error);
+      if (editMessage) {
+        editMessage.textContent = error.message || "บันทึกไม่สำเร็จ";
+        editMessage.classList.remove("is-success");
+      }
+    }
+  });
+
+  let searchTimer = null;
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(fetchMaintenanceRequests, 250);
+    });
   }
 
   if (filterType) filterType.addEventListener("change", fetchMaintenanceRequests);

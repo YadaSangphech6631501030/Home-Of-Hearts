@@ -182,6 +182,41 @@
     </div>
   </main>
 
+
+  <div class="maintenance-edit-modal" id="maintenance-edit-modal" aria-hidden="true">
+    <form class="maintenance-edit-card" id="maintenance-edit-form" aria-labelledby="maintenance-edit-title">
+      <button class="maintenance-edit-close" type="button" id="maintenance-edit-close" aria-label="ปิด">×</button>
+      <h2 id="maintenance-edit-title">แก้ไขสถานะแจ้งซ่อม</h2>
+      <p class="maintenance-edit-summary" id="maintenance-edit-summary">-</p>
+
+      <label class="maintenance-edit-field">
+        <span>สถานะ</span>
+        <select id="maintenance-edit-status" required>
+          <option value="รอดำเนินการ">รอดำเนินการ</option>
+          <option value="กำลังดำเนินการ">กำลังดำเนินการ</option>
+          <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+        </select>
+      </label>
+
+      <label class="maintenance-edit-field">
+        <span>วันนัดหมาย</span>
+        <span class="maintenance-edit-date"><input type="date" id="maintenance-edit-appointment" /><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"></rect><line x1="8" y1="3" x2="8" y2="7"></line><line x1="16" y1="3" x2="16" y2="7"></line><line x1="4" y1="10" x2="20" y2="10"></line></svg></span>
+      </label>
+
+      <label class="maintenance-edit-field">
+        <span>วันเสร็จสิ้น</span>
+        <span class="maintenance-edit-date"><input type="date" id="maintenance-edit-completed" /><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"></rect><line x1="8" y1="3" x2="8" y2="7"></line><line x1="16" y1="3" x2="16" y2="7"></line><line x1="4" y1="10" x2="20" y2="10"></line></svg></span>
+      </label>
+
+      <p class="maintenance-edit-message" id="maintenance-edit-message"></p>
+
+      <div class="maintenance-edit-actions">
+        <button class="maintenance-edit-cancel" type="button" id="maintenance-edit-cancel">ยกเลิก</button>
+        <button class="maintenance-edit-submit" type="submit">บันทึก</button>
+      </div>
+    </form>
+  </div>
+
   <script src="/js/admin-dashboard.js"></script>
   <script src="/js/maintenance.js"></script>
 </body>
