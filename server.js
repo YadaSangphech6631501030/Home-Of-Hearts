@@ -118,7 +118,10 @@ const maintenanceSchema = new mongoose.Schema({
   roomNumber: String,
   senderName: String,
   type: String,
-  status: { type: String, default: "รอดำเนินการ" }, 
+  title: String,
+  description: String,
+  imageUrl: String,
+  status: { type: String, default: "รอดำเนินการ" },
   appointmentDate: String,
   completedDate: String
 }, { timestamps: true });
@@ -356,6 +359,76 @@ app.get("/api/dashboard/summary", async (req, res) => {
   } catch (err) {
     console.error("Dashboard Summary Error:", err);
     res.status(500).json({ success: false, error: "ไม่สามารถดึงข้อมูลสรุปได้" });
+  }
+});
+
+// maintenance requests
+app.get('/api/maintenance', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+
+    if (!sessionUser || sessionUser.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้ดูแลระบบเท่านั้น' });
+    }
+
+    const { type, status, from, to } = req.query;
+    const query = {};
+
+    if (type) query.type = type;
+    if (status) query.status = status;
+    if (from || to) {
+      query.createdAt = {};
+      if (from) query.createdAt.$gte = new Date(from);
+      if (to) {
+        const endDate = new Date(to);
+        endDate.setHours(23, 59, 59, 999);
+        query.createdAt.$lte = endDate;
+      }
+    }
+
+    const list = await Maintenance.find(query).sort({ createdAt: -1 });
+    res.json(list);
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/maintenance', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+
+    if (!sessionUser || sessionUser.role !== 'tenant') {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้เช่าเท่านั้น' });
+    }
+
+    const { type, title, description, imageUrl } = req.body;
+
+    if (!type || !title || !description) {
+      return res.status(400).json({ success: false, message: 'กรุณากรอกข้อมูลแจ้งซ่อมให้ครบ' });
+    }
+
+    const tenantUser = sessionUser.userId
+      ? await User.findOne({ _id: sessionUser.userId, role: 'user' })
+      : null;
+    const roomNumber = tenantUser ? tenantUser.username : sessionUser.roomNumber;
+    const room = await Room.findOne({ roomNumber });
+    const senderName = (tenantUser && tenantUser.name) || (room && room.tenant && room.tenant.fullName) || 'ผู้เช่า';
+
+    const item = await Maintenance.create({
+      roomNumber,
+      senderName,
+      type,
+      title,
+      description,
+      imageUrl: imageUrl || '',
+      status: 'รอดำเนินการ',
+      appointmentDate: '',
+      completedDate: '',
+    });
+
+    res.status(201).json({ success: true, data: item });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

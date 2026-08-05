@@ -22,10 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ...(to && { to })
       });
 
-      const response = await fetch(`/api/maintenance?${queryParams.toString()}`);
-      if (!response.ok) throw new Error("ไม่สามารถดึงข้อมูลได้");
-
-      const data = await response.json();
+      const data = await API.get(`/api/maintenance?${queryParams.toString()}`);
       
       // show information in table
       renderTable(data);
@@ -77,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${formatDate(item.createdAt)}</td>
         <td>${item.roomNumber || "-"}</td>
         <td>${item.senderName || "-"}</td>
-        <td>${item.type || "-"}</td>
+        <td>${item.type || "-"}${item.title ? `<br><small>${item.title}</small>` : ""}</td>
         <td>
           <span class="status-cell">
             ${item.status || "รอดำเนินการ"} <span class="status-dot ${dotClass}"></span>
