@@ -6,6 +6,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const userLine = document.getElementById("contact-line");
   const userAddress = document.getElementById("contact-address");
   const userQrImg = document.getElementById("contact-qr-img");
+  const userLineSubtext = document.getElementById("contact-line-subtext");
+
+  const DEFAULT_QR = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=LineHormpak&color=7d8153";
 
   fetchContactData();
 
@@ -16,21 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const response = await res.json();
         const data = response.data || response;
         renderUserData(data);
-        return;
       }
     } catch (err) {
-      console.log("Fetching from local storage fallback...");
-    }
-
-    // get localStorage of Admin
-    const localData = JSON.parse(localStorage.getItem("contact_info"));
-    if (localData) {
-      renderUserData(localData);
-    }
-
-    const savedQR = localStorage.getItem("qr_code_main");
-    if (savedQR && userQrImg) {
-      userQrImg.src = savedQR;
+      console.error("Failed to fetch contact info:", err);
+      if (userQrImg) userQrImg.src = DEFAULT_QR;
     }
   }
 
@@ -40,6 +32,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (userFacebook) userFacebook.textContent = data.facebook || "-";
     if (userLine) userLine.textContent = data.line || "-";
     if (userAddress) userAddress.textContent = data.address || "-";
-    if (userQrImg && data.qrMain) userQrImg.src = data.qrMain;
+    
+    if (userLineSubtext) {
+      userLineSubtext.textContent = "สแกนเพิ่มเพื่อน หรือ @1234";
+    }
+
+    if (userQrImg) {
+      userQrImg.src = (data.qrMain && data.qrMain.trim() !== "") ? data.qrMain : DEFAULT_QR;
+      userQrImg.style.display = "block";
+    }
   }
 });

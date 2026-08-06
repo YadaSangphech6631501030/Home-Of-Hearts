@@ -158,6 +158,18 @@ const billingCycleSchema = new mongoose.Schema({
 }, { timestamps: true });
 const BillingCycle = mongoose.models.BillingCycle || mongoose.model("BillingCycle", billingCycleSchema);
 
+const contactInfoSchema = new mongoose.Schema({
+  tel: { type: String, default: "" },
+  email: { type: String, default: "" },
+  facebook: { type: String, default: "" },
+  line: { type: String, default: "" },
+  address: { type: String, default: "" },
+  qrMain: { type: String, default: "" },
+  qrShop: { type: String, default: "" },
+  qrOffice: { type: String, default: "" }
+}, { timestamps: true });
+const ContactInfo = mongoose.models.ContactInfo || mongoose.model("ContactInfo", contactInfoSchema);
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -166,6 +178,57 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/css", express.static(path.join(__dirname, "public/css")));
 app.use("/js", express.static(path.join(__dirname, "public/js")));
+
+// contact info
+app.get("/api/contact", async (req, res) => {
+  try {
+    const contact = await ContactInfo.findOne().sort({ updatedAt: -1 });
+
+    res.json({
+      success: true,
+      data: contact || {
+        tel: "",
+        email: "",
+        facebook: "",
+        line: "",
+        address: "",
+        qrMain: "",
+        qrShop: "",
+        qrOffice: ""
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.put("/api/contact", async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+
+    if (!sessionUser || sessionUser.role !== "admin") {
+      return res.status(403).json({ success: false, message: "ไม่มีสิทธิ์แก้ไขข้อมูลติดต่อ" });
+    }
+
+    const allowedFields = ["tel", "email", "facebook", "line", "address", "qrMain", "qrShop", "qrOffice"];
+    const payload = {};
+
+    allowedFields.forEach((field) => {
+      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+        payload[field] = String(req.body[field] || "").trim();
+      }
+    });
+
+    const existing = await ContactInfo.findOne().sort({ updatedAt: -1 });
+    const contact = existing
+      ? await ContactInfo.findByIdAndUpdate(existing._id, payload, { new: true })
+      : await ContactInfo.create(payload);
+
+    res.json({ success: true, data: contact });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 // login
 app.post("/auth/login", async (req, res) => {

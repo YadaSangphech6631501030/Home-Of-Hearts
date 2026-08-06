@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ติดต่อ | Home of Hearts Residence</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/user-home.css" />
   <link rel="stylesheet" href="/css/user-contact.css" />
 </head>
+
 <body class="user-page">
   <script src="/js/config.js"></script>
   <script src="/js/api.js"></script>
@@ -19,7 +22,8 @@
     <a class="user-brand" href="/user/index.html" aria-label="Home of Hearts Residence">
       <span class="user-brand__icon" aria-hidden="true">
         <svg viewBox="0 0 512 512" fill="currentColor">
-          <path d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z"/>
+          <path
+            d="M261.56 10.35a25.6 25.6 0 0 0-31.12 0l-216 172.8A25.6 25.6 0 0 0 4.8 203.2v25.6A25.6 25.6 0 0 0 30.4 254.4h17.6v201.6A25.6 25.6 0 0 0 73.6 481.6h112a12.8 12.8 0 0 0 12.8-12.8v-128a38.4 38.4 0 0 1 76.8 0v128a12.8 12.8 0 0 0 12.8 12.8h112a25.6 25.6 0 0 0 25.6-25.6V254.4h17.6a25.6 25.6 0 0 0 25.6-25.6v-25.6a25.6 25.6 0 0 0-9.6-20.05z" />
         </svg>
       </span>
       <span><strong>Home of Hearts Residence</strong><small>หอพักบ้านแห่งหัวใจ</small></span>
@@ -34,9 +38,13 @@
     </nav>
     <div class="user-actions">
       <button class="user-bell" type="button" aria-label="แจ้งเตือน">
-        <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+        <svg viewBox="0 0 24 24">
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+          <path d="M10 21h4" />
+        </svg>
       </button>
-      <button class="user-profile" type="button" id="user-profile-trigger" aria-expanded="false" aria-controls="user-profile-dropdown">
+      <button class="user-profile" type="button" id="user-profile-trigger" aria-expanded="false"
+        aria-controls="user-profile-dropdown">
         <span id="user-profile-name">ผู้เช่า...</span>
         <span class="user-avatar" id="user-avatar">ผ</span>
         <span>⌄</span>
@@ -47,14 +55,16 @@
           <strong id="user-menu-name">ผู้เช่า</strong>
         </div>
         <a class="user-dropdown-item" href="/user/account.html" role="menuitem">
-          <svg class="user-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg class="user-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="7" r="3.5"></circle>
             <path d="M5 20c0-3.866 3.134-7 7-7s7 3.134 7 7"></path>
           </svg>
           <span>บัญชี</span>
         </a>
         <button class="user-dropdown-item" type="button" id="user-logout" role="menuitem">
-          <svg class="user-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg class="user-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
             <polyline points="16 17 21 12 16 7"></polyline>
             <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -76,38 +86,41 @@
           <li>
             <span class="contact-icon">📞</span>
             <strong>Tel :</strong>
-            <span id="contact-tel">097-920-xxxx , 095-221-xxx</span>
+            <span id="contact-tel">-</span>
           </li>
           <li>
             <span class="contact-icon">✉️</span>
             <strong>Email :</strong>
-            <span id="contact-email">123@gmail.com</span>
+            <span id="contact-email">-</span>
           </li>
           <li>
             <span class="contact-icon">💬</span>
             <strong>Facebook :</strong>
-            <span id="contact-facebook">123</span>
+            <span id="contact-facebook">-</span>
           </li>
           <li>
             <span class="contact-icon">💬</span>
             <strong>Line :</strong>
-            <span id="contact-line">@123</span>
+            <span id="contact-line">-</span>
           </li>
           <li>
             <span class="contact-icon">🏠</span>
             <strong>ที่อยู่ :</strong>
-            <span id="contact-address">000 จ.เชียงราย อ.เมือง ต.เวียง 57160</span>
+            <span id="contact-address">-</span>
           </li>
         </ul>
       </div>
 
       <!-- QR Code -->
+      <!-- QR Code -->
       <div class="contact-qr-section">
         <h3>Line หอพัก</h3>
         <div class="qr-code-box">
-          <img id="contact-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=LineHormpak&color=7d8153" alt="Line QR Code" />
+          <img id="contact-qr-img"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=LineHormpak&color=7d8153"
+            alt="Line QR Code" />
         </div>
-        <p>สแกนเพิ่มเพื่อน หรือ @1234</p>
+        <p id="contact-line-subtext">สแกนเพิ่มเพื่อน หรือ @1234</p>
       </div>
     </div>
   </main>
@@ -116,4 +129,5 @@
   <script src="/js/user-notifications.js"></script>
   <script src="/js/user-contact.js"></script>
 </body>
+
 </html>
