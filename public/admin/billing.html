@@ -172,6 +172,180 @@
     </div>
   </main>
 
+
+  <div class="modal-overlay" id="bill-detail-modal">
+    <div class="modal-card bill-detail-card">
+      <div class="modal-content-card bill-detail-content">
+        <button class="bill-detail-close" type="button" id="bill-detail-close" aria-label="ปิด">×</button>
+        <h2 class="modal-card-title">รายละเอียดบิล 💵</h2>
+
+        <div class="bill-detail-summary">
+          <div>
+            <span>ห้อง</span>
+            <strong id="detail-room">-</strong>
+          </div>
+          <div>
+            <span>ผู้เช่า</span>
+            <strong id="detail-tenant">-</strong>
+          </div>
+          <div>
+            <span>กำหนดชำระ</span>
+            <strong id="detail-due-date">-</strong>
+          </div>
+          <div>
+            <span>สถานะ</span>
+            <strong id="detail-status">-</strong>
+          </div>
+        </div>
+
+        <div class="bill-detail-section">
+          <h3>รายละเอียดค่าใช้จ่าย</h3>
+          <div class="bill-detail-row">
+            <span>ค่าเช่า</span>
+            <strong id="detail-rent">0</strong>
+            <span>บาท</span>
+          </div>
+          <div class="bill-detail-row">
+            <span>ค่าน้ำ</span>
+            <span><strong id="detail-water-rate">0</strong> บาท/หน่วย</span>
+            <span>ใช้ไป <strong id="detail-water-units">0</strong> หน่วย</span>
+            <span>รวม <strong id="detail-water-total">0</strong> บาท</span>
+          </div>
+          <div class="bill-detail-row">
+            <span>ค่าไฟ</span>
+            <span><strong id="detail-electricity-rate">0</strong> บาท/หน่วย</span>
+            <span>ใช้ไป <strong id="detail-electricity-units">0</strong> หน่วย</span>
+            <span>รวม <strong id="detail-electricity-total">0</strong> บาท</span>
+          </div>
+        </div>
+
+        <div class="bill-detail-total">
+          <span>รวมทั้งสิ้น</span>
+          <strong id="detail-total">0</strong>
+          <span>บาท</span>
+        </div>
+
+        <div class="bill-detail-note">
+          <span>หมายเหตุ</span>
+          <p id="detail-note">-</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal-overlay" id="bill-delete-modal">
+    <div class="modal-card bill-delete-card">
+      <div class="modal-content-card bill-delete-content">
+        <button class="bill-detail-close" type="button" id="bill-delete-close" aria-label="ปิด">×</button>
+        <h2 class="modal-card-title">ลบบิลนี้หรือไม่</h2>
+        <p class="bill-delete-subtitle">รายการนี้จะถูกลบออกจากระบบเงินหอพัก</p>
+
+        <div class="bill-delete-summary">
+          <div>
+            <span>ห้อง</span>
+            <strong id="delete-room">-</strong>
+          </div>
+          <div>
+            <span>ผู้เช่า</span>
+            <strong id="delete-tenant">-</strong>
+          </div>
+          <div>
+            <span>ยอดเงิน</span>
+            <strong><span id="delete-total">0</span> บาท</strong>
+          </div>
+        </div>
+
+        <p class="bill-delete-message" id="bill-delete-message"></p>
+
+        <div class="modal-actions-center">
+          <button type="button" class="btn-popup btn-popup-cancel" id="cancel-delete-bill">ยกเลิก</button>
+          <button type="button" class="btn-popup btn-popup-danger" id="confirm-delete-bill">ลบบิล</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="create-single-bill-modal">
+    <div class="modal-card modal-card--large modal-card--compact">
+      <div class="modal-content-card">
+        <h2 class="modal-card-title">สร้างบิล 💵</h2>
+
+        <div class="modal-section-header">
+          <h3>ข้อมูลบิลรายห้อง</h3>
+        </div>
+
+        <div class="single-bill-form">
+          <label class="single-bill-field">
+            <span>รอบบิล</span>
+            <select id="single-bill-cycle" class="filter-select">
+              <option value="">เลือกรอบบิล</option>
+            </select>
+          </label>
+
+          <label class="single-bill-field">
+            <span>ห้อง</span>
+            <select id="single-bill-room" class="filter-select">
+              <option value="">เลือกห้อง</option>
+            </select>
+          </label>
+
+          <div class="single-bill-expenses single-bill-field--full">
+            <h3>รายละเอียดค่าใช้จ่าย</h3>
+
+            <div class="expense-line expense-line--rent">
+              <span class="expense-name">ค่าเช่า</span>
+              <input type="text" id="single-bill-rent" value="4,600" />
+              <span>บาท</span>
+            </div>
+
+            <div class="expense-line">
+              <span class="expense-name">ค่าน้ำ</span>
+              <input type="text" id="single-bill-water-rate" value="27" />
+              <span>บาท/หน่วย</span>
+              <span>ใช้ไป</span>
+              <input type="text" id="single-bill-water-units" placeholder="0" />
+              <span>หน่วย</span>
+              <span>รวม</span>
+              <input type="text" id="single-bill-water-total" value="0" readonly />
+              <span>บาท</span>
+            </div>
+
+            <div class="expense-line">
+              <span class="expense-name">ค่าไฟ</span>
+              <input type="text" id="single-bill-electricity-rate" value="6" />
+              <span>บาท/หน่วย</span>
+              <span>ใช้ไป</span>
+              <input type="text" id="single-bill-electricity-units" placeholder="0" />
+              <span>หน่วย</span>
+              <span>รวม</span>
+              <input type="text" id="single-bill-electricity-total" value="0" readonly />
+              <span>บาท</span>
+            </div>
+
+            <div class="expense-total-line">
+              <span>รวมทั้งสิ้น</span>
+              <strong id="single-bill-total-display">4,600</strong>
+              <span>บาท</span>
+            </div>
+          </div>
+
+          <label class="single-bill-field single-bill-field--full">
+            <span>หมายเหตุ</span>
+            <input type="text" id="single-bill-note" placeholder="รายละเอียดเพิ่มเติม" />
+          </label>
+        </div>
+
+        <p class="single-bill-message" id="single-bill-message"></p>
+
+        <div class="modal-actions-center">
+          <button type="button" class="btn-popup btn-popup-cancel" id="cancel-single-bill-modal">ยกเลิก</button>
+          <button type="button" class="btn-popup btn-popup-submit" id="submit-single-bill-modal">สร้างบิล</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
    <!-- Create bill -->
   <div class="modal-overlay" id="create-batch-modal">
     <div class="modal-card modal-card--large">
