@@ -110,6 +110,7 @@ async function fetchBillingData() {
   }
 }
 
+// Event listeners and modal handling
 document.addEventListener("DOMContentLoaded", () => {
   const openBtn = document.getElementById("btn-create-cycle");
   const modal = document.getElementById("create-batch-modal");
@@ -224,6 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
     deleteModal?.classList.add("active");
   }
 
+  // Open bill detail modal
   function openBillDetailModal(bill) {
     setText("detail-room", bill.roomNumber || "-");
     setText("detail-tenant", bill.tenantName || "-");
@@ -320,6 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Handle click events on billing table
   document.getElementById("billing-tbody")?.addEventListener("click", async (event) => {
     const button = event.target.closest(".btn-action");
     if (!button) return;
@@ -380,6 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Handle click events on expense edit buttons
   document.querySelectorAll(".btn-edit-expense").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const input = e.currentTarget.parentElement.querySelector("input");

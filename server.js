@@ -135,9 +135,28 @@ const billingSchema = new mongoose.Schema({
   dueDate: String,
   completedDate: String,
   status: { type: String, default: "pending" }, // 'pending', 'completed'
-  note: String
+  note: String,
+  cycleId: String,
+  rentAmount: { type: Number, default: 0 },
+  waterRate: { type: Number, default: 0 },
+  waterUnits: { type: Number, default: 0 },
+  waterTotal: { type: Number, default: 0 },
+  electricityRate: { type: Number, default: 0 },
+  electricityUnits: { type: Number, default: 0 },
+  electricityTotal: { type: Number, default: 0 }
 }, { timestamps: true });
 const Billing = mongoose.models.Billing || mongoose.model("Billing", billingSchema);
+
+const billingCycleSchema = new mongoose.Schema({
+  startDate: { type: String, required: true },
+  endDate: { type: String, required: true },
+  rentAmount: { type: Number, default: 0 },
+  waterRate: { type: Number, default: 0 },
+  electricityRate: { type: Number, default: 0 },
+  targetRooms: { type: String, default: "occupied" },
+  status: { type: String, default: "active" }
+}, { timestamps: true });
+const BillingCycle = mongoose.models.BillingCycle || mongoose.model("BillingCycle", billingCycleSchema);
 
 // Middleware
 app.use(express.json());
@@ -510,6 +529,237 @@ app.get('/api/user/home-data', async (req, res) => {
         announcements,
       },
     });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// billing helpers
+function parseBillingNumber(value) {
+  const number = Number(String(value ?? "0").replace(/,/g, "").trim());
+  return Number.isFinite(number) ? number : 0;
+}
+
+function formatBillingStatus(status) {
+  if (status === "completed") return "เสร็จสิ้น";
+  if (status === "pending") return "รอดำเนินการ";
+  return status || "รอดำเนินการ";
+}
+
+// admin billing cycles
+app.get('/api/billing-cycles', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+    if (!sessionUser || sessionUser.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้ดูแลระบบเท่านั้น' });
+    }
+    const cycles = await BillingCycle.find().sort({ endDate: -1, createdAt: -1 });
+    res.json({ success: true, data: cycles });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/billings/batch', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+    if (!sessionUser || sessionUser.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้ดูแลระบบเท่านั้น' });
+    }
+
+    const { startDate, endDate, targetRooms } = req.body;
+    if (!startDate || !endDate) {
+      return res.status(400).json({ success: false, message: 'กรุณาเลือกช่วงวันที่ให้ครบถ้วน' });
+    }
+
+    const cycle = await BillingCycle.findOneAndUpdate(
+      { startDate, endDate },
+      {
+        $set: {
+          startDate,
+          endDate,
+          targetRooms: targetRooms || 'occupied',
+          rentAmount: parseBillingNumber(req.body.rentAmount),
+          waterRate: parseBillingNumber(req.body.waterRate),
+          electricityRate: parseBillingNumber(req.body.electricityRate),
+          status: 'active',
+        },
+      },
+      { new: true, upsert: true }
+    );
+
+    res.status(201).json({ success: true, data: cycle });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// admin billing records
+app.get('/api/billings', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+    if (!sessionUser || sessionUser.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้ดูแลระบบเท่านั้น' });
+    }
+    const billings = await Billing.find().sort({ createdAt: -1 });
+    res.json(billings);
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/billings', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+    if (!sessionUser || sessionUser.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้ดูแลระบบเท่านั้น' });
+    }
+
+    const { cycleId, roomNumber, note } = req.body;
+    if (!cycleId || !roomNumber) {
+      return res.status(400).json({ success: false, message: 'กรุณาเลือกรอบบิลและห้องให้ครบถ้วน' });
+    }
+
+    const cycle = await BillingCycle.findById(cycleId);
+    if (!cycle) return res.status(404).json({ success: false, message: 'ไม่พบรอบบิล' });
+
+    const room = await Room.findOne({ roomNumber });
+    const tenantName = room?.tenant?.fullName || '-';
+    const payload = {
+      cycleId: String(cycle._id),
+      roomNumber,
+      tenantName,
+      dueDate: cycle.endDate,
+      amount: parseBillingNumber(req.body.amount),
+      rentAmount: parseBillingNumber(req.body.rentAmount),
+      waterRate: parseBillingNumber(req.body.waterRate),
+      waterUnits: parseBillingNumber(req.body.waterUnits),
+      waterTotal: parseBillingNumber(req.body.waterTotal),
+      electricityRate: parseBillingNumber(req.body.electricityRate),
+      electricityUnits: parseBillingNumber(req.body.electricityUnits),
+      electricityTotal: parseBillingNumber(req.body.electricityTotal),
+      note: note || '',
+      status: 'pending',
+    };
+
+    const billing = await Billing.findOneAndUpdate(
+      { cycleId: String(cycle._id), roomNumber },
+      { $set: payload },
+      { new: true, upsert: true }
+    );
+
+    res.status(201).json({ success: true, data: billing });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.put('/api/billings/:id', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+    if (!sessionUser || sessionUser.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้ดูแลระบบเท่านั้น' });
+    }
+
+    const payload = {
+      amount: parseBillingNumber(req.body.amount),
+      rentAmount: parseBillingNumber(req.body.rentAmount),
+      waterRate: parseBillingNumber(req.body.waterRate),
+      waterUnits: parseBillingNumber(req.body.waterUnits),
+      waterTotal: parseBillingNumber(req.body.waterTotal),
+      electricityRate: parseBillingNumber(req.body.electricityRate),
+      electricityUnits: parseBillingNumber(req.body.electricityUnits),
+      electricityTotal: parseBillingNumber(req.body.electricityTotal),
+      note: req.body.note || '',
+    };
+
+    const billing = await Billing.findByIdAndUpdate(req.params.id, { $set: payload }, { new: true });
+    if (!billing) return res.status(404).json({ success: false, message: 'ไม่พบบิล' });
+    res.json({ success: true, data: billing });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.delete('/api/billings/:id', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+    if (!sessionUser || sessionUser.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้ดูแลระบบเท่านั้น' });
+    }
+    const billing = await Billing.findByIdAndDelete(req.params.id);
+    if (!billing) return res.status(404).json({ success: false, message: 'ไม่พบบิล' });
+    res.json({ success: true, data: billing });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// user billing - latest bill for logged-in tenant room
+app.get('/api/user/billing-data', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+    if (!sessionUser || sessionUser.role !== 'tenant') {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้เช่าเท่านั้น' });
+    }
+
+    const roomNumber = sessionUser.roomNumber;
+    const [room, billing] = await Promise.all([
+      Room.findOne({ roomNumber }),
+      Billing.findOne({ roomNumber }).sort({ dueDate: -1, createdAt: -1 }),
+    ]);
+    let cycle = billing?.cycleId ? await BillingCycle.findById(billing.cycleId) : null;
+    if (!cycle && billing?.dueDate) {
+      cycle = await BillingCycle.findOne({ endDate: billing.dueDate }).sort({ createdAt: -1 });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        tenant: sessionUser,
+        room,
+        billing,
+        cycle,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+
+// user billing history - all bills for logged-in tenant room
+app.get('/api/user/billing-history', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+    if (!sessionUser || sessionUser.role !== 'tenant') {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้เช่าเท่านั้น' });
+    }
+
+    const roomNumber = sessionUser.roomNumber;
+    const billings = await Billing.find({ roomNumber }).sort({ dueDate: -1, createdAt: -1 });
+    const cycleIds = [...new Set(billings.map((billing) => billing.cycleId).filter(Boolean))];
+    const cycles = cycleIds.length ? await BillingCycle.find({ _id: { $in: cycleIds } }) : [];
+    const cycleMap = new Map(cycles.map((cycle) => [String(cycle._id), cycle]));
+
+    const history = billings.map((billing) => {
+      const cycle = billing.cycleId ? cycleMap.get(String(billing.cycleId)) : null;
+      return {
+        id: billing._id,
+        cycle: cycle ? { startDate: cycle.startDate, endDate: cycle.endDate } : null,
+        roomNumber: billing.roomNumber,
+        tenantName: billing.tenantName,
+        dueDate: billing.dueDate,
+        completedDate: billing.completedDate,
+        status: billing.status,
+        amount: billing.amount,
+        note: billing.note,
+        createdAt: billing.createdAt,
+        updatedAt: billing.updatedAt,
+      };
+    });
+
+    res.json({ success: true, data: history });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
