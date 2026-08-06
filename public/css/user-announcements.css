@@ -1,5 +1,5 @@
 .user-announcements-main {
-  width: min(1100px, calc(100% - 48px));
+  width: min(960px, calc(100% - 48px));
   margin: 0 auto;
   padding: 40px 0 80px;
 }
@@ -15,20 +15,20 @@
 
 .user-announcement-list {
   display: grid;
-  gap: 28px;
+  gap: 20px;
 }
 
 .user-announcement-item {
   display: grid;
-  grid-template-columns: 18px 300px 1fr 120px 26px;
+  grid-template-columns: 14px 240px minmax(0, 1fr) 92px 22px;
   align-items: center;
-  gap: 18px;
-  min-height: 72px;
-  padding: 0 22px 0 30px;
+  gap: 14px;
+  min-height: 58px;
+  padding: 0 18px 0 24px;
   border: 0;
-  border-radius: 14px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.18);
   color: #111111;
   font-family: "Noto Sans Thai", sans-serif;
   cursor: pointer;
@@ -36,8 +36,8 @@
 }
 
 .user-announcement-dot {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #ff1515;
 }
@@ -48,7 +48,7 @@
 
 .user-announcement-title {
   min-width: 0;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
@@ -58,7 +58,7 @@
 .user-announcement-preview {
   min-width: 0;
   color: #888181;
-  font-size: 18px;
+  font-size: 15px;
   line-height: 1.25;
   white-space: nowrap;
   overflow: hidden;
@@ -67,14 +67,14 @@
 
 .user-announcement-date {
   color: #888181;
-  font-size: 18px;
+  font-size: 15px;
   text-align: center;
   white-space: nowrap;
 }
 
 .user-announcement-arrow {
   color: #d18a9a;
-  font-size: 42px;
+  font-size: 34px;
   line-height: 1;
   font-weight: 300;
   text-align: right;
