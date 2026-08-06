@@ -43,11 +43,14 @@
 
     <section class="billing-slip" aria-label="ใบแจ้งชำระค่าหอพัก">
       <div class="billing-slip__top">
-        <div class="billing-tenant-line">
-          <span>รหัสลูกหอ <strong id="billing-tenant-code">-</strong></span>
-          <span>ชื่อ <strong id="billing-tenant-name">-</strong></span>
-          <span>สถานะ:<strong id="billing-status">-</strong></span>
-          <span class="billing-status-dot" id="billing-status-dot"></span>
+        <div class="billing-tenant-box">
+          <div class="billing-tenant-line">
+            <span>รหัสลูกหอ <strong id="billing-tenant-code">-</strong></span>
+            <span>ชื่อ <strong id="billing-tenant-name">-</strong></span>
+            <span>สถานะ:<strong id="billing-status">-</strong></span>
+            <span class="billing-status-dot" id="billing-status-dot"></span>
+          </div>
+          <div class="billing-cycle-inline" id="billing-note-cycle">รอบบิล -</div>
         </div>
         <div class="billing-period-box">
           <span>ประจำวันที่</span><strong id="billing-due-date">-</strong>
@@ -68,18 +71,18 @@
           <span>ค่าอื่นๆ</span>
         </div>
         <div class="billing-cell billing-values" id="billing-units">
-          <span>-</span><span>00.00</span><span>00.00</span><span>-</span>
+          <span id="billing-rent-units">-</span><span id="billing-water-units">00.00</span><span id="billing-electricity-units">00.00</span><span id="billing-other-units">-</span>
         </div>
         <div class="billing-cell billing-values" id="billing-rates">
-          <span>-</span><span>27</span><span>6</span><span>-</span>
+          <span id="billing-rent-rate">-</span><span id="billing-water-rate">27</span><span id="billing-electricity-rate">6</span><span id="billing-other-rate">-</span>
         </div>
         <div class="billing-cell billing-values" id="billing-amounts">
-          <span id="billing-rent-amount">0.00</span><span>00.00</span><span>00.00</span><span>-</span>
+          <span id="billing-rent-amount">0.00</span><span id="billing-water-total">00.00</span><span id="billing-electricity-total">00.00</span><span id="billing-other-total">-</span>
         </div>
       </div>
 
       <div class="billing-slip__bottom">
-        <p class="billing-note"><span>หมายเหตุ</span><br />กรุณาชำระค่าเช่าภายในวันที่ 1-7 ของทุกเดือน หากเกินกำหนด<br />ปรับเพิ่มวันละ 50บาท</p>
+        <p class="billing-note"><span>หมายเหตุ</span><br /><span id="billing-note-text">กรุณาชำระค่าเช่าภายในวันที่ 1-7 ของทุกเดือน หากเกินกำหนด<br />ปรับเพิ่มวันละ 50บาท</span></p>
         <div class="billing-total-label">รวมทั้งสิ้น</div>
         <strong class="billing-total" id="billing-total">0.00</strong>
       </div>
@@ -90,6 +93,31 @@
       <button class="billing-pay-button" type="button" id="billing-pay-button">ชำระเงิน</button>
     </div>
   </main>
+
+  <div class="payment-modal-overlay" id="payment-qr-modal" aria-hidden="true">
+    <section class="payment-modal" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
+      <button class="payment-modal-close" type="button" id="payment-modal-close" aria-label="ยกเลิกรายการชำระ">×</button>
+      <h2 id="payment-modal-title">ชำระเงินผ่าน QR Code</h2>
+      <p class="payment-modal-subtitle">สแกน QR เพื่อชำระค่าหอพัก</p>
+
+      <div class="payment-amount-card">
+        <span>ยอดชำระ</span>
+        <strong id="payment-modal-amount">0.00 บาท</strong>
+      </div>
+
+      <div class="payment-qr-frame">
+        <img id="payment-qr-image" src="" alt="QR Code สำหรับชำระเงิน" />
+      </div>
+
+      <div class="payment-countdown" aria-live="polite">
+        เหลือเวลา <strong id="payment-countdown-time">05:00</strong>
+      </div>
+
+      <button class="payment-refresh-button" type="button" id="payment-refresh-button" aria-label="โหลด QR Code ใหม่">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+      </button>
+    </section>
+  </div>
 
   <script src="/js/user-home.js"></script>
   <script src="/js/user-notifications.js"></script>

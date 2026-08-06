@@ -1,0 +1,115 @@
+.billing-history-main {
+  position: relative;
+  width: min(1340px, calc(100% - 64px));
+  margin: 0 auto;
+  padding: 30px 0 72px;
+}
+
+.billing-history-title {
+  margin: 0 0 28px;
+  text-align: center;
+  color: #111111;
+  font-size: 28px;
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+.billing-back-button {
+  position: absolute;
+  left: 0;
+  top: 26px;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #7d8153;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.16);
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 38px;
+  line-height: 42px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.billing-history-card {
+  min-height: 430px;
+  padding: 42px 28px 32px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+}
+
+.billing-history-table {
+  width: 100%;
+  min-width: 960px;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.billing-history-table th {
+  padding: 14px 8px;
+  border-bottom: 1px solid #eeeeee;
+  color: #222222;
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.billing-history-table td {
+  padding: 16px 8px;
+  border-bottom: 1px solid #f9f9f9;
+  color: #555555;
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 400;
+}
+
+.billing-history-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.billing-history-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff9800;
+}
+
+.billing-history-dot.is-paid {
+  background: #19b83b;
+}
+
+.billing-history-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.billing-history-empty {
+  height: 240px;
+  color: #888181 !important;
+}
+
+@media (max-width: 900px) {
+  .billing-history-main {
+    width: min(100% - 32px, 720px);
+    padding-top: 28px;
+  }
+
+  .billing-history-title {
+    margin-bottom: 28px;
+    font-size: 24px;
+  }
+
+  .billing-back-button {
+    position: static;
+    margin-bottom: 18px;
+  }
+
+  .billing-history-card {
+    padding: 28px 18px;
+  }
+}
