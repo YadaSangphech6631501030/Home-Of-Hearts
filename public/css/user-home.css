@@ -613,3 +613,12 @@ body.user-page { min-height: 100vh; margin: 0; font-family: "Noto Sans Thai", sa
 
 }
 
+
+/* Keep secondary gray text in user dashboard cards the same size. */
+.info-column .list-copy span,
+.info-column .alert-list-copy span {
+  color: #888181;
+  font-size: 15px;
+  line-height: 1.25;
+  font-weight: 400;
+}
