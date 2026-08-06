@@ -45,6 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
     qrOffice: document.getElementById("qr-img-3"),
   };
 
+  // ตัวแปรเก็บค่า QR Code ปัจจุบันไว้
+  let currentQRs = {
+    qrMain: "",
+    qrShop: "",
+    qrOffice: "",
+  };
+
   loadContactData();
 
   async function loadContactData() {
@@ -62,19 +69,30 @@ document.addEventListener("DOMContentLoaded", () => {
     if (displayFacebook) displayFacebook.textContent = data.facebook || "-";
     if (displayLine) displayLine.textContent = data.line || "-";
     if (displayAddress) displayAddress.textContent = data.address || "-";
-    if (qrImages.qrMain && data.qrMain) qrImages.qrMain.src = data.qrMain;
-    if (qrImages.qrShop && data.qrShop) qrImages.qrShop.src = data.qrShop;
-    if (qrImages.qrOffice && data.qrOffice) qrImages.qrOffice.src = data.qrOffice;
+
+    if (data.qrMain) {
+      currentQRs.qrMain = data.qrMain;
+      if (qrImages.qrMain) qrImages.qrMain.src = data.qrMain;
+    }
+    if (data.qrShop) {
+      currentQRs.qrShop = data.qrShop;
+      if (qrImages.qrShop) qrImages.qrShop.src = data.qrShop;
+    }
+    if (data.qrOffice) {
+      currentQRs.qrOffice = data.qrOffice;
+      if (qrImages.qrOffice) qrImages.qrOffice.src = data.qrOffice;
+    }
   }
 
-  async function saveContactData(extra = {}) {
+  async function saveContactData(dataPayload = {}) {
     const payload = {
-      tel: displayTel?.textContent === "-" ? "" : displayTel?.textContent || "",
-      email: displayEmail?.textContent === "-" ? "" : displayEmail?.textContent || "",
-      facebook: displayFacebook?.textContent === "-" ? "" : displayFacebook?.textContent || "",
-      line: displayLine?.textContent === "-" ? "" : displayLine?.textContent || "",
-      address: displayAddress?.textContent === "-" ? "" : displayAddress?.textContent || "",
-      ...extra,
+      tel: inputTel?.value.trim() || (displayTel?.textContent === "-" ? "" : displayTel?.textContent) || "",
+      email: inputEmail?.value.trim() || (displayEmail?.textContent === "-" ? "" : displayEmail?.textContent) || "",
+      facebook: inputFacebook?.value.trim() || (displayFacebook?.textContent === "-" ? "" : displayFacebook?.textContent) || "",
+      line: inputLine?.value.trim() || (displayLine?.textContent === "-" ? "" : displayLine?.textContent) || "",
+      address: inputAddress?.value.trim() || (displayAddress?.textContent === "-" ? "" : displayAddress?.textContent) || "",
+      ...currentQRs,
+      ...dataPayload,
     };
 
     const response = await API.put("/api/contact", payload);
@@ -83,20 +101,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   openModalBtn?.addEventListener("click", () => {
     if (inputTel && displayTel)
-      inputTel.value =
-        displayTel.textContent === "-" ? "" : displayTel.textContent;
+      inputTel.value = displayTel.textContent === "-" ? "" : displayTel.textContent;
     if (inputEmail && displayEmail)
-      inputEmail.value =
-        displayEmail.textContent === "-" ? "" : displayEmail.textContent;
+      inputEmail.value = displayEmail.textContent === "-" ? "" : displayEmail.textContent;
     if (inputFacebook && displayFacebook)
-      inputFacebook.value =
-        displayFacebook.textContent === "-" ? "" : displayFacebook.textContent;
+      inputFacebook.value = displayFacebook.textContent === "-" ? "" : displayFacebook.textContent;
     if (inputLine && displayLine)
-      inputLine.value =
-        displayLine.textContent === "-" ? "" : displayLine.textContent;
+      inputLine.value = displayLine.textContent === "-" ? "" : displayLine.textContent;
     if (inputAddress && displayAddress)
-      inputAddress.value =
-        displayAddress.textContent === "-" ? "" : displayAddress.textContent;
+      inputAddress.value = displayAddress.textContent === "-" ? "" : displayAddress.textContent;
 
     modal?.classList.add("active");
   });
@@ -111,25 +124,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target === modal) closeModal();
   });
 
+  // บันทึกข้อมูลเมื่อกดปุ่มใน Modal
   editForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    if (displayTel && inputTel)
-      displayTel.textContent = inputTel.value.trim() || "-";
-    if (displayEmail && inputEmail)
-      displayEmail.textContent = inputEmail.value.trim() || "-";
-    if (displayFacebook && inputFacebook)
-      displayFacebook.textContent = inputFacebook.value.trim() || "-";
-    if (displayLine && inputLine)
-      displayLine.textContent = inputLine.value.trim() || "-";
-    if (displayAddress && inputAddress)
-      displayAddress.textContent = inputAddress.value.trim() || "-";
-
     try {
-      await saveContactData();
+      const newContactData = {
+        tel: inputTel?.value.trim() || "-",
+        email: inputEmail?.value.trim() || "-",
+        facebook: inputFacebook?.value.trim() || "-",
+        line: inputLine?.value.trim() || "-",
+        address: inputAddress?.value.trim() || "-",
+      };
+
+      await saveContactData(newContactData);
       closeModal();
     } catch (error) {
-      alert(error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูลติดต่อ");
+      console.error("Save error:", error);
+      alert(error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูลติดต่อ (อาจต้องล็อกอิน Admin ใหม่อีกครั้ง)");
     }
   });
 
@@ -157,6 +169,17 @@ document.addEventListener("DOMContentLoaded", () => {
       reader.readAsDataURL(file);
     });
   };
+
+  const logoutButton = document.getElementById("logout-button");
+  logoutButton?.addEventListener("click", () => {
+    if (typeof API !== "undefined" && typeof API.logout === "function") {
+      API.logout();
+    } else {
+      localStorage.removeItem("token");
+      sessionStorage.clear();
+      window.location.href = "/";
+    }
+  });
 
   setupQRUpload("upload-qr-1", "qr-img-1", "qrMain");
   setupQRUpload("upload-qr-2", "qr-img-2", "qrShop");
