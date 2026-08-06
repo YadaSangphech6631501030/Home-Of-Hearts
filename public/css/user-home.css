@@ -405,3 +405,211 @@ body.user-page { min-height: 100vh; margin: 0; font-family: "Noto Sans Thai", sa
 .user-dropdown-item:hover {
   background-color: #f5f2ef;
 }
+
+/* Announcement notification panel for user header. */
+.user-bell--notifiable {
+  position: relative;
+}
+
+.user-notification-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #e3a0b3;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 16px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(206, 143, 158, 0.45);
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.user-bell.has-notification .user-notification-badge {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.user-notification-modal {
+  position: fixed;
+  left: var(--notification-left, auto);
+  top: var(--notification-top, 72px);
+  z-index: 300;
+  display: none;
+  width: min(430px, calc(100vw - 24px));
+  pointer-events: none;
+}
+
+.user-notification-modal.is-open {
+  display: block;
+}
+
+.user-notification-card {
+  position: relative;
+  width: 100%;
+  max-height: min(560px, calc(100vh - var(--notification-top, 72px) - 18px));
+  overflow: visible;
+  border: 1px solid rgba(215, 209, 206, 0.78);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 18px 46px rgba(42, 36, 34, 0.17);
+  pointer-events: auto;
+}
+
+.user-notification-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--line);
+  border-radius: 16px 16px 0 0;
+  background: #ffffff;
+  color: #1f1f23;
+}
+
+.user-notification-header h2 {
+  margin: 0;
+  color: #1f1f23;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.user-notification-header p {
+  margin: 3px 0 0;
+  color: #858585;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+.user-notification-list {
+  display: grid;
+  max-height: 360px;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 0 0 16px 16px;
+}
+
+.user-notification-item {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto 18px;
+  align-items: center;
+  gap: 12px;
+  min-height: 76px;
+  padding: 12px 16px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: #ffffff;
+  color: #1f1f23;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.user-notification-item:hover {
+  background: rgba(249, 246, 244, 0.7);
+}
+
+.user-notification-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff1010;
+}
+
+.user-notification-copy {
+  min-width: 0;
+}
+
+.user-notification-copy strong,
+.user-notification-copy small {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-notification-copy strong {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.28;
+}
+
+.user-notification-copy small,
+.user-notification-date {
+  color: #858585;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.user-notification-arrow {
+  color: var(--rose);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.user-notification-empty {
+  margin: 0;
+  padding: 24px 18px;
+  color: #858585;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.user-notification-detail {
+  padding: 18px 18px 6px;
+  background: #ffffff;
+}
+
+.user-notification-detail-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  color: #858585;
+  font-size: 13px;
+  font-weight: 700;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.user-notification-detail h3 {
+  margin: 16px 0 8px;
+  color: #1f1f23;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.user-notification-detail p {
+  margin: 0;
+  max-height: 235px;
+  overflow-y: auto;
+  color: #6f6a68;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+
+@media (max-width: 560px) {
+  .user-notification-modal {
+    left: 12px !important;
+    right: 12px;
+    width: auto;
+  }
+
+}
+

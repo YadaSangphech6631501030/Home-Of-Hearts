@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalDate = document.getElementById("announcement-modal-date");
   const modalTitle = document.getElementById("user-announcement-modal-title");
   const modalContent = document.getElementById("announcement-modal-content");
+  const READ_STORAGE_KEY = "homeOfHeartsReadAnnouncementIds";
   let announcements = [];
 
   closeButton?.addEventListener("click", closeModal);
@@ -26,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await API.get("/api/announcements");
       announcements = response.data || [];
       renderList(announcements);
+      openAnnouncementFromQuery();
     } catch (error) {
       renderList([]);
     }
@@ -50,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function openModal(id) {
     const item = announcements.find((entry) => String(entry._id || entry.id || '') === String(id));
     if (!item || !modal) return;
+    markAnnouncementRead(id);
     if (modalAuthor) modalAuthor.textContent = item.author || 'สำนักงานหอพักบ้านแห่งหัวใจ';
     if (modalDate) modalDate.textContent = formatShortDate(item.date || item.createdAt);
     if (modalTitle) modalTitle.textContent = item.title || 'ประกาศ';
@@ -61,6 +64,23 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeModal() {
     modal?.classList.remove('is-open');
     modal?.setAttribute('aria-hidden', 'true');
+  }
+
+  function openAnnouncementFromQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('announcement');
+    if (id) openModal(id);
+  }
+
+  function markAnnouncementRead(id) {
+    try {
+      const stored = JSON.parse(localStorage.getItem(READ_STORAGE_KEY) || '[]');
+      const readIds = new Set(Array.isArray(stored) ? stored.map(String) : []);
+      readIds.add(String(id));
+      localStorage.setItem(READ_STORAGE_KEY, JSON.stringify(Array.from(readIds)));
+    } catch (error) {
+      localStorage.setItem(READ_STORAGE_KEY, JSON.stringify([String(id)]));
+    }
   }
 
   function formatShortDate(value) {
