@@ -385,56 +385,68 @@ app.get("/admin/index.html", (req, res) => {
 
 app.get("/api/dashboard/summary", async (req, res) => {
   try {
-    // get rooms
-    const totalRooms = await Room.countDocuments();
-    const occupiedRooms = await Room.countDocuments({
-      status: { $in: ["occupied", "ไม่ว่าง"] }
-    });
-    const availableRooms = totalRooms - occupiedRooms;
+    const latestCycle = await BillingCycle.findOne().sort({ endDate: -1, createdAt: -1 });
+    const billingQuery = latestCycle
+      ? { $or: [{ cycleId: String(latestCycle._id) }, { dueDate: latestCycle.endDate }] }
+      : {};
 
-    // get maintenance
-    const maintPending = await Maintenance.countDocuments({ status: "รอดำเนินการ" });
-    const maintProgress = await Maintenance.countDocuments({ status: "กำลังดำเนินการ" });
-    const maintCompleted = await Maintenance.countDocuments({ status: "เสร็จสิ้น" });
+    const [rooms, maintenanceItems, billings, parcels, recentAnnouncements] = await Promise.all([
+      Room.find().lean(),
+      Maintenance.find().lean(),
+      Billing.find(billingQuery).lean(),
+      Parcel.find({ status: { $nin: ["completed", "เสร็จสิ้น"] } }).lean(),
+      Announcement.find().sort({ createdAt: -1 }).limit(6).lean()
+    ]);
 
-    // get billing
-    const totalBillings = await Billing.countDocuments();
-    const billingPending = await Billing.countDocuments({ status: { $in: ["pending", "รอดำเนินการ"] } });
-    const billingCompleted = await Billing.countDocuments({ status: { $in: ["completed", "เสร็จสิ้น"] } });
+    const occupiedRooms = rooms.filter((room) => {
+      const status = String(room.status || "").toLowerCase().trim();
+      return status === "occupied" || status === "ไม่ว่าง" || Boolean(room.tenant && room.tenant.fullName);
+    }).length;
 
-    // get parcels
-    const parcelTotal = await Parcel.countDocuments({ status: "pending" });
-    const parcelBox = await Parcel.countDocuments({ status: "pending", type: "กล่อง" });
-    const parcelEnvelope = await Parcel.countDocuments({ status: "pending", type: "ซอง" });
+    const availableRooms = rooms.filter((room) => {
+      const status = String(room.status || "").toLowerCase().trim();
+      return status === "available" || status === "ว่าง" || (!room.tenant?.fullName && status !== "maintenance");
+    }).length;
 
-    // get announcements
-    const recentAnnouncements = await Announcement.find()
-      .sort({ createdAt: -1 })
-      .limit(6);
+    const maintenanceSummary = maintenanceItems.reduce((summary, item) => {
+      const status = String(item.status || "รอดำเนินการ").trim();
+      if (status === "เสร็จสิ้น" || status === "completed") summary.completed += 1;
+      else if (status === "กำลังดำเนินการ" || status === "in-progress") summary.progress += 1;
+      else summary.pending += 1;
+      return summary;
+    }, { pending: 0, progress: 0, completed: 0 });
+
+    const billingSummary = billings.reduce((summary, item) => {
+      const status = String(item.status || "pending").trim();
+      if (status === "completed" || status === "เสร็จสิ้น") summary.completed += 1;
+      else summary.pending += 1;
+      return summary;
+    }, { total: billings.length, pending: 0, completed: 0 });
+
+    const parcelSummary = parcels.reduce((summary, item) => {
+      const type = String(item.type || "").trim().toLowerCase();
+      summary.total += 1;
+      if (["envelope", "ซอง", "ซองเอกสาร"].includes(type)) summary.envelope += 1;
+      else summary.box += 1;
+      return summary;
+    }, { total: 0, box: 0, envelope: 0 });
 
     res.json({
       success: true,
       data: {
         rooms: {
-          total: totalRooms,
+          total: rooms.length,
           occupied: occupiedRooms,
           available: availableRooms
         },
-        maintenance: {
-          pending: maintPending,
-          progress: maintProgress,
-          completed: maintCompleted
-        },
+        maintenance: maintenanceSummary,
         billing: {
-          total: totalBillings,
-          pending: billingPending,
-          completed: billingCompleted
+          ...billingSummary,
+          date: latestCycle?.endDate || billings[0]?.dueDate || "-",
+          cycleStart: latestCycle?.startDate || "",
+          cycleEnd: latestCycle?.endDate || ""
         },
-        parcels: {
-          total: parcelTotal,
-          box: parcelBox,
-          envelope: parcelEnvelope
-        },
+        parcels: parcelSummary,
         alerts: recentAnnouncements
       }
     });
