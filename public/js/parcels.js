@@ -148,11 +148,20 @@ document.addEventListener("DOMContentLoaded", () => {
     updateTenantName();
   }
 
-  function updateTenantName() {
-    if (!tenantNameDisplay) return;
+  function getSelectedRoomTenantName() {
     const selectedRoom = roomSelect?.value || "";
     const room = occupiedRoomsData.find((item) => String(item.roomNumber) === String(selectedRoom));
-    tenantNameDisplay.textContent = room?.tenant?.fullName || "-";
+    return room?.tenant?.fullName || "";
+  }
+
+  function updateTenantName() {
+    const tenantName = getSelectedRoomTenantName();
+    if (tenantNameDisplay) tenantNameDisplay.textContent = tenantName || "-";
+
+    const recipientInput = document.getElementById("modal-recipient");
+    if (!currentEditId && recipientInput && !recipientInput.value.trim()) {
+      recipientInput.value = tenantName;
+    }
   }
 
   function updateLastModifiedDate(parcels) {
@@ -401,6 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   openModalBtn?.addEventListener("click", () => {
     currentEditId = null;
+    addParcelForm?.reset();
     renderRoomOptions("");
     openModal(false);
   });
@@ -447,7 +457,8 @@ document.addEventListener("DOMContentLoaded", () => {
       formattedCompletedDate = `${cd}/${cm}/${cy}`;
     }
 
-    const recipientVal = document.getElementById("modal-recipient")?.value.trim() || "-";
+    const recipientInputValue = document.getElementById("modal-recipient")?.value.trim() || "";
+    const recipientVal = recipientInputValue || getSelectedRoomTenantName() || "-";
     const existingParcel = currentEditId
       ? parcelsData.find((p) => String(p._id || p.id) === String(currentEditId))
       : null;
