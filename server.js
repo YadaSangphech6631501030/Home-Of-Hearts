@@ -566,6 +566,34 @@ app.put('/api/maintenance/:id', async (req, res) => {
   }
 });
 
+app.delete('/api/maintenance/:id', async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+    const sessionAdmin = sessionUser && sessionUser.role === 'admin';
+    const mongoAdmin = sessionUser && sessionUser.userId
+      ? await User.findOne({ _id: sessionUser.userId, role: 'admin' }).select('_id')
+      : null;
+
+    if (!sessionAdmin && !mongoAdmin) {
+      return res.status(403).json({ success: false, message: 'ต้องเป็นผู้ดูแลระบบเท่านั้น' });
+    }
+
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: 'รหัสรายการแจ้งซ่อมไม่ถูกต้อง' });
+    }
+
+    const item = await Maintenance.findByIdAndDelete(id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: 'ไม่พบรายการแจ้งซ่อม' });
+    }
+
+    res.json({ success: true, data: item });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // user homepage data - only for the logged-in tenant
 app.get('/api/user/home-data', async (req, res) => {
   try {

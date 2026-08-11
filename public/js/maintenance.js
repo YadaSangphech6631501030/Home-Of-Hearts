@@ -16,8 +16,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const editCompleted = document.getElementById("maintenance-edit-completed");
   const editSummary = document.getElementById("maintenance-edit-summary");
   const editMessage = document.getElementById("maintenance-edit-message");
+  const viewModal = document.getElementById("maintenance-view-modal");
+  const viewClose = document.getElementById("maintenance-view-close");
+  const deleteModal = document.getElementById("maintenance-delete-modal");
+  const deleteCancel = document.getElementById("maintenance-delete-cancel");
+  const deleteConfirm = document.getElementById("maintenance-delete-confirm");
+  const deleteSummary = document.getElementById("maintenance-delete-summary");
+  const deleteMessage = document.getElementById("maintenance-delete-message");
   let currentRequests = [];
   let editingId = null;
+  let deletingId = null;
 
   async function fetchMaintenanceRequests() {
     try {
@@ -98,11 +106,25 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${formatDate(item.appointmentDate)}</td>
         <td>${formatDate(item.completedDate)}</td>
         <td>
-          <button class="btn-edit-row" data-id="${item._id}" title="แก้ไข">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-            </svg>
-          </button>
+          <div class="maintenance-action-buttons">
+            <button class="maintenance-action-btn btn-view-row" data-id="${item._id}" type="button" title="ดูรายละเอียด" aria-label="ดูรายละเอียด">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+            <button class="maintenance-action-btn btn-edit-row" data-id="${item._id}" type="button" title="แก้ไข" aria-label="แก้ไข">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+              </svg>
+            </button>
+            <button class="maintenance-action-btn btn-delete-row" data-id="${item._id}" type="button" title="ลบ" aria-label="ลบ">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
+          </div>
         </td>
       `;
       tbody.appendChild(tr);
@@ -146,8 +168,57 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${day}/${month}/${year}`;
   }
 
+  function findRequestById(id) {
+    return currentRequests.find((request) => String(request._id) === String(id));
+  }
+
+  function setViewText(id, value) {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value || "-";
+  }
+
+  function openViewModal(id) {
+    const item = findRequestById(id);
+    if (!item || !viewModal) return;
+
+    setViewText("maintenance-view-date", formatDate(item.createdAt));
+    setViewText("maintenance-view-room", item.roomNumber || "-");
+    setViewText("maintenance-view-sender", item.senderName || "-");
+    setViewText("maintenance-view-type", item.type || "-");
+    setViewText("maintenance-view-status", item.status || "รอดำเนินการ");
+    setViewText("maintenance-view-appointment", formatDate(item.appointmentDate));
+    setViewText("maintenance-view-completed", formatDate(item.completedDate));
+    setViewText("maintenance-view-topic", item.title || "-");
+    setViewText("maintenance-view-description", item.description || "-");
+
+    viewModal.classList.add("is-open");
+    viewModal.setAttribute("aria-hidden", "false");
+  }
+
+  function closeViewModal() {
+    viewModal?.classList.remove("is-open");
+    viewModal?.setAttribute("aria-hidden", "true");
+  }
+
+  function openDeleteModal(id) {
+    const item = findRequestById(id);
+    if (!item || !deleteModal) return;
+    deletingId = id;
+    if (deleteSummary) deleteSummary.textContent = "ห้อง " + (item.roomNumber || "-") + " • " + (item.senderName || "-") + " • " + (item.type || "-");
+    if (deleteMessage) deleteMessage.textContent = "";
+    deleteModal.classList.add("is-open");
+    deleteModal.setAttribute("aria-hidden", "false");
+  }
+
+  function closeDeleteModal() {
+    deleteModal?.classList.remove("is-open");
+    deleteModal?.setAttribute("aria-hidden", "true");
+    deletingId = null;
+    if (deleteMessage) deleteMessage.textContent = "";
+  }
+
   function openEditModal(id) {
-    const item = currentRequests.find((request) => String(request._id) === String(id));
+    const item = findRequestById(id);
     if (!item || !editModal) return;
     editingId = id;
     if (editStatus) editStatus.value = item.status || "รอดำเนินการ";
@@ -182,9 +253,46 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   tbody?.addEventListener("click", (event) => {
-    const button = event.target.closest(".btn-edit-row");
+    const button = event.target.closest(".maintenance-action-btn");
     if (!button) return;
-    openEditModal(button.dataset.id);
+
+    if (button.classList.contains("btn-view-row")) {
+      openViewModal(button.dataset.id);
+      return;
+    }
+
+    if (button.classList.contains("btn-edit-row")) {
+      openEditModal(button.dataset.id);
+      return;
+    }
+
+    if (button.classList.contains("btn-delete-row")) {
+      openDeleteModal(button.dataset.id);
+    }
+  });
+
+  viewClose?.addEventListener("click", closeViewModal);
+  viewModal?.addEventListener("click", (event) => {
+    if (event.target === viewModal) closeViewModal();
+  });
+
+  deleteCancel?.addEventListener("click", closeDeleteModal);
+  deleteModal?.addEventListener("click", (event) => {
+    if (event.target === deleteModal) closeDeleteModal();
+  });
+
+  deleteConfirm?.addEventListener("click", async () => {
+    if (!deletingId) return;
+    try {
+      await API.delete("/api/maintenance/" + deletingId);
+      currentRequests = currentRequests.filter((item) => String(item._id) !== String(deletingId));
+      renderTable(currentRequests);
+      updateLastModifiedDate(currentRequests);
+      closeDeleteModal();
+    } catch (error) {
+      console.error("Error deleting maintenance:", error);
+      if (deleteMessage) deleteMessage.textContent = error.message || "ลบไม่สำเร็จ";
+    }
   });
 
   editClose?.addEventListener("click", closeEditModal);
