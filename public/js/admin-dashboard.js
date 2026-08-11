@@ -54,87 +54,48 @@
 
   async function loadAllDashboardData() {
     try {
-      const [roomsRes, maintRes, billingRes, parcelRes, announceRes] = await Promise.allSettled([
-        API.get('/api/rooms'),
-        fetch('/api/maintenance').then(r => r.json()),
-        fetch('/api/billings').then(r => r.json()),
-        fetch('/api/parcels').then(r => r.json()),
-        fetch('/api/announcements').then(r => r.json())
-      ]);
+      const result = await API.get('/api/dashboard/summary');
+      const data = result.data || {};
+      const rooms = data.rooms || {};
+      const maintenance = data.maintenance || {};
+      const billing = data.billing || {};
+      const parcels = data.parcels || {};
 
-      // Room Summary
-      if (roomsRes.status === 'fulfilled') {
-        const rooms = roomsRes.value;
-        const roomList = Array.isArray(rooms) ? rooms : (rooms.data || rooms.rooms || []);
-        const total = roomList.length;
-        const occupied = roomList.filter(r => {
-          const s = String(r.status || '').toLowerCase().trim();
-          return s === 'occupied' || s === 'ไม่ว่าง';
-        }).length;
-        const available = total - occupied;
+      updateText('dash-total-rooms', rooms.total ?? 0);
+      updateText('dash-occupied-rooms', rooms.occupied ?? 0);
+      updateText('dash-available-rooms', rooms.available ?? 0);
 
-        updateText('dash-total-rooms', total);
-        updateText('dash-occupied-rooms', occupied);
-        updateText('dash-available-rooms', available);
-      }
+      updateText('dash-maint-pending', maintenance.pending ?? 0);
+      updateText('dash-maint-progress', maintenance.progress ?? 0);
+      updateText('dash-maint-done', maintenance.completed ?? 0);
 
-      // profile menu
-      document.addEventListener('DOMContentLoaded', () => {
-      const accountMenuItems = document.querySelectorAll('.profile-dropdown__item[href="#"]');
-  
-    accountMenuItems.forEach(item => {
-    if (item.textContent.includes('บัญชี')) {
-      item.setAttribute('href', '/admin/account.html'); 
-    }
-  });
-});
+      updateText('dash-bill-date', formatDashboardDate(billing.date || billing.cycleEnd || '-'));
+      updateText('dash-bill-total', billing.total ?? 0);
+      updateText('dash-bill-pending', billing.pending ?? 0);
+      updateText('dash-bill-done', billing.completed ?? 0);
 
-      // Maintenance Summary
-      if (maintRes.status === 'fulfilled' && Array.isArray(maintRes.value)) {
-        const maints = maintRes.value;
-        const pending = maints.filter(i => i.status === 'รอดำเนินการ').length;
-        const progress = maints.filter(i => i.status === 'กำลังดำเนินการ').length;
-        const completed = maints.filter(i => i.status === 'เสร็จสิ้น').length;
+      updateText('dash-parcel-total', parcels.total ?? 0);
+      updateText('dash-parcel-box', parcels.box ?? 0);
+      updateText('dash-parcel-envelope', parcels.envelope ?? 0);
 
-        updateText('dash-maint-pending', pending);
-        updateText('dash-maint-progress', progress);
-        updateText('dash-maint-done', completed);
-      }
-
-      // Billing Summary
-      if (billingRes.status === 'fulfilled' && Array.isArray(billingRes.value)) {
-        const bills = billingRes.value;
-        const total = bills.length;
-        const completed = bills.filter(i => i.status === 'completed' || i.status === 'เสร็จสิ้น').length;
-        const pending = total - completed;
-
-        updateText('dash-bill-total', total);
-        updateText('dash-bill-pending', pending);
-        updateText('dash-bill-done', completed);
-      }
-
-      // Parcel Summary 
-      if (parcelRes.status === 'fulfilled' && Array.isArray(parcelRes.value)) {
-        const parcels = parcelRes.value;
-
-        const pendingParcels = parcels.filter(p => p.status !== 'completed');
-        const totalPending = pendingParcels.length;
-        const boxCount = pendingParcels.filter(p => p.type === 'กล่อง').length;
-        const envelopeCount = pendingParcels.filter(p => p.type === 'ซอง').length;
-
-        updateText('dash-parcel-total', totalPending);
-        updateText('dash-parcel-box', boxCount);
-        updateText('dash-parcel-envelope', envelopeCount);
-      }
-
-      // Summary box mail 
-      if (announceRes.status === 'fulfilled' && announceRes.value.success) {
-        renderAlerts(announceRes.value.data || []);
-      }
-
+      renderAlerts(data.alerts || []);
     } catch (err) {
       console.error("Error loading dashboard data:", err);
+      renderAlerts([]);
     }
+  }
+
+  function formatDashboardDate(value) {
+    if (!value || value === '-') return '-';
+    if (typeof value === 'string' && value.includes('/')) return value;
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value;
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return day + '/' + month + '/' + year;
   }
 
   // Helper Function 
