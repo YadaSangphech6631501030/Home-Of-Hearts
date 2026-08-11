@@ -17,9 +17,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const addParcelForm = document.getElementById("add-parcel-form");
   const imageInput = document.getElementById("modal-image-input");
   const fileNameDisplay = document.getElementById("file-name-display");
+  const roomSelect = document.getElementById("modal-room");
+  const tenantNameDisplay = document.getElementById("modal-tenant-name");
 
   let currentEditId = null;
   let parcelsData = [];
+  let occupiedRoomsData = [];
 
   const imagePreviewModal = document.createElement("div");
   imagePreviewModal.className = "parcel-image-modal";
@@ -85,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Fetch and Render Parcels Table
   fetchParcels();
+  loadOccupiedRooms();
 
   async function fetchParcels() {
     try {
@@ -99,6 +103,56 @@ document.addEventListener("DOMContentLoaded", () => {
       updateLastModifiedDate([]);
       renderTable([]);
     }
+  }
+
+  async function loadOccupiedRooms() {
+    if (!roomSelect) return;
+
+    try {
+      const response = await fetch("/api/rooms");
+      if (!response.ok) throw new Error("Failed to fetch rooms");
+      const result = await response.json();
+      const rooms = Array.isArray(result) ? result : (result.data || result.rooms || []);
+
+      occupiedRoomsData = rooms.filter((room) => {
+        const status = String(room.status || "").toLowerCase().trim();
+        const tenantName = String(room.tenant?.fullName || "").trim();
+        return status === "occupied" || status === "ไม่ว่าง" || (tenantName && tenantName !== "-");
+      });
+
+      renderRoomOptions();
+    } catch (error) {
+      console.error("Error loading occupied rooms:", error);
+      occupiedRoomsData = [];
+      renderRoomOptions();
+    }
+  }
+
+  function renderRoomOptions(selectedRoom = "") {
+    if (!roomSelect) return;
+
+    const currentValue = selectedRoom || roomSelect.value || "";
+    roomSelect.innerHTML = '<option value="" disabled selected hidden>เลือกห้อง</option>';
+
+    occupiedRoomsData.forEach((room) => {
+      const option = document.createElement("option");
+      option.value = room.roomNumber;
+      option.textContent = room.roomNumber;
+      roomSelect.appendChild(option);
+    });
+
+    if (currentValue && occupiedRoomsData.some((room) => String(room.roomNumber) === String(currentValue))) {
+      roomSelect.value = currentValue;
+    }
+
+    updateTenantName();
+  }
+
+  function updateTenantName() {
+    if (!tenantNameDisplay) return;
+    const selectedRoom = roomSelect?.value || "";
+    const room = occupiedRoomsData.find((item) => String(item.roomNumber) === String(selectedRoom));
+    tenantNameDisplay.textContent = room?.tenant?.fullName || "-";
   }
 
   function updateLastModifiedDate(parcels) {
@@ -299,7 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const completedDateEl = document.getElementById("modal-completed-date");
       const recipientEl = document.getElementById("modal-recipient");
 
-      if (roomEl) roomEl.value = item.roomNumber || "";
+      if (roomEl) renderRoomOptions(item.roomNumber || "");
       if (courierEl) courierEl.value = item.courier || "";
       if (typeEl) typeEl.value = item.type || "";
       if (noteEl) noteEl.value = item.note === "-" ? "" : (item.note || "");
@@ -347,6 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   openModalBtn?.addEventListener("click", () => {
     currentEditId = null;
+    renderRoomOptions("");
     openModal(false);
   });
 
@@ -354,6 +409,8 @@ document.addEventListener("DOMContentLoaded", () => {
   modal?.addEventListener("click", (e) => {
     if (e.target === modal) closeModal();
   });
+
+  roomSelect?.addEventListener("change", updateTenantName);
 
   imageInput?.addEventListener("change", (e) => {
     fileNameDisplay.textContent = e.target.files.length > 0 ? `(${e.target.files[0].name})` : "";
