@@ -36,6 +36,16 @@
 - ดูพัสดุของตนเองจากข้อมูลที่ admin เพิ่มในระบบพัสดุ
 - ดูประกาศจากทางหอพัก และระบบแจ้งเตือนเมื่อมีประกาศใหม่
 
+## Resume Highlights
+
+- Full-stack dormitory management web application using Node.js, Express, MongoDB, HTML, CSS and vanilla JavaScript
+- Role-based experience for admin and tenant users with signed session tokens
+- Real MongoDB-backed workflows for rooms, tenants, maintenance requests, billing, parcels, announcements and contact information
+- Admin dashboard aggregates live data across modules for operational overview
+- Tenant dashboard shows room-specific billing, parcels, maintenance status, announcements and contact data
+- Responsive Thai-language UI designed from custom dashboard mockups
+- Environment-based configuration with `.env` and a smoke test script for endpoint verification
+
 ## Project Structure
 
 ```text
@@ -224,7 +234,53 @@ cp .env.example .env
 
 # รัน server
 npm start
+
+# smoke test endpoint สำคัญหลังเปิด server แล้ว
+npm run smoke:test
 ```
+
+## Smoke Test
+
+โปรเจกต์มี smoke test แบบไม่แก้ไขข้อมูลในฐานข้อมูล อยู่ที่ `scripts/smoke-test.js` ใช้สำหรับตรวจว่า server, หน้าเว็บหลัก, public API และ protected API สำคัญยังตอบได้ถูกต้อง
+
+รัน server ก่อนใน terminal แรก
+
+```bash
+npm start
+```
+
+จากนั้นรัน smoke test ใน terminal อีกหน้าหนึ่ง
+
+```bash
+npm run smoke:test
+```
+
+คำสั่งด้านบนจะทดสอบเฉพาะ public pages/API และตรวจว่า admin endpoint ที่ไม่มี token ถูกปฏิเสธด้วย `403`
+
+ถ้าต้องการทดสอบ flow login admin/user ด้วย ให้ส่ง credential ผ่าน environment variable โดยไม่ต้องเขียนรหัสผ่านลงใน repo
+
+```bash
+SMOKE_ADMIN_USERNAME="admin@example.com" \
+SMOKE_ADMIN_PASSWORD="your-admin-password" \
+SMOKE_USER_USERNAME="101" \
+SMOKE_USER_PASSWORD="your-user-password" \
+SMOKE_ROOM_NUMBER="101" \
+npm run smoke:test
+```
+
+> ห้าม commit password จริงลง README, source code หรือไฟล์ใด ๆ ใน git
+
+## Tested Flow
+
+รายการที่ใช้ตรวจความพร้อมก่อนนำไปใส่ resume
+
+- Server เริ่มทำงานได้หลังตั้งค่า `.env`
+- MongoDB เชื่อมต่อสำเร็จ
+- หน้า HTML หลักของ admin และ user เปิดได้
+- Admin login ได้และเรียก API dashboard, rooms, maintenance, billing, parcels, announcements ได้
+- User login ได้และเห็นข้อมูลส่วนตัวของห้อง เช่น home data, billing, billing history และ parcels
+- API admin สำคัญปฏิเสธ request ที่ไม่มี token
+- Validation เบื้องต้น เช่น login ว่าง หรือแจ้งซ่อมกรอกไม่ครบ ตอบ error ถูกต้อง
 
 ## Handover Checklist
 
@@ -238,3 +294,17 @@ npm start
 - หน้า user แสดงข้อมูลที่ admin เพิ่มไว้จริง
 - ระบบแจ้งซ่อม บิล พัสดุ และประกาศสามารถเพิ่ม/แก้ไข/อ่านข้อมูลได้
 - ไม่มีไฟล์ `.env`, `node_modules/` หรือข้อมูลลับถูก commit เข้า git
+
+## Portfolio Notes
+
+คำอธิบายสั้นสำหรับใช้ใน resume หรือ portfolio
+
+```text
+Developed Home of Hearts Residence, a full-stack dormitory management web application with separate admin and tenant dashboards. Built with Node.js, Express, MongoDB, and vanilla JavaScript. Implemented authentication, room and tenant management, maintenance tracking, billing cycles, parcel management, announcements, contact settings, and MongoDB-backed dashboard summaries.
+```
+
+ตัวอย่าง bullet สำหรับ resume
+
+- Built a full-stack dormitory management system with role-based admin and tenant workflows
+- Designed and implemented MongoDB-backed modules for rooms, maintenance, billing, parcels and announcements
+- Added signed token authentication, environment configuration and smoke-test coverage for key endpoints
