@@ -974,6 +974,116 @@ app.get("/api/rooms/:roomNumber", async (req, res) => {
   }
 });
 
+app.get("/api/rooms/:roomNumber/overview", async (req, res) => {
+  try {
+    const sessionUser = getSessionUser(req);
+    if (!sessionUser || sessionUser.role !== "admin") {
+      return res.status(403).json({ success: false, message: "ต้องเป็นผู้ดูแลระบบเท่านั้น" });
+    }
+
+    const { roomNumber } = req.params;
+    const [room, maintenanceList, latestBilling, parcelList] = await Promise.all([
+      Room.findOne({ roomNumber }).lean(),
+      Maintenance.find({ roomNumber }).sort({ createdAt: -1 }).lean(),
+      Billing.findOne({ roomNumber }).sort({ dueDate: -1, createdAt: -1 }).lean(),
+      Parcel.find({ roomNumber }).sort({ createdAt: -1 }).lean(),
+    ]);
+
+    if (!room) {
+      return res.status(404).json({ success: false, message: "Room not found" });
+    }
+
+    let cycle = null;
+    if (latestBilling && latestBilling.cycleId && mongoose.Types.ObjectId.isValid(latestBilling.cycleId)) {
+      cycle = await BillingCycle.findById(latestBilling.cycleId).lean();
+    }
+    if (!cycle && latestBilling && latestBilling.dueDate) {
+      cycle = await BillingCycle.findOne({ endDate: latestBilling.dueDate }).sort({ createdAt: -1 }).lean();
+    }
+
+    const pendingMaintenanceStatuses = ["รอดำเนินการ", "กำลังดำเนินการ", "pending", "in_progress"];
+    const pendingMaintenance = maintenanceList.filter((item) => pendingMaintenanceStatuses.includes(item.status));
+    const pendingParcels = parcelList.filter((item) => item.status !== "completed" && item.status !== "เสร็จสิ้น");
+    const completedParcels = parcelList.filter((item) => item.status === "completed" || item.status === "เสร็จสิ้น");
+    const billingDueDate = (latestBilling && latestBilling.dueDate) || (cycle && cycle.endDate) || "";
+    const cycleStartDate = (cycle && cycle.startDate) || "";
+    const cycleEndDate = (cycle && cycle.endDate) || billingDueDate;
+    const period = cycleStartDate && cycleEndDate ? cycleStartDate + " ถึง " + cycleEndDate : billingDueDate || "-";
+    const overdueDays = getOverdueDays(billingDueDate, latestBilling ? latestBilling.status : "");
+    const tenant = room.tenant || {};
+    const tenantName = (tenant.fullName || "").trim();
+    const hasTenant = tenantName && tenantName !== "-";
+    const tenantHistory = hasTenant
+      ? [{
+          year: extractYear(tenant.startDate || room.updatedAt),
+          name: tenantName,
+          period: formatTenantPeriod(tenant.startDate, tenant.endDate),
+          status: hasTenant ? "ผู้เช่าปัจจุบัน" : "ย้ายออก",
+        }]
+      : [];
+
+    res.json({
+      success: true,
+      data: {
+        maintenance: {
+          total: maintenanceList.length,
+          pending: pendingMaintenance.length,
+          latest: maintenanceList[0] || null,
+        },
+        billing: {
+          latest: latestBilling || null,
+          period,
+          overdueDays,
+          statusText: latestBilling ? formatBillingStatus(latestBilling.status) : "-",
+          amount: latestBilling ? latestBilling.amount || 0 : 0,
+        },
+        parcels: {
+          total: parcelList.length,
+          pending: pendingParcels.length,
+          completed: completedParcels.length,
+          latest: parcelList[0] || null,
+        },
+        tenantHistory,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+function getOverdueDays(dateValue, status) {
+  if (!dateValue || status === "completed") return 0;
+  const dueDate = parseStoredDate(dateValue);
+  if (!dueDate) return 0;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  dueDate.setHours(0, 0, 0, 0);
+  if (dueDate >= today) return 0;
+  return Math.ceil((today - dueDate) / (1000 * 60 * 60 * 24));
+}
+
+function parseStoredDate(value) {
+  if (!value) return null;
+  if (value instanceof Date && !Number.isNaN(value.getTime())) return value;
+  const text = String(value).trim();
+  const isoDate = new Date(text);
+  if (!Number.isNaN(isoDate.getTime())) return isoDate;
+  const match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!match) return null;
+  const date = new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function extractYear(value) {
+  const date = parseStoredDate(value);
+  return date ? date.getFullYear() : "-";
+}
+
+function formatTenantPeriod(startDate, endDate) {
+  if (!startDate && !endDate) return "-";
+  return (startDate || "-") + " - " + (endDate || "-");
+}
+
 // Update Room 
 app.put("/api/rooms/:roomNumber", async (req, res) => {
   try {

@@ -12,6 +12,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const tenantContractEnd = document.getElementById("tenant-contract-end");
   const tenantAvatarInitials = document.getElementById("tenant-avatar-initials");
   const roomStatusBadge = document.getElementById("room-status");
+  const maintenanceTotal = document.getElementById("maintenance-total");
+  const maintenancePending = document.getElementById("maintenance-pending");
+  const billingPeriod = document.getElementById("billing-period");
+  const billingOverdue = document.getElementById("billing-overdue");
+  const billingStatus = document.getElementById("billing-status");
+  const parcelTotal = document.getElementById("parcel-total");
+  const parcelPending = document.getElementById("parcel-pending");
+  const tenantHistory = document.getElementById("tenant-history");
 
   // Modal Elements
   const tenantModal = document.getElementById("tenant-modal");
@@ -35,11 +43,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function fetchRoomDetail() {
     try {
-      const response = await fetch(`/api/rooms/${roomNumber}`);
+      const [response, overviewPayload] = await Promise.all([
+        fetch(`/api/rooms/${roomNumber}`),
+        window.API ? API.get(`/api/rooms/${roomNumber}/overview`).catch((error) => {
+          console.error("Error fetching room overview:", error);
+          return null;
+        }) : null,
+      ]);
       if (!response.ok) throw new Error("ไม่สามารถดึงข้อมูลห้องได้");
       
       const room = await response.json();
       renderRoomDetail(room);
+
+      if (overviewPayload) {
+        renderRoomOverview(overviewPayload.data || overviewPayload);
+      }
     } catch (err) {
       console.error("Error fetching room detail:", err);
     }
@@ -81,6 +99,46 @@ document.addEventListener("DOMContentLoaded", () => {
     if (modalEmail) modalEmail.value = email !== "-" ? email : "";
     if (modalMoveIn) modalMoveIn.value = formatDateForInput(moveIn);
     if (modalContractEnd) modalContractEnd.value = formatDateForInput(contractEnd);
+  }
+
+  function renderRoomOverview(data) {
+    if (!data) return;
+
+    const maintenance = data.maintenance || {};
+    const billing = data.billing || {};
+    const parcels = data.parcels || {};
+
+    if (maintenanceTotal) maintenanceTotal.textContent = `${maintenance.total || 0} ครั้ง`;
+    if (maintenancePending) maintenancePending.textContent = `${maintenance.pending || 0} ครั้ง`;
+
+    if (billingPeriod) billingPeriod.textContent = billing.period || "-";
+    if (billingOverdue) billingOverdue.textContent = `${billing.overdueDays || 0} วัน`;
+    if (billingStatus) billingStatus.textContent = billing.statusText || "-";
+
+    if (parcelTotal) parcelTotal.textContent = `${parcels.total || 0} ครั้ง`;
+    if (parcelPending) parcelPending.textContent = `${parcels.pending || 0} ครั้ง`;
+
+    renderTenantHistory(data.tenantHistory || []);
+  }
+
+  function renderTenantHistory(history) {
+    if (!tenantHistory) return;
+
+    if (!history.length) {
+      tenantHistory.innerHTML = '<p class="tenant-history-empty">ยังไม่มีประวัติผู้เช่า</p>';
+      return;
+    }
+
+    tenantHistory.innerHTML = history.map((item) => `
+      <div class="history-item">
+        <div class="history-year">ปี ${item.year || "-"}</div>
+        <div class="history-details">
+          <p>ชื่อ : ${item.name || "-"}</p>
+          <p>สัญญาผู้เช่า : ${item.period || "-"}</p>
+          <p>สถานะ : ${item.status || "-"}</p>
+        </div>
+      </div>
+    `).join("");
   }
 
   function formatDateForDisplay(dateStr) {
