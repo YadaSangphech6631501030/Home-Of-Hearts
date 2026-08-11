@@ -21,6 +21,20 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentEditId = null;
   let parcelsData = [];
 
+  const imagePreviewModal = document.createElement("div");
+  imagePreviewModal.className = "parcel-image-modal";
+  imagePreviewModal.innerHTML = [
+    '<div class="parcel-image-card" role="dialog" aria-label="รูปภาพพัสดุ">',
+    '<button class="parcel-image-close" type="button" aria-label="ปิด">&times;</button>',
+    '<h2>รูปภาพพัสดุ</h2>',
+    '<div class="parcel-image-frame"><img class="parcel-image-preview" alt="รูปภาพพัสดุ" /></div>',
+    '</div>'
+  ].join("");
+  document.body.appendChild(imagePreviewModal);
+
+  const imagePreview = imagePreviewModal.querySelector(".parcel-image-preview");
+  const imagePreviewClose = imagePreviewModal.querySelector(".parcel-image-close");
+
   // Set Today's Date
   setTodayDate();
 
@@ -32,6 +46,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const year = today.getFullYear();
     updateDateEl.textContent = `${day}/${month}/${year}`;
   }
+
+  function readImageAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function openImagePreview(imageUrl) {
+    if (!imageUrl) {
+      alert("ไม่มีรูปภาพสำหรับพัสดุชิ้นนี้");
+      return;
+    }
+
+    if (imagePreview) imagePreview.src = imageUrl;
+    imagePreviewModal.classList.add("is-open");
+  }
+
+  function closeImagePreview() {
+    imagePreviewModal.classList.remove("is-open");
+    if (imagePreview) imagePreview.removeAttribute("src");
+  }
+
+  imagePreviewClose?.addEventListener("click", closeImagePreview);
+  imagePreviewModal.addEventListener("click", (event) => {
+    if (event.target === imagePreviewModal) closeImagePreview();
+  });
 
   // DD/MM/YYYY to YYYY-MM-DD
   function parseDateToInputFormat(dateStr) {
@@ -48,12 +91,126 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch("/api/parcels");
       if (!response.ok) throw new Error("Failed to fetch parcels");
       parcelsData = await response.json();
-      renderTable(parcelsData);
+      updateLastModifiedDate(parcelsData);
+      renderTable(getFilteredParcels());
     } catch (err) {
       console.warn("API error or no data:", err);
       parcelsData = [];
+      updateLastModifiedDate([]);
       renderTable([]);
     }
+  }
+
+  function updateLastModifiedDate(parcels) {
+    if (!updateDateEl) return;
+    if (!parcels || parcels.length === 0) {
+      setTodayDate();
+      return;
+    }
+
+    const latestItem = parcels.reduce((latest, item) => {
+      const currentDate = new Date(item.updatedAt || item.createdAt || 0);
+      const latestDate = new Date(latest.updatedAt || latest.createdAt || 0);
+      return currentDate > latestDate ? item : latest;
+    }, parcels[0]);
+
+    updateDateEl.textContent = formatDateFromValue(latestItem.updatedAt || latestItem.createdAt || new Date());
+  }
+
+  function formatDateFromValue(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "-";
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return day + "/" + month + "/" + year;
+  }
+
+  function parseDateValue(value) {
+    if (!value || value === "-") return null;
+    if (typeof value === "string" && value.includes("/")) {
+      const [day, month, year] = value.split("/");
+      const date = new Date(year + "-" + month + "-" + day);
+      if (!Number.isNaN(date.getTime())) {
+        date.setHours(0, 0, 0, 0);
+        return date;
+      }
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }
+
+  function normalizeText(value) {
+    return String(value || "").trim().toLowerCase();
+  }
+
+  function normalizeParcelType(value) {
+    const text = normalizeText(value);
+    if (["small-box", "กล่องขนาดเล็ก", "กล่องเล็ก"].includes(text)) return "small-box";
+    if (["medium-box", "กล่องขนาดกลาง", "กล่องกลาง"].includes(text)) return "medium-box";
+    if (["large-box", "กล่องขนาดใหญ่", "กล่องใหญ่"].includes(text)) return "large-box";
+    if (["envelope", "ซองเอกสาร", "ซอง"].includes(text)) return "envelope";
+    if (["กล่อง", "box"].includes(text)) return "box";
+    return text;
+  }
+
+  function normalizeCourier(value) {
+    const text = normalizeText(value).replace(/\s+/g, "-");
+    if (text === "ไปรษณีย์ไทย" || text === "thailandpost") return "thailand-post";
+    if (text === "shopee-xpress" || text === "shopee-express") return "shopee";
+    return text;
+  }
+
+  function getFilteredParcels() {
+    const selectedType = filterType?.value || "all";
+    const selectedCourier = filterCourier?.value || "all";
+    const selectedStatus = filterStatus?.value || "all";
+    const fromDate = parseDateValue(dateFrom?.value);
+    const toDate = parseDateValue(dateTo?.value);
+    const keyword = normalizeText(searchInput?.value);
+
+    return parcelsData.filter((item) => {
+      if (selectedType && selectedType !== "all") {
+        const itemType = normalizeParcelType(item.type);
+        if (itemType !== selectedType) return false;
+      }
+
+      if (selectedCourier && selectedCourier !== "all") {
+        const itemCourier = normalizeCourier(item.courier);
+        if (itemCourier !== selectedCourier) return false;
+      }
+
+      if (selectedStatus && selectedStatus !== "all" && item.status !== selectedStatus) return false;
+
+      const receivedDate = parseDateValue(item.receivedDate || item.createdAt);
+      if (fromDate && (!receivedDate || receivedDate < fromDate)) return false;
+      if (toDate && (!receivedDate || receivedDate > toDate)) return false;
+
+      if (keyword) {
+        const searchable = [
+          item.receivedDate,
+          item.roomNumber,
+          item.recipientName,
+          item.type,
+          item.courier,
+          item.statusText,
+          item.status === "completed" ? "เสร็จสิ้น" : "รอรับพัสดุ",
+          item.completedDate,
+          item.note,
+        ].map(normalizeText).join(" ");
+
+        if (!searchable.includes(keyword)) return false;
+      }
+
+      return true;
+    });
+  }
+
+  function applyParcelFilters() {
+    renderTable(getFilteredParcels());
   }
 
   function renderTable(parcels) {
@@ -90,7 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${item.completedDate || "-"}</td>
         <td>
           <div class="action-buttons">
-            <button class="btn-action view-image-btn" data-id="${item._id || item.id}" title="ดูรูปภาพพัสดุ" data-image="${item.imageUrl || ''}">
+            <button class="btn-action view-image-btn" data-id="${item._id || item.id}" title="ดูรูปภาพพัสดุ">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
                 <circle cx="12" cy="12" r="3"></circle>
@@ -123,13 +280,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const id = target.dataset.id;
 
     if (target.classList.contains("view-image-btn")) {
-      const item = parcelsData.find((p) => (p._id || p.id) === id);
-      const imageUrl = target.dataset.image || (item && item.imageUrl);
-      if (imageUrl) {
-        window.open(imageUrl, "_blank");
-      } else {
-        alert("ไม่มีรูปภาพสำหรับพัสดุชิ้นนี้");
-      }
+      const item = parcelsData.find((p) => String(p._id || p.id) === String(id));
+      openImagePreview(item?.imageUrl);
+      return;
     }
 
     if (target.classList.contains("edit-btn")) {
@@ -154,6 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (dateEl) dateEl.value = parseDateToInputFormat(item.receivedDate);
       if (completedDateEl) completedDateEl.value = parseDateToInputFormat(item.completedDate);
+      if (fileNameDisplay) fileNameDisplay.textContent = item.imageUrl ? "(มีรูปภาพเดิม)" : "";
 
       openModal(true);
     }
@@ -205,6 +359,17 @@ document.addEventListener("DOMContentLoaded", () => {
     fileNameDisplay.textContent = e.target.files.length > 0 ? `(${e.target.files[0].name})` : "";
   });
 
+  let parcelSearchTimer = null;
+  searchInput?.addEventListener("input", () => {
+    clearTimeout(parcelSearchTimer);
+    parcelSearchTimer = setTimeout(applyParcelFilters, 200);
+  });
+  filterType?.addEventListener("change", applyParcelFilters);
+  filterCourier?.addEventListener("change", applyParcelFilters);
+  filterStatus?.addEventListener("change", applyParcelFilters);
+  dateFrom?.addEventListener("change", applyParcelFilters);
+  dateTo?.addEventListener("change", applyParcelFilters);
+
   // Submit Form
   addParcelForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -226,6 +391,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const recipientVal = document.getElementById("modal-recipient")?.value.trim() || "-";
+    const existingParcel = currentEditId
+      ? parcelsData.find((p) => String(p._id || p.id) === String(currentEditId))
+      : null;
+    const selectedImage = imageInput?.files?.[0];
+    const imageUrl = selectedImage ? await readImageAsDataUrl(selectedImage) : (existingParcel?.imageUrl || "");
 
     const isCompleted = rawCompletedDate !== "";
 
@@ -238,7 +408,8 @@ document.addEventListener("DOMContentLoaded", () => {
       recipientName: recipientVal,
       note: document.getElementById("modal-note")?.value || "-",
       status: isCompleted ? "completed" : "pending",
-      statusText: isCompleted ? "เสร็จสิ้น" : "รอรับพัสดุ"
+      statusText: isCompleted ? "เสร็จสิ้น" : "รอรับพัสดุ",
+      imageUrl
     };
 
     try {
