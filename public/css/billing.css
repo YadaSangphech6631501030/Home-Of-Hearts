@@ -983,3 +983,48 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Billing page primary actions */
+.action-bar {
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.action-bar .btn-action {
+  min-width: auto;
+  height: auto;
+  padding: 8px 22px;
+  border: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0;
+  box-shadow: 0 5px 10px rgba(76, 66, 66, 0.18);
+  text-shadow: none;
+  transform: none;
+}
+
+.action-bar .btn-secondary {
+  background-color: #9fa364;
+}
+
+.action-bar .btn-primary {
+  background-color: #e3a0b3;
+}
+
+.action-bar .btn-secondary:hover {
+  background-color: #93975a;
+  transform: translateY(-1px);
+}
+
+.action-bar .btn-primary:hover {
+  background-color: #db93a8;
+  transform: translateY(-1px);
+}

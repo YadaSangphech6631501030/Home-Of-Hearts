@@ -8,9 +8,24 @@ function formatDate(dateString) {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
+  return day + "/" + month + "/" + year;
 }
 
+function getBillingStatusValue(status) {
+  if (status === "completed" || status === "เสร็จสิ้น" || status === "ชำระแล้ว") return "completed";
+  return "pending";
+}
+
+function getBillingStatusText(status) {
+  return getBillingStatusValue(status) === "completed" ? "เสร็จสิ้น" : "รอดำเนินการ";
+}
+
+function getComparableDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
 // fetch billing from api
 async function fetchBillingData() {
   try {
@@ -18,100 +33,123 @@ async function fetchBillingData() {
     const data = await response.json();
     billingData = Array.isArray(data) ? data : [];
 
-    const tableBody = document.getElementById("billing-tbody");
-    const updateDateEl = document.getElementById("last-update-date");
-
-    if (updateDateEl) {
-      if (data && data.length > 0) {
-        const latestItem = data.reduce(
-          (max, item) =>
-            new Date(item.updatedAt || item.createdAt) >
-            new Date(max.updatedAt || max.createdAt)
-              ? item
-              : max,
-          data[0]
-        );
-
-        updateDateEl.textContent = formatDate(
-          latestItem.updatedAt || latestItem.createdAt
-        );
-      } else {
-        updateDateEl.textContent = formatDate(new Date());
-      }
-    }
-
-    if (!tableBody) return;
-
-    if (!billingData || billingData.length === 0) {
-      tableBody.innerHTML = `
-        <tr>
-          <td colspan="9" class="empty-state-cell" style="padding: 40px; color: #888;">
-            ไม่พบข้อมูลรายการเงินหอพัก
-          </td>
-        </tr>
-      `;
-      return;
-    }
-
-    tableBody.innerHTML = billingData
-      .map(
-        (item) => `
-      <tr>
-        <td>${formatDate(item.createdAt)}</td>
-        <td>${item.roomNumber || "-"}</td>
-        <td>${item.tenantName || "-"}</td>
-        <td>${item.amount ? item.amount.toLocaleString() : "0"}</td>
-        <td>${formatDate(item.dueDate)}</td>
-        <td>
-          <span class="status-cell">
-            <span class="status-dot ${item.status === "completed" ? "dot--completed" : "dot--progress"}"></span>
-            ${item.status === "completed" ? "เสร็จสิ้น" : "รอดำเนินการ"}
-          </span>
-        </td>
-        <td>${item.completedDate ? formatDate(item.completedDate) : "-"}</td>
-        <td>
-          <div class="action-buttons">
-            <button class="btn-action view-image-btn" type="button" title="ดูรายละเอียด" aria-label="ดูรายละเอียด" data-id="${item._id}">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
-            <button class="btn-action edit-btn" type="button" title="แก้ไข" aria-label="แก้ไข" data-id="${item._id}">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-              </svg>
-            </button>
-            <button class="btn-action delete-btn" type="button" title="ลบ" aria-label="ลบ" data-id="${item._id}">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              </svg>
-            </button>
-          </div>
-        </td>
-        <td>${item.note || "-"}</td>
-      </tr>
-    `
-      )
-      .join("");
+    updateBillingLastModifiedDate(billingData);
+    renderBillingTable(getFilteredBillingData());
   } catch (error) {
     console.warn("⚠️ ไม่พบข้อมูล API:", error);
-    const tableBody = document.getElementById("billing-tbody");
-    if (tableBody) {
-      tableBody.innerHTML = `
-        <tr>
-          <td colspan="9" class="empty-state-cell" style="padding: 40px; color: #888;">
-            ไม่พบข้อมูลรายการเงินหอพัก
-          </td>
-        </tr>
-      `;
-    }
+    renderBillingTable([]);
   }
 }
 
+function updateBillingLastModifiedDate(data) {
+  const updateDateEl = document.getElementById("last-update-date");
+  if (!updateDateEl) return;
+
+  if (data && data.length > 0) {
+    const latestItem = data.reduce(
+      (max, item) =>
+        new Date(item.updatedAt || item.createdAt) >
+        new Date(max.updatedAt || max.createdAt)
+          ? item
+          : max,
+      data[0]
+    );
+
+    updateDateEl.textContent = formatDate(latestItem.updatedAt || latestItem.createdAt);
+  } else {
+    updateDateEl.textContent = formatDate(new Date());
+  }
+}
+
+function getFilteredBillingData() {
+  const fromInput = document.getElementById("date-from")?.value || "";
+  const toInput = document.getElementById("date-to")?.value || "";
+  const selectedStatus = document.getElementById("filter-status")?.value || "";
+  const searchKeyword = (document.getElementById("search-input")?.value || "").trim().toLowerCase();
+  const fromDate = getComparableDate(fromInput);
+  const toDate = getComparableDate(toInput);
+
+  return billingData.filter((item) => {
+    const itemDate = getComparableDate(item.createdAt || item.dueDate);
+    if (fromDate && (!itemDate || itemDate < fromDate)) return false;
+    if (toDate && (!itemDate || itemDate > toDate)) return false;
+
+    if (selectedStatus && getBillingStatusValue(item.status) !== selectedStatus) return false;
+
+    if (searchKeyword) {
+      const searchable = [
+        item.roomNumber,
+        item.tenantName,
+        item.amount,
+        item.dueDate,
+        item.completedDate,
+        item.note,
+        getBillingStatusText(item.status),
+        formatDate(item.createdAt),
+        formatDate(item.dueDate),
+        formatDate(item.completedDate),
+      ]
+        .map((value) => String(value || "").toLowerCase())
+        .join(" ");
+
+      if (!searchable.includes(searchKeyword)) return false;
+    }
+
+    return true;
+  });
+}
+
+function renderBillingTable(data) {
+  const tableBody = document.getElementById("billing-tbody");
+  if (!tableBody) return;
+
+  if (!data || data.length === 0) {
+    tableBody.innerHTML = [
+      '<tr>',
+      '<td colspan="9" class="empty-state-cell" style="padding: 40px; color: #888;">',
+      'ไม่พบข้อมูลรายการเงินหอพัก',
+      '</td>',
+      '</tr>'
+    ].join("");
+    return;
+  }
+
+  tableBody.innerHTML = data
+    .map((item) => {
+      const statusValue = getBillingStatusValue(item.status);
+      const statusDot = statusValue === "completed" ? "dot--completed" : "dot--progress";
+      return [
+        '<tr>',
+        '<td>' + formatDate(item.createdAt) + '</td>',
+        '<td>' + (item.roomNumber || "-") + '</td>',
+        '<td>' + (item.tenantName || "-") + '</td>',
+        '<td>' + (item.amount ? item.amount.toLocaleString() : "0") + '</td>',
+        '<td>' + formatDate(item.dueDate) + '</td>',
+        '<td><span class="status-cell"><span class="status-dot ' + statusDot + '"></span>' + getBillingStatusText(item.status) + '</span></td>',
+        '<td>' + (item.completedDate ? formatDate(item.completedDate) : "-") + '</td>',
+        '<td><div class="action-buttons">' +
+          '<button class="btn-action view-image-btn" type="button" title="ดูรายละเอียด" aria-label="ดูรายละเอียด" data-id="' + item._id + '">' +
+            '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>' +
+          '</button>' +
+          '<button class="btn-action edit-btn" type="button" title="แก้ไข" aria-label="แก้ไข" data-id="' + item._id + '">' +
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>' +
+          '</button>' +
+          '<button class="btn-action delete-btn" type="button" title="ลบ" aria-label="ลบ" data-id="' + item._id + '">' +
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>' +
+          '</button>' +
+        '</div></td>',
+        '<td>' + (item.note || "-") + '</td>',
+        '</tr>'
+      ].join("");
+    })
+    .join("");
+}
 // Event listeners and modal handling
 document.addEventListener("DOMContentLoaded", () => {
+  const filterDateFrom = document.getElementById("date-from");
+  const filterDateTo = document.getElementById("date-to");
+  const filterStatus = document.getElementById("filter-status");
+  const searchInput = document.getElementById("search-input");
   const openBtn = document.getElementById("btn-create-cycle");
   const modal = document.getElementById("create-batch-modal");
   const cancelBtn = document.getElementById("cancel-batch-modal");
@@ -487,6 +525,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+  function applyBillingFilters() {
+    renderBillingTable(getFilteredBillingData());
+  }
+
+  let billingSearchTimer = null;
+  searchInput?.addEventListener("input", () => {
+    clearTimeout(billingSearchTimer);
+    billingSearchTimer = setTimeout(applyBillingFilters, 200);
+  });
+  filterStatus?.addEventListener("change", applyBillingFilters);
+  filterDateFrom?.addEventListener("change", applyBillingFilters);
+  filterDateTo?.addEventListener("change", applyBillingFilters);
 
   fetchBillingData();
 });
