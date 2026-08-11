@@ -183,6 +183,42 @@
   </main>
 
 
+  <div class="maintenance-detail-modal" id="maintenance-view-modal" aria-hidden="true">
+    <div class="maintenance-detail-card" role="dialog" aria-labelledby="maintenance-view-title">
+      <button class="maintenance-detail-close" type="button" id="maintenance-view-close" aria-label="ปิด">×</button>
+      <h2 id="maintenance-view-title">รายละเอียดแจ้งซ่อม</h2>
+      <div class="maintenance-detail-grid">
+        <div><span>วัน/เดือน/ปี</span><strong id="maintenance-view-date">-</strong></div>
+        <div><span>ห้อง</span><strong id="maintenance-view-room">-</strong></div>
+        <div><span>ผู้ส่ง</span><strong id="maintenance-view-sender">-</strong></div>
+        <div><span>ประเภท</span><strong id="maintenance-view-type">-</strong></div>
+        <div><span>สถานะ</span><strong id="maintenance-view-status">-</strong></div>
+        <div><span>วันที่นัดหมาย</span><strong id="maintenance-view-appointment">-</strong></div>
+        <div><span>วันเสร็จสิ้น</span><strong id="maintenance-view-completed">-</strong></div>
+      </div>
+      <div class="maintenance-detail-block">
+        <span>หัวข้อ</span>
+        <p id="maintenance-view-topic">-</p>
+      </div>
+      <div class="maintenance-detail-block">
+        <span>รายละเอียด</span>
+        <p id="maintenance-view-description">-</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="maintenance-confirm-modal" id="maintenance-delete-modal" aria-hidden="true">
+    <div class="maintenance-confirm-card" role="dialog" aria-labelledby="maintenance-delete-title">
+      <h2 id="maintenance-delete-title">ลบรายการแจ้งซ่อม</h2>
+      <p id="maintenance-delete-summary">ต้องการลบรายการนี้ใช่ไหม?</p>
+      <p class="maintenance-delete-message" id="maintenance-delete-message"></p>
+      <div class="maintenance-confirm-actions">
+        <button class="maintenance-confirm-cancel" type="button" id="maintenance-delete-cancel">ยกเลิก</button>
+        <button class="maintenance-confirm-submit" type="button" id="maintenance-delete-confirm">ลบ</button>
+      </div>
+    </div>
+  </div>
+
   <div class="maintenance-edit-modal" id="maintenance-edit-modal" aria-hidden="true">
     <form class="maintenance-edit-card" id="maintenance-edit-form" aria-labelledby="maintenance-edit-title">
       <button class="maintenance-edit-close" type="button" id="maintenance-edit-close" aria-label="ปิด">×</button>
