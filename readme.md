@@ -36,15 +36,6 @@
 - ดูพัสดุของตนเองจากข้อมูลที่ admin เพิ่มในระบบพัสดุ
 - ดูประกาศจากทางหอพัก และระบบแจ้งเตือนเมื่อมีประกาศใหม่
 
-## Resume Highlights
-
-- Full-stack dormitory management web application using Node.js, Express, MongoDB, HTML, CSS and vanilla JavaScript
-- Role-based experience for admin and tenant users with signed session tokens
-- Real MongoDB-backed workflows for rooms, tenants, maintenance requests, billing, parcels, announcements and contact information
-- Admin dashboard aggregates live data across modules for operational overview
-- Tenant dashboard shows room-specific billing, parcels, maintenance status, announcements and contact data
-- Responsive Thai-language UI designed from custom dashboard mockups
-- Environment-based configuration with `.env` and a smoke test script for endpoint verification
 
 ## Project Structure
 
@@ -63,8 +54,20 @@ Home-Of-Hearts/
 │   └── images/                # รูปภาพและ assets
 ├── package.json
 ├── package-lock.json
+├── docs/                      # คู่มือ Docker, Admin, User และ Handover
+├── Dockerfile                 # Docker image สำหรับ app
+├── docker-compose.yml         # รัน app และ MongoDB พร้อมกัน
 └── README.md
 ```
+
+## Documentation
+
+| เอกสาร | รายละเอียด |
+|---|---|
+| `docs/DOCKER.md` | วิธีรันระบบด้วย Docker Compose |
+| `docs/ADMIN_GUIDE.md` | คู่มือใช้งานฝั่งผู้ดูแลระบบ |
+| `docs/USER_GUIDE.md` | คู่มือใช้งานฝั่งผู้เช่า |
+| `docs/HANDOVER.md` | คู่มือส่งต่อระบบและ checklist สำหรับคนดูแลต่อ |
 
 ## Requirements
 
@@ -119,6 +122,38 @@ npm run seed
 คำสั่งนี้จะใช้ `seedAdmin.js` เพื่อสร้างบัญชี admin ใน MongoDB ตามค่าที่กำหนดไว้ในไฟล์ seed
 
 > ควรตรวจข้อมูลใน `seedAdmin.js` ก่อนใช้งานจริง และเปลี่ยนรหัสผ่านหลัง seed เสร็จ
+
+สร้างข้อมูลห้องพักเริ่มต้น 3 ชั้น
+
+```bash
+npm run seed:rooms
+```
+
+seed ข้อมูลตัวอย่างอื่นสำหรับ demo
+
+```bash
+npm run seed:billing
+npm run seed:parcels
+npm run seed:maintenance
+```
+
+> seed บางตัวจะลบข้อมูลเดิมใน collection นั้นก่อนสร้างข้อมูลตัวอย่าง ควรใช้ด้วยความระวัง
+
+## Docker Run
+
+สามารถรันระบบพร้อม MongoDB ด้วย Docker Compose
+
+```bash
+docker compose up --build
+```
+
+หลังระบบเริ่มทำงาน เปิดที่
+
+```text
+http://localhost:3000/
+```
+
+รายละเอียดเพิ่มเติมดูที่ `docs/DOCKER.md`
 
 ## Run Project
 
@@ -229,11 +264,17 @@ npm install
 # seed admin user
 npm run seed
 
+# seed rooms
+npm run seed:rooms
+
 # สร้างไฟล์ env สำหรับ local
 cp .env.example .env
 
 # รัน server
 npm start
+
+# รันด้วย Docker
+docker compose up --build
 
 # smoke test endpoint สำคัญหลังเปิด server แล้ว
 npm run smoke:test

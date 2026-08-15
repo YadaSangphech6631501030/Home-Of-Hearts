@@ -1,0 +1,31 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: homeofhearts-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: homeofhearts-app
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      SESSION_SECRET: ${SESSION_SECRET:-change-me-in-docker-env}
+      MONGO_URI: mongodb://mongo:27017/homeofhearts
+      PORT: 3000
+
+volumes:
+  mongo_data:

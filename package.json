@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node server.js",
     "seed": "node seedAdmin.js",
-    "smoke:test": "node scripts/smoke-test.js"
+    "smoke:test": "node scripts/smoke-test.js",
+    "seed:rooms": "node seedRooms.js",
+    "seed:billing": "node seedBilling.js",
+    "seed:parcels": "node seedParcels.js",
+    "seed:maintenance": "node seed-maintenance.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+
+dotenv.config();
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/homeofhearts';
 
 const maintenanceSchema = new mongoose.Schema({
   roomNumber: String,
@@ -27,7 +31,7 @@ const initialMaintenanceData = [
 
 const seedMaintenanceDatabase = async () => {
   try {
-   await mongoose.connect('mongodb://localhost:27017/homeofhearts');
+   await mongoose.connect(MONGO_URI);
     console.log('📦 Connected to MongoDB...');
 
     await Maintenance.deleteMany({});
